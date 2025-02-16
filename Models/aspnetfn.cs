@@ -1666,9 +1666,7 @@ public partial class UAMS_20250216_1835 {
 
         // Menu items // DN
         List<MenuItem> menuItems = [
-            new(10, "mi_Appointment_Form", "AppointmentForm", -1, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointment Form", false, false, "", "", false, true),
-            new(2, "mi_Appointments", "AppointmentsList", -1, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointments", false, false, "", "", false, true),
-            new(3, "mi_Participants", "ParticipantsList", -1, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Participants", false, false, "", "", false, true),
+            new(11, "mi_Dashboard", "Dashboard", -1, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Dashboard", false, false, "", "", false, true),
             new(9, "mci_User_Management", "", -1, true, false, true, "", "", false, true),
             new(1, "mi_Users", "UsersList", 9, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Users", false, false, "", "", false, true),
             new(7, "mi_UserLevels", "UserLevelsList", 9, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}UserLevels", false, false, "", "", false, true),

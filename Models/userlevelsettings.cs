@@ -23,8 +23,6 @@ public partial class UAMS_20250216_1835 {
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointments", Id = 0, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Participants", Id = -2, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Participants", Id = 0, Permission = 0 },
-            new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}RefreshTokens", Id = -2, Permission = 0 },
-            new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}RefreshTokens", Id = 0, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Timezones", Id = -2, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Timezones", Id = 0, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}UserLevels", Id = -2, Permission = 0 },
@@ -32,7 +30,9 @@ public partial class UAMS_20250216_1835 {
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}UserLevelPermissions", Id = -2, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}UserLevelPermissions", Id = 0, Permission = 0 },
             new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointment Form", Id = -2, Permission = 0 },
-            new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointment Form", Id = 0, Permission = 0 }
+            new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointment Form", Id = 0, Permission = 0 },
+            new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Dashboard", Id = -2, Permission = 0 },
+            new() { Table = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Dashboard", Id = 0, Permission = 0 }
         ];
 
         // User level table info // DN
@@ -40,11 +40,11 @@ public partial class UAMS_20250216_1835 {
             new() { TableName = "Users", TableVar = "Users", Caption = "Users", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "UsersList" },
             new() { TableName = "Appointments", TableVar = "Appointments", Caption = "Appointments", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "AppointmentsList" },
             new() { TableName = "Participants", TableVar = "Participants", Caption = "Participants", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "ParticipantsList" },
-            new() { TableName = "RefreshTokens", TableVar = "RefreshTokens", Caption = "Refresh Tokens", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "RefreshTokensList" },
             new() { TableName = "Timezones", TableVar = "Timezones", Caption = "Timezones", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "TimezonesList" },
             new() { TableName = "UserLevels", TableVar = "UserLevels", Caption = "User Levels", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "UserLevelsList" },
             new() { TableName = "UserLevelPermissions", TableVar = "UserLevelPermissions", Caption = "User Level Permissions", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "UserLevelPermissionsList" },
-            new() { TableName = "Appointment Form", TableVar = "Appointment_Form", Caption = "Appointment Form", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "AppointmentForm" }
+            new() { TableName = "Appointment Form", TableVar = "Appointment_Form", Caption = "Appointment Form", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "AppointmentForm" },
+            new() { TableName = "Dashboard", TableVar = "Dashboard", Caption = "Dashboard", Allowed = true, ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}", Url = "Dashboard" }
         ];
     }
 } // End Partial class

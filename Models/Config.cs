@@ -84,7 +84,7 @@ public partial class UAMS_20250216_1835 {
 
         public const string ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}"; // Project ID (GUID)
 
-        public static string RandomKey = "CkO3W11MEkkx6ewm"; // Random key for encryption // DN
+        public static string RandomKey = "aOlP0SPnxYohZNxd"; // Random key for encryption // DN
 
         public static string EncryptionKey = ""; // Encryption key for data protection
 
@@ -966,7 +966,6 @@ public partial class UAMS_20250216_1835 {
             {"Users", typeof(Users)},
             {"Appointments", typeof(Appointments)},
             {"Participants", typeof(Participants)},
-            {"RefreshTokens", typeof(RefreshTokens)},
             {"Timezones", typeof(Timezones)},
             {"UserLevels", typeof(UserLevels)},
             {"UserLevelPermissions", typeof(UserLevelPermissions)},
@@ -979,7 +978,6 @@ public partial class UAMS_20250216_1835 {
             {"Users", "DB"},
             {"Appointments", "DB"},
             {"Participants", "DB"},
-            {"RefreshTokens", "DB"},
             {"Timezones", "DB"},
             {"UserLevels", "DB"},
             {"UserLevelPermissions", "DB"},

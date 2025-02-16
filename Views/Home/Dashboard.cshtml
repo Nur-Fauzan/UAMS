@@ -1,0 +1,84 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (dashboard.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = dashboard.UseLayout ? "_Layout" : "";
+}
+@dashboard.ShowMessages()
+<style>
+.appointment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.appointment-list li {
+    background: #f5f5f5;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+</style>
+<h2>Dashboard</h2>
+
+<div id="dashboardContainer">
+    <p>Loading dashboard...</p>
+</div>
+
+@section Scripts {
+    <script>
+        async function loadDashboard() {
+            try {
+                const response = await fetch("/api/dashboard", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("token"), // If using JWT
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch dashboard data.");
+                }
+
+                const data = await response.json();
+                displayAppointments(data);
+            } catch (error) {
+                console.error("Error loading dashboard:", error);
+                document.getElementById("dashboardContainer").innerHTML = "<p>Error loading dashboard.</p>";
+            }
+        }
+
+        function displayAppointments(appointments) {
+            const container = document.getElementById("dashboardContainer");
+            container.innerHTML = ""; // Clear previous content
+
+            if (appointments.length === 0) {
+                container.innerHTML = "<p>No recent appointments.</p>";
+                return;
+            }
+
+            let html = "<ul class='appointment-list'>";
+            appointments.forEach(appt => {
+                html += `
+                    <li>
+                        <strong>${appt.Title}</strong><br>
+                        Start: ${appt.StartTime} <br>
+                        End: ${appt.EndTime}
+                    </li>
+                `;
+            });
+            html += "</ul>";
+
+            container.innerHTML = html;
+        }
+
+        document.addEventListener("DOMContentLoaded", loadDashboard);
+    </script>
+}
+
+@Html.Raw(GetDebugMessage())

@@ -1,7 +1,7 @@
 E:\porto\UserAppointmentManagementSystem\Controllers\AppointmentFormController.cs
 E:\porto\UserAppointmentManagementSystem\Controllers\AppointmentsController.cs
+E:\porto\UserAppointmentManagementSystem\Controllers\DashboardController.cs
 E:\porto\UserAppointmentManagementSystem\Controllers\ParticipantsController.cs
-E:\porto\UserAppointmentManagementSystem\Controllers\RefreshTokensController.cs
 E:\porto\UserAppointmentManagementSystem\Controllers\TimezonesController.cs
 E:\porto\UserAppointmentManagementSystem\Controllers\UserLevelPermissionsController.cs
 E:\porto\UserAppointmentManagementSystem\Controllers\UserLevelsController.cs
@@ -16,6 +16,7 @@ E:\porto\UserAppointmentManagementSystem\Models\AppointmentsEdit.cs
 E:\porto\UserAppointmentManagementSystem\Models\AppointmentsList.cs
 E:\porto\UserAppointmentManagementSystem\Models\AppointmentsView.cs
 E:\porto\UserAppointmentManagementSystem\Models\Config.cs
+E:\porto\UserAppointmentManagementSystem\Models\Dashboard.cs
 E:\porto\UserAppointmentManagementSystem\Models\Error.cs
 E:\porto\UserAppointmentManagementSystem\Models\GlobalUsings.cs
 E:\porto\UserAppointmentManagementSystem\Models\Participants.cs
@@ -25,12 +26,6 @@ E:\porto\UserAppointmentManagementSystem\Models\ParticipantsEdit.cs
 E:\porto\UserAppointmentManagementSystem\Models\ParticipantsList.cs
 E:\porto\UserAppointmentManagementSystem\Models\ParticipantsView.cs
 E:\porto\UserAppointmentManagementSystem\Models\PersonalData.cs
-E:\porto\UserAppointmentManagementSystem\Models\RefreshTokens.cs
-E:\porto\UserAppointmentManagementSystem\Models\RefreshTokensAdd.cs
-E:\porto\UserAppointmentManagementSystem\Models\RefreshTokensDelete.cs
-E:\porto\UserAppointmentManagementSystem\Models\RefreshTokensEdit.cs
-E:\porto\UserAppointmentManagementSystem\Models\RefreshTokensList.cs
-E:\porto\UserAppointmentManagementSystem\Models\RefreshTokensView.cs
 E:\porto\UserAppointmentManagementSystem\Models\Timezones.cs
 E:\porto\UserAppointmentManagementSystem\Models\TimezonesAdd.cs
 E:\porto\UserAppointmentManagementSystem\Models\TimezonesDelete.cs
@@ -110,7 +105,6 @@ E:\porto\UserAppointmentManagementSystem\Models\src\Email.cs
 E:\porto\UserAppointmentManagementSystem\Models\src\EmailBase.cs
 E:\porto\UserAppointmentManagementSystem\Models\src\Entity\Appointment.cs
 E:\porto\UserAppointmentManagementSystem\Models\src\Entity\Participant.cs
-E:\porto\UserAppointmentManagementSystem\Models\src\Entity\RefreshToken.cs
 E:\porto\UserAppointmentManagementSystem\Models\src\Entity\Timezone.cs
 E:\porto\UserAppointmentManagementSystem\Models\src\Entity\_User.cs
 E:\porto\UserAppointmentManagementSystem\Models\src\Entity\_UserLevel.cs
@@ -203,17 +197,13 @@ E:\porto\UserAppointmentManagementSystem\Views\Home\AppointmentsDelete.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\AppointmentsEdit.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\AppointmentsList.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\AppointmentsView.cshtml
+E:\porto\UserAppointmentManagementSystem\Views\Home\Dashboard.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\ParticipantsAdd.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\ParticipantsDelete.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\ParticipantsEdit.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\ParticipantsList.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\ParticipantsView.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\PersonalData.cshtml
-E:\porto\UserAppointmentManagementSystem\Views\Home\RefreshTokensAdd.cshtml
-E:\porto\UserAppointmentManagementSystem\Views\Home\RefreshTokensDelete.cshtml
-E:\porto\UserAppointmentManagementSystem\Views\Home\RefreshTokensEdit.cshtml
-E:\porto\UserAppointmentManagementSystem\Views\Home\RefreshTokensList.cshtml
-E:\porto\UserAppointmentManagementSystem\Views\Home\RefreshTokensView.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\Swagger.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\TimezonesAdd.cshtml
 E:\porto\UserAppointmentManagementSystem\Views\Home\TimezonesDelete.cshtml

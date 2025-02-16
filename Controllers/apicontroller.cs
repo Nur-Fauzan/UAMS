@@ -652,4 +652,48 @@ public partial class AppointmentController : ApiController
         }
         return Ok(new { isValid = true });
     }
+
+    [HttpGet("dashboard")]
+    public IActionResult GetDashboard()
+    {
+        int currentUserId = Convert.ToInt32(CurrentUserID());
+        var user = QueryBuilder("Users")
+            .Where("Id", currentUserId)
+            .Select("PreferredTimezone")
+            .FirstOrDefault();
+        if (user == null)
+        {
+            return BadRequest("User not found.");
+        }
+        string preferredTimezone = user["PreferredTimezone"].ToString();
+        var appointments = QueryBuilder("Appointments")
+            .Join("Participants", "Appointments.Id", "Participants.AppointmentId")
+            .Where("Participants.UserId", currentUserId)
+            .Select("Appointments.Id", "Title", "StartTime", "EndTime")
+            .OrderByDesc("StartTime")
+            .Limit(1)
+            .Get();
+        List<object> convertedAppointments = new List<object>();
+        foreach (var appointment in appointments)
+        {
+            try
+            {
+                TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(preferredTimezone);
+                DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(appointment["StartTime"].ToString()), tzInfo);
+                DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(appointment["EndTime"].ToString()), tzInfo);
+                convertedAppointments.Add(new
+                {
+                    Id = appointment["Id"],
+                    Title = appointment["Title"],
+                    StartTime = startLocal.ToString("yyyy-MM-dd HH:mm:ss"),
+                    EndTime = endLocal.ToString("yyyy-MM-dd HH:mm:ss")
+                });
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return BadRequest($"Invalid timezone: {preferredTimezone}");
+            }
+        }
+        return Ok(convertedAppointments);
+    }
 }

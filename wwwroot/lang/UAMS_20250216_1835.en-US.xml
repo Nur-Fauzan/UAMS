@@ -4,14 +4,14 @@
     <menu id="10">
       <phrase id="menutext" value="Appointment Form" />
     </menu>
+    <menu id="11">
+      <phrase id="menutext" value="Dashboard" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Appointments" />
     </menu>
     <menu id="3">
       <phrase id="menutext" value="Participants" />
-    </menu>
-    <menu id="4">
-      <phrase id="menutext" value="Refresh Tokens" />
     </menu>
     <menu id="5">
       <phrase id="menutext" value="Timezones" />
@@ -94,23 +94,6 @@
         <phrase id="fldtagcaption3" value="Rejected" />
       </field>
     </table>
-    <table id="refreshtokens">
-      <phrase id="tblcaption" value="Refresh Tokens" />
-      <field id="id">
-        <phrase id="fldcaption" value="Id" />
-      </field>
-      <field id="userid">
-        <phrase id="fldcaption" value="User Id" />
-      </field>
-      <field id="_token">
-        <phrase id="fldcaption" value="Token" />
-      </field>
-      <field id="expirydate">
-        <phrase id="fldcaption" value="Expiry Date" />
-        <phrase id="fldtagvalue1" value="adsd" />
-        <phrase id="fldtagcaption1" value="asd" />
-      </field>
-    </table>
     <table id="timezones">
       <phrase id="tblcaption" value="Timezones" />
       <field id="timezoneid">
@@ -146,6 +129,9 @@
     </table>
     <table id="appointment_form">
       <phrase id="tblcaption" value="Appointment Form" />
+    </table>
+    <table id="dashboard">
+      <phrase id="tblcaption" value="Dashboard" />
     </table>
   </project>
 </ew-language>
