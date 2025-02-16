@@ -475,3 +475,155 @@ public class ChatController : ApiController
         return Json(new { success = false });
     }
 }
+
+// Custom API actions
+public class CreateAppointmentRequest
+{
+    public string Title { get; set; }
+
+    public string Description { get; set; }
+
+    public DateTime StartTime { get; set; }
+
+    public DateTime EndTime { get; set; }
+
+    public int CreatedBy { get; set; }
+
+    public List<int> ParticipantIds { get; set; }
+}
+
+public class CheckWorkingHoursRequest
+{
+    public DateTime StartTime { get; set; }
+
+    public DateTime EndTime { get; set; }
+
+    public List<int> ParticipantIds { get; set; }
+
+    public string SelectedTimezone { get; set; }
+}
+
+public partial class AppointmentController : ApiController
+{
+    [HttpGet("users")]
+    public IActionResult GetUser()
+    {
+        var user = QueryBuilder("Users")
+            .Join("Timezones", "Users.PreferredTimezoneID", "Timezones.TimezoneID")
+            .Select("Users.Id", "Users.Name", "Users.Username", "Timezones.TimezoneName")
+            .Get();
+        if (user == null)
+            return NotFound("User not found.");
+        return Ok(user);
+    }
+
+    [HttpPost("create")]
+    public IActionResult CreateAppointment([FromBody] CreateAppointmentRequest request)
+    {
+        // Convert to UTC (Assuming frontend sends local time)
+        DateTime startTimeUtc = TimeZoneInfo.ConvertTimeToUtc(request.StartTime);
+        DateTime endTimeUtc = TimeZoneInfo.ConvertTimeToUtc(request.EndTime);
+        if (request.ParticipantIds.Count == 0)
+        {
+            return BadRequest("No participants selected.");
+        }
+
+        // Get participant timezones using QueryBuilder
+        var participantTimezones = QueryBuilder("Users")
+            .Join("Timezones", "Users.PreferredTimezoneID", "Timezones.TimezoneID")
+            .WhereIn("Users.Id", request.ParticipantIds)
+            .Select("Users.Id", "Timezones.TimezoneName")
+            .Get();
+        foreach (var participant in participantTimezones)
+        {
+            string timezoneName = participant.TimezoneName.ToString();
+            TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneName);
+
+            // Convert UTC time to participant's local time
+            DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(startTimeUtc, tzInfo);
+            DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(endTimeUtc, tzInfo);
+
+            // Validate working hours (09:00 - 17:00)
+            if (startLocal.TimeOfDay < TimeSpan.FromHours(9) || endLocal.TimeOfDay > TimeSpan.FromHours(17))
+            {
+                return BadRequest($"Appointment time is outside working hours (09:00 - 17:00) for {timezoneName}.");
+            }
+        }
+
+        // Insert appointment in UTC using QueryBuilder
+        var appointmentId = QueryBuilder("Appointments")
+            .InsertGetId<int>(new
+            {
+                Title = request.Title,
+                Description = request.Description,
+                StartTime = startTimeUtc,
+                EndTime = endTimeUtc,
+                CreatedBy = CurrentUserID()
+            });
+        if (appointmentId == null)
+        {
+            return BadRequest("Failed to create appointment.");
+        }
+
+        // Insert participants using QueryBuilder
+        foreach (var userId in request.ParticipantIds)
+        {
+            QueryBuilder("Participants")
+                .Insert(new
+                {
+                    UserId = userId,
+                    AppointmentId = appointmentId,
+                    Status = userId == request.CreatedBy ? "Accepted" : "Pending"
+                });
+        }
+        return Ok(new { Message = "Appointment created successfully!", AppointmentId = appointmentId });
+    }
+
+    [HttpPost("check-working-hours")]
+    public IActionResult CheckWorkingHours([FromBody] CheckWorkingHoursRequest request)
+    {
+        if (string.IsNullOrEmpty(request.SelectedTimezone))
+        {
+            return BadRequest("Please select a timezone.");
+        }
+        TimeZoneInfo selectedTzInfo;
+        try
+        {
+            selectedTzInfo = TimeZoneInfo.FindSystemTimeZoneById(request.SelectedTimezone);
+        }
+        catch
+        {
+            return BadRequest("Invalid timezone.");
+        }
+
+        // Convert Start and End Time to UTC based on selected timezone
+        DateTime startUtc = TimeZoneInfo.ConvertTimeToUtc(request.StartTime, selectedTzInfo);
+        DateTime endUtc = TimeZoneInfo.ConvertTimeToUtc(request.EndTime, selectedTzInfo);
+        foreach (var participantId in request.ParticipantIds)
+        {
+            // Fetch participant's timezone from the database
+            var participantTimezone = QueryBuilder("Users")
+                .Join("Timezones", "Users.PreferredTimezoneID", "Timezones.TimezoneID")
+                .Where("Users.Id", participantId)
+                .Select("Timezones.TimezoneName")
+                .First();
+            if (participantTimezone == null)
+            {
+                continue; // Skip if no timezone found
+            }
+            string timezoneName = participantTimezone.TimezoneName.ToString();
+            TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneName);
+
+            // Convert UTC time to participant's local time
+            DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(startUtc, tzInfo);
+            DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(endUtc, tzInfo);
+
+            // Validate working hours (09:00 - 17:00)
+            if (startLocal.TimeOfDay < TimeSpan.FromHours(8) || endLocal.TimeOfDay > TimeSpan.FromHours(17))
+            {
+                return Ok(new { isValid = false });
+            }
+        }
+        return Ok(new { isValid = true });
+    }
+}

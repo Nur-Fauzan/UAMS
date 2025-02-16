@@ -45,6 +45,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "UserId": @Html.Raw(participantsAdd.UserId.ToClientList(participantsAdd)),
+            "AppointmentId": @Html.Raw(participantsAdd.AppointmentId.ToClientList(participantsAdd)),
             "Status": @Html.Raw(participantsAdd.Status.ToClientList(participantsAdd)),
         })
         .build();
@@ -74,24 +76,52 @@ loadjs.ready("head", function() {
 <div class="ew-add-div"><!-- page* -->
 @if (participantsAdd.UserId.Visible) { // participantsAdd.UserId.Visible (begin)
     <div id="r_UserId" @Html.Raw(participantsAdd.UserId.RowAttributes)>
-        <label id="elh_Participants_UserId" for="x_UserId" class="@(participantsAdd.LeftColumnClass)">@Html.Raw(participantsAdd.UserId.Caption)@Html.Raw(participantsAdd.UserId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <label id="elh_Participants_UserId" class="@(participantsAdd.LeftColumnClass)">@Html.Raw(participantsAdd.UserId.Caption)@Html.Raw(participantsAdd.UserId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
         <div class="@(participantsAdd.RightColumnClass)"><div @Html.Raw(participantsAdd.UserId.CellAttributes)>
 <span id="el_Participants_UserId">
-<input type="@(participantsAdd.UserId.InputTextType)" name="x_UserId" id="x_UserId" data-table="Participants" data-field="x_UserId" value="@Html.Raw(participantsAdd.UserId.EditValue)" size="30" placeholder="@Html.Raw(HtmlEncode(participantsAdd.UserId.PlaceHolder))" data-format-pattern="@(participantsAdd.UserId.FormatPattern)"@Html.Raw(participantsAdd.UserId.EditAttributes) aria-describedby="x_UserId_help">
+<span>@{
+    if (IsRTL) {
+        participantsAdd.UserId.EditAttrs["dir"] = "rtl";
+    }
+}</span>
+<span id="as_x_UserId" class="ew-auto-suggest">
+    <input type="text" class="form-control" name="sv_x_UserId" id="sv_x_UserId" value="@(RemoveHtml(ConvertToString(participantsAdd.UserId.EditValue)))" autocomplete="off" size="30" placeholder="@Html.Raw(HtmlEncode(participantsAdd.UserId.PlaceHolder))" data-placeholder="@Html.Raw(HtmlEncode(participantsAdd.UserId.PlaceHolder))" data-format-pattern="@(participantsAdd.UserId.FormatPattern)" @Html.Raw(participantsAdd.UserId.EditAttributes) aria-describedby="x_UserId_help">
+</span>
+<selection-list hidden class="form-control" data-table="Participants" data-field="x_UserId" data-input="sv_x_UserId" data-value-separator="@(participantsAdd.UserId.DisplayValueSeparatorAttribute)" name="x_UserId" id="x_UserId" value="@(HtmlEncode(participantsAdd.UserId.CurrentValue))"></selection-list>
 @Html.Raw(participantsAdd.UserId.GetCustomMessage)
 <div class="invalid-feedback">@Html.Raw(participantsAdd.UserId.GetErrorMessage())</div>
+<script>
+loadjs.ready(["fParticipantsadd"], function() {
+    fParticipantsadd.createAutoSuggest(Object.assign({"id":"x_UserId","forceSelect":false}, { lookupAllDisplayFields: @(participantsAdd.UserId.Lookup.LookupAllDisplayFields ? "true" : "false") }, ew.vars.tables.Participants.fields.UserId.autoSuggestOptions));
+});
+</script>
+@Html.Raw(participantsAdd.UserId.Lookup.GetParamTag(participantsAdd, "p_x_UserId"))
 </span>
 </div></div>
     </div>
 } @* participantsAdd.UserId.Visible (end) *@
 @if (participantsAdd.AppointmentId.Visible) { // participantsAdd.AppointmentId.Visible (begin)
     <div id="r_AppointmentId" @Html.Raw(participantsAdd.AppointmentId.RowAttributes)>
-        <label id="elh_Participants_AppointmentId" for="x_AppointmentId" class="@(participantsAdd.LeftColumnClass)">@Html.Raw(participantsAdd.AppointmentId.Caption)@Html.Raw(participantsAdd.AppointmentId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <label id="elh_Participants_AppointmentId" class="@(participantsAdd.LeftColumnClass)">@Html.Raw(participantsAdd.AppointmentId.Caption)@Html.Raw(participantsAdd.AppointmentId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
         <div class="@(participantsAdd.RightColumnClass)"><div @Html.Raw(participantsAdd.AppointmentId.CellAttributes)>
 <span id="el_Participants_AppointmentId">
-<input type="@(participantsAdd.AppointmentId.InputTextType)" name="x_AppointmentId" id="x_AppointmentId" data-table="Participants" data-field="x_AppointmentId" value="@Html.Raw(participantsAdd.AppointmentId.EditValue)" size="30" placeholder="@Html.Raw(HtmlEncode(participantsAdd.AppointmentId.PlaceHolder))" data-format-pattern="@(participantsAdd.AppointmentId.FormatPattern)"@Html.Raw(participantsAdd.AppointmentId.EditAttributes) aria-describedby="x_AppointmentId_help">
+<span>@{
+    if (IsRTL) {
+        participantsAdd.AppointmentId.EditAttrs["dir"] = "rtl";
+    }
+}</span>
+<span id="as_x_AppointmentId" class="ew-auto-suggest">
+    <input type="text" class="form-control" name="sv_x_AppointmentId" id="sv_x_AppointmentId" value="@(RemoveHtml(ConvertToString(participantsAdd.AppointmentId.EditValue)))" autocomplete="off" size="30" placeholder="@Html.Raw(HtmlEncode(participantsAdd.AppointmentId.PlaceHolder))" data-placeholder="@Html.Raw(HtmlEncode(participantsAdd.AppointmentId.PlaceHolder))" data-format-pattern="@(participantsAdd.AppointmentId.FormatPattern)" @Html.Raw(participantsAdd.AppointmentId.EditAttributes) aria-describedby="x_AppointmentId_help">
+</span>
+<selection-list hidden class="form-control" data-table="Participants" data-field="x_AppointmentId" data-input="sv_x_AppointmentId" data-value-separator="@(participantsAdd.AppointmentId.DisplayValueSeparatorAttribute)" name="x_AppointmentId" id="x_AppointmentId" value="@(HtmlEncode(participantsAdd.AppointmentId.CurrentValue))"></selection-list>
 @Html.Raw(participantsAdd.AppointmentId.GetCustomMessage)
 <div class="invalid-feedback">@Html.Raw(participantsAdd.AppointmentId.GetErrorMessage())</div>
+<script>
+loadjs.ready(["fParticipantsadd"], function() {
+    fParticipantsadd.createAutoSuggest(Object.assign({"id":"x_AppointmentId","forceSelect":false}, { lookupAllDisplayFields: @(participantsAdd.AppointmentId.Lookup.LookupAllDisplayFields ? "true" : "false") }, ew.vars.tables.Participants.fields.AppointmentId.autoSuggestOptions));
+});
+</script>
+@Html.Raw(participantsAdd.AppointmentId.Lookup.GetParamTag(participantsAdd, "p_x_AppointmentId"))
 </span>
 </div></div>
     </div>

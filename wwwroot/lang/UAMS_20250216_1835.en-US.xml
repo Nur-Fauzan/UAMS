@@ -1,6 +1,9 @@
 <ew-language date="2025/2/16" id="en-US" author="e.World Technology Limited">
   <project>
     <phrase id="footertext" value="&amp;copy;2024 e.World Technology Limited. All rights reserved." />
+    <menu id="10">
+      <phrase id="menutext" value="Appointment Form" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Appointments" />
     </menu>
@@ -140,6 +143,9 @@
       <field id="permission">
         <phrase id="fldcaption" value="Permission" />
       </field>
+    </table>
+    <table id="appointment_form">
+      <phrase id="tblcaption" value="Appointment Form" />
     </table>
   </project>
 </ew-language>

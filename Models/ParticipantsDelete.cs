@@ -422,6 +422,8 @@ public partial class UAMS_20250216_1835 {
                 InlineDelete = true;
 
             // Set up lookup cache
+            await SetupLookupOptions(UserId);
+            await SetupLookupOptions(AppointmentId);
             await SetupLookupOptions(Status);
 
             // Set up Breadcrumb
@@ -601,12 +603,46 @@ public partial class UAMS_20250216_1835 {
 
                 // UserId
                 UserId.ViewValue = UserId.CurrentValue;
-                UserId.ViewValue = FormatNumber(UserId.ViewValue, UserId.FormatPattern);
+                string curVal = ConvertToString(UserId.CurrentValue);
+                if (!Empty(curVal)) {
+                    if (UserId.Lookup != null && IsDictionary(UserId.Lookup?.Options) && UserId.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                        UserId.ViewValue = UserId.LookupCacheOption(curVal);
+                    } else { // Lookup from database // DN
+                        string filterWrk = SearchFilter(UserId.Lookup?.GetTable()?.Fields["Id"].SearchExpression, "=", UserId.CurrentValue, UserId.Lookup?.GetTable()?.Fields["Id"].SearchDataType, "");
+                        string? sqlWrk = UserId.Lookup?.GetSql(false, filterWrk, null, this, true, true);
+                        var rswrk = sqlWrk != null ? Connection.GetRows(sqlWrk) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                        if (rswrk?.Count > 0 && UserId.Lookup != null) { // Lookup values found
+                            var listwrk = UserId.Lookup?.RenderViewRow(rswrk[0]);
+                            UserId.ViewValue = UserId.DisplayValue(listwrk);
+                        } else {
+                            UserId.ViewValue = FormatNumber(UserId.CurrentValue, UserId.FormatPattern);
+                        }
+                    }
+                } else {
+                    UserId.ViewValue = DbNullValue;
+                }
                 UserId.ViewCustomAttributes = "";
 
                 // AppointmentId
                 AppointmentId.ViewValue = AppointmentId.CurrentValue;
-                AppointmentId.ViewValue = FormatNumber(AppointmentId.ViewValue, AppointmentId.FormatPattern);
+                string curVal2 = ConvertToString(AppointmentId.CurrentValue);
+                if (!Empty(curVal2)) {
+                    if (AppointmentId.Lookup != null && IsDictionary(AppointmentId.Lookup?.Options) && AppointmentId.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                        AppointmentId.ViewValue = AppointmentId.LookupCacheOption(curVal2);
+                    } else { // Lookup from database // DN
+                        string filterWrk2 = SearchFilter(AppointmentId.Lookup?.GetTable()?.Fields["Id"].SearchExpression, "=", AppointmentId.CurrentValue, AppointmentId.Lookup?.GetTable()?.Fields["Id"].SearchDataType, "");
+                        string? sqlWrk2 = AppointmentId.Lookup?.GetSql(false, filterWrk2, null, this, true, true);
+                        var rswrk2 = sqlWrk2 != null ? Connection.GetRows(sqlWrk2) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                        if (rswrk2?.Count > 0 && AppointmentId.Lookup != null) { // Lookup values found
+                            var listwrk = AppointmentId.Lookup?.RenderViewRow(rswrk2[0]);
+                            AppointmentId.ViewValue = AppointmentId.DisplayValue(listwrk);
+                        } else {
+                            AppointmentId.ViewValue = FormatNumber(AppointmentId.CurrentValue, AppointmentId.FormatPattern);
+                        }
+                    }
+                } else {
+                    AppointmentId.ViewValue = DbNullValue;
+                }
                 AppointmentId.ViewCustomAttributes = "";
 
                 // Status

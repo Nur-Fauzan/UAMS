@@ -1,0 +1,129 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (appointmentForm.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = appointmentForm.UseLayout ? "_Layout" : "";
+}
+@appointmentForm.ShowMessages()
+@{
+    var users = ExecuteRows("SELECT Id, Name FROM Users ORDER BY Name");
+    var userTimezone = ExecuteScalar("SELECT TimezoneName FROM Timezones WHERE TimezoneID = (SELECT PreferredTimezoneID FROM Users WHERE Id = @UserId)", new { UserId = CurrentUserID() });
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<form id="appointmentForm">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" name="title" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" name="description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="startTime" class="form-label">Start Time</label>
+        <input type="datetime-local" id="startTime" name="startTime" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="endTime" class="form-label">End Time</label>
+        <input type="datetime-local" id="endTime" name="endTime" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+    <label for="timezone" class="form-label">Select Timezone</label>
+        <select id="timezone" name="timezone" class="form-control">
+            <option value="">-- Select Timezone --</option>
+            @foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
+            {
+                <option value="@tz.Id">@tz.DisplayName</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="participants" class="form-label">Invite Participants</label>
+        <select id="participants" name="participants" class="form-control" multiple>
+            @foreach (var user in users)
+            {
+                <option value="@user["Id"]">@user["Name"]</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Appointment</button>
+</form>
+
+<script>
+$(document).ready(function () {
+    var userTimezone = "@userTimezone"; // Get logged-in user's timezone
+    console.log("User Timezone:", userTimezone);
+
+    $("#participants").select2({
+        placeholder: "Select participants",
+        allowClear: true
+    });
+
+    $("#appointmentForm").submit(async function (e) {
+        e.preventDefault();
+
+        let formData = {
+            title: $("#title").val(),
+            description: $("#description").val(),
+            startTime: $("#startTime").val(),
+            endTime: $("#endTime").val(),
+            createdBy: @CurrentUserID(),
+            participantIds: $("#participants").val(),
+            selectedTimezone: $("#timezone").val() // ✅ Pass selected timezone
+        };
+
+        if (!formData.selectedTimezone) {
+            alert("Please select a timezone.");
+            return;
+        }
+
+        let isValid = await validateWorkingHours(formData.startTime, formData.endTime, formData.participantIds, formData.selectedTimezone);
+        if (!isValid) {
+            alert("Appointment must be scheduled between 09:00 - 17:00 in all participants' timezones.");
+            return;
+        }
+
+        $.ajax({
+            url: "/api/appointment/create",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (response) {
+                alert(response.message);
+                window.location.href = "/AppointmentsList"; // Redirect
+            },
+            error: function (xhr) {
+                alert("Error: " + xhr.responseText);
+            }
+        });
+    });
+
+    async function validateWorkingHours(startTime, endTime, participantIds, selectedTimezone) {
+        let response = await $.ajax({
+            url: "/api/appointment/check-working-hours",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ startTime, endTime, participantIds, selectedTimezone }),
+        });
+
+        return response.isValid; // Make sure the backend checks for 08:00 - 17:00
+    }
+
+});
+</script>
+
+@Html.Raw(GetDebugMessage())

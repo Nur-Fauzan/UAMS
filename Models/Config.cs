@@ -84,7 +84,7 @@ public partial class UAMS_20250216_1835 {
 
         public const string ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}"; // Project ID (GUID)
 
-        public static string RandomKey = "tQcRmCQzli3Y6lzc"; // Random key for encryption // DN
+        public static string RandomKey = "E4SoyE308ibRju3l"; // Random key for encryption // DN
 
         public static string EncryptionKey = ""; // Encryption key for data protection
 
