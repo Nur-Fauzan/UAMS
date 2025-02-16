@@ -43,10 +43,10 @@
         <phrase id="fldcaption" value="Name" />
       </field>
       <field id="preferredtimezoneid">
-        <phrase id="fldcaption" value="Preferred Timezone ID" />
+        <phrase id="fldcaption" value="Preferred Timezone" />
       </field>
       <field id="userlevelid">
-        <phrase id="fldcaption" value="User Level ID" />
+        <phrase id="fldcaption" value="User Level" />
       </field>
     </table>
     <table id="appointments">
@@ -79,10 +79,10 @@
         <phrase id="fldcaption" value="Id" />
       </field>
       <field id="userid">
-        <phrase id="fldcaption" value="User Id" />
+        <phrase id="fldcaption" value="User" />
       </field>
       <field id="appointmentid">
-        <phrase id="fldcaption" value="Appointment Id" />
+        <phrase id="fldcaption" value="Appointment" />
       </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />

@@ -826,10 +826,6 @@ public partial class UAMS_20250216_1835 {
 
             // View row
             if (RowType == RowType.View) {
-                // Id
-                Id.ViewValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // UserId
                 UserId.ViewValue = UserId.CurrentValue;
                 string curVal = ConvertToString(UserId.CurrentValue);

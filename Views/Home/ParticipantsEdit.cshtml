@@ -31,7 +31,6 @@ loadjs.ready(["wrapper", "head"], function () {
         // Add fields
         .setFields([
 
-            ["Id", [fields.Id.visible && fields.Id.required ? ew.Validators.required(fields.Id.caption) : null], fields.Id.isInvalid],
             ["UserId", [fields.UserId.visible && fields.UserId.required ? ew.Validators.required(fields.UserId.caption) : null, ew.Validators.integer], fields.UserId.isInvalid],
             ["AppointmentId", [fields.AppointmentId.visible && fields.AppointmentId.required ? ew.Validators.required(fields.AppointmentId.caption) : null, ew.Validators.integer], fields.AppointmentId.isInvalid],
             ["Status", [fields.Status.visible && fields.Status.required ? ew.Validators.required(fields.Status.caption) : null], fields.Status.isInvalid]
@@ -76,18 +75,6 @@ loadjs.ready("head", function() {
 }
 <input type="hidden" name="@(participantsEdit.OldKeyName)" value="@Html.Raw(participantsEdit.OldKey)">
 <div class="ew-edit-div"><!-- page* -->
-@if (participantsEdit.Id.Visible) { // participantsEdit.Id.Visible (begin)
-    <div id="r_Id" @Html.Raw(participantsEdit.Id.RowAttributes)>
-        <label id="elh_Participants_Id" class="@(participantsEdit.LeftColumnClass)">@Html.Raw(participantsEdit.Id.Caption)@Html.Raw(participantsEdit.Id.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
-        <div class="@(participantsEdit.RightColumnClass)"><div @Html.Raw(participantsEdit.Id.CellAttributes)>
-<span id="el_Participants_Id">
-<span @Html.Raw(participantsEdit.Id.ViewAttributes)>
-<input type="text" readonly class="form-control-plaintext" value="@Html.Raw(RemoveHtml(ConvertToString(participantsEdit.Id.EditValue)))"></span>
-<input type="hidden" data-table="Participants" data-field="x_Id" data-hidden="1" name="x_Id" id="x_Id" value="@Html.Raw(HtmlEncode(participantsEdit.Id.CurrentValue))">
-</span>
-</div></div>
-    </div>
-} @* participantsEdit.Id.Visible (end) *@
 @if (participantsEdit.UserId.Visible) { // participantsEdit.UserId.Visible (begin)
     <div id="r_UserId" @Html.Raw(participantsEdit.UserId.RowAttributes)>
         <label id="elh_Participants_UserId" class="@(participantsEdit.LeftColumnClass)">@Html.Raw(participantsEdit.UserId.Caption)@Html.Raw(participantsEdit.UserId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
@@ -182,6 +169,7 @@ loadjs.ready("fParticipantsedit", function() {
     </div>
 } @* participantsEdit.Status.Visible (end) *@
 </div><!-- /page* -->
+    <input type="hidden" data-table="Participants" data-field="x_Id" data-hidden="1" name="x_Id" id="x_Id" value="@Html.Raw(HtmlEncode(participantsEdit.Id.CurrentValue))">
 @{ participantsEdit.CloseRecordset(); }
 @Html.Raw(participantsEdit.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
     <div class="@(participantsEdit.OffsetColumnClass)"><!-- buttons offset -->

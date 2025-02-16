@@ -50,9 +50,6 @@ loadjs.ready("head", function() {
 <table class="@(participantsDelete.TableClass)">
     <thead>
     <tr class="ew-table-header">
-@if (participantsDelete.Id.Visible) { // participantsDelete.Id.Visible (begin)
-        <th class="@Html.Raw(participantsDelete.Id.HeaderCellClass)"><span id="elh_Participants_Id" class="Participants_Id">@Html.Raw(participantsDelete.Id.Caption)</span></th>
-} @* participantsDelete.Id.Visible (end) *@
 @if (participantsDelete.UserId.Visible) { // participantsDelete.UserId.Visible (begin)
         <th class="@Html.Raw(participantsDelete.UserId.HeaderCellClass)"><span id="elh_Participants_UserId" class="Participants_UserId">@Html.Raw(participantsDelete.UserId.Caption)</span></th>
 } @* participantsDelete.UserId.Visible (end) *@
@@ -80,13 +77,6 @@ loadjs.ready("head", function() {
     // Render row
     await participantsDelete.RenderRow();
     <tr @Html.Raw(participantsDelete.RowAttributes)>
-@if (participantsDelete.Id.Visible) { // participantsDelete.Id.Visible (begin)
-        <td @Html.Raw(participantsDelete.Id.CellAttributes)>
-<span id="">
-<span @Html.Raw(participantsDelete.Id.ViewAttributes)>
-@Html.Raw(participantsDelete.Id.GetViewValue())</span>
-</span></td>
-} @* participantsDelete.Id.Visible (end) *@
 @if (participantsDelete.UserId.Visible) { // participantsDelete.UserId.Visible (begin)
         <td @Html.Raw(participantsDelete.UserId.CellAttributes)>
 <span id="">

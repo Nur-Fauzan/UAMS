@@ -267,7 +267,7 @@ public partial class UAMS_20250216_1835 {
         // Set field visibility
         public void SetVisibility()
         {
-            Id.SetVisibility();
+            Id.Visible = false;
             UserId.SetVisibility();
             AppointmentId.SetVisibility();
             Status.SetVisibility();
@@ -1048,7 +1048,6 @@ public partial class UAMS_20250216_1835 {
 
             // Initialize
             var filters = new JObject(); // DN
-            filters.Merge(JObject.Parse(Id.AdvancedSearch.ToJson())); // Field Id
             filters.Merge(JObject.Parse(UserId.AdvancedSearch.ToJson())); // Field UserId
             filters.Merge(JObject.Parse(AppointmentId.AdvancedSearch.ToJson())); // Field AppointmentId
             filters.Merge(JObject.Parse(Status.AdvancedSearch.ToJson())); // Field Status
@@ -1077,16 +1076,6 @@ public partial class UAMS_20250216_1835 {
             var filter = JsonConvert.DeserializeObject<Dictionary<string, string>>(Post("filter"));
             Command = "search";
             string? sv;
-
-            // Field Id
-            if (filter?.TryGetValue("x_Id", out sv) ?? false) {
-                Id.AdvancedSearch.SearchValue = sv;
-                Id.AdvancedSearch.SearchOperator = filter["z_Id"];
-                Id.AdvancedSearch.SearchCondition = filter["v_Id"];
-                Id.AdvancedSearch.SearchValue2 = filter["y_Id"];
-                Id.AdvancedSearch.SearchOperator2 = filter["w_Id"];
-                Id.AdvancedSearch.Save();
-            }
 
             // Field UserId
             if (filter?.TryGetValue("x_UserId", out sv) ?? false) {
@@ -1225,7 +1214,6 @@ public partial class UAMS_20250216_1835 {
             if (Get("order", out StringValues sv)) {
                 CurrentOrder = sv.ToString();
                 CurrentOrderType = Get("ordertype");
-                UpdateSort(Id); // Id
                 UpdateSort(UserId); // UserId
                 UpdateSort(AppointmentId); // AppointmentId
                 UpdateSort(Status); // Status
@@ -1486,7 +1474,6 @@ public partial class UAMS_20250216_1835 {
                 item = option.AddGroupOption();
                 item.Body = "";
                 item.Visible = UseColumnVisibility;
-                CreateColumnOption(option.Add("Id")); // DN
                 CreateColumnOption(option.Add("UserId")); // DN
                 CreateColumnOption(option.Add("AppointmentId")); // DN
                 CreateColumnOption(option.Add("Status")); // DN
@@ -1920,6 +1907,7 @@ public partial class UAMS_20250216_1835 {
             // Common render codes for all row types
 
             // Id
+            Id.CellCssStyle = "white-space: nowrap;";
 
             // UserId
 
@@ -1929,10 +1917,6 @@ public partial class UAMS_20250216_1835 {
 
             // View row
             if (RowType == RowType.View) {
-                // Id
-                Id.ViewValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // UserId
                 UserId.ViewValue = UserId.CurrentValue;
                 string curVal = ConvertToString(UserId.CurrentValue);
@@ -1984,10 +1968,6 @@ public partial class UAMS_20250216_1835 {
                     Status.ViewValue = DbNullValue;
                 }
                 Status.ViewCustomAttributes = "";
-
-                // Id
-                Id.HrefValue = "";
-                Id.TooltipValue = "";
 
                 // UserId
                 UserId.HrefValue = "";

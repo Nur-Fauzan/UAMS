@@ -31,23 +31,23 @@
 
     <div class="mb-3">
         <label for="startTime" class="form-label">Start Time</label>
-        <input type="datetime-local" id="startTime" name="startTime" class="form-control" required>
+        <input type="datetime-local" id="startTime" min="@DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm")" required>
     </div>
 
     <div class="mb-3">
         <label for="endTime" class="form-label">End Time</label>
-        <input type="datetime-local" id="endTime" name="endTime" class="form-control" required>
+        <input type="datetime-local" id="endTime" min="@DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm")" required>
     </div>
 
     <div class="mb-3">
-    <label for="timezone" class="form-label">Select Timezone</label>
-        <select id="timezone" name="timezone" class="form-control">
-            <option value="">-- Select Timezone --</option>
-            @foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
-            {
-                <option value="@tz.Id">@tz.DisplayName</option>
-            }
-        </select>
+    <label for="timezone">Preferred Timezone</label>
+    <select id="timezone" name="timezone" class="form-control">
+        <option value="">Select Timezone</option>
+        @foreach (var timezone in ExecuteRows("SELECT TimezoneName FROM Timezones ORDER BY TimezoneName"))
+        {
+            <option value="@timezone["TimezoneName"]">@timezone["TimezoneName"]</option>
+        }
+    </select>
     </div>
 
     <div class="mb-3">

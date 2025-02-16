@@ -213,7 +213,7 @@ public partial class UAMS_20250216_1835 {
                 IsUpload = false
             };
             PreferredTimezoneID.Raw = true;
-            PreferredTimezoneID.Lookup = new Lookup<DbField>(PreferredTimezoneID, "Timezones", false, "TimezoneID", new List<string> {"TimezoneName", "UtcOffset", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "CONCAT([TimezoneName],'" + ValueSeparator(1, PreferredTimezoneID) + "',[UtcOffset])");
+            PreferredTimezoneID.Lookup = new Lookup<DbField>(PreferredTimezoneID, "Timezones", false, "TimezoneID", new List<string> {"UtcOffset", "TimezoneName", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "CONCAT([UtcOffset],'" + ValueSeparator(1, PreferredTimezoneID) + "',[TimezoneName])");
             Fields.Add("PreferredTimezoneID", PreferredTimezoneID);
 
             // UserLevelID

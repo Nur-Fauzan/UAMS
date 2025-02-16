@@ -197,7 +197,7 @@ public partial class UAMS_20250216_1835 {
         // Set field visibility
         public void SetVisibility()
         {
-            Id.SetVisibility();
+            Id.Visible = false;
             UserId.SetVisibility();
             AppointmentId.SetVisibility();
             Status.SetVisibility();
@@ -727,11 +727,6 @@ public partial class UAMS_20250216_1835 {
             bool validate = !Config.ServerValidate;
             string val;
 
-            // Check field name 'Id' before field var 'x_Id'
-            val = CurrentForm.HasValue("Id") ? CurrentForm.GetValue("Id") : CurrentForm.GetValue("x_Id");
-            if (!Id.IsDetailKey)
-                Id.SetFormValue(val);
-
             // Check field name 'UserId' before field var 'x_UserId'
             val = CurrentForm.HasValue("UserId") ? CurrentForm.GetValue("UserId") : CurrentForm.GetValue("x_UserId");
             if (!UserId.IsDetailKey) {
@@ -758,6 +753,11 @@ public partial class UAMS_20250216_1835 {
                 else
                     Status.SetFormValue(val);
             }
+
+            // Check field name 'Id' before field var 'x_Id'
+            val = CurrentForm.HasValue("Id") ? CurrentForm.GetValue("Id") : CurrentForm.GetValue("x_Id");
+            if (!Id.IsDetailKey)
+                Id.SetFormValue(val);
         }
         #pragma warning restore 1998
 
@@ -869,10 +869,6 @@ public partial class UAMS_20250216_1835 {
 
             // View row
             if (RowType == RowType.View) {
-                // Id
-                Id.ViewValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // UserId
                 UserId.ViewValue = UserId.CurrentValue;
                 string curVal = ConvertToString(UserId.CurrentValue);
@@ -925,9 +921,6 @@ public partial class UAMS_20250216_1835 {
                 }
                 Status.ViewCustomAttributes = "";
 
-                // Id
-                Id.HrefValue = "";
-
                 // UserId
                 UserId.HrefValue = "";
 
@@ -937,11 +930,6 @@ public partial class UAMS_20250216_1835 {
                 // Status
                 Status.HrefValue = "";
             } else if (RowType == RowType.Edit) {
-                // Id
-                Id.SetupEditAttributes();
-                Id.EditValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // UserId
                 UserId.SetupEditAttributes();
                 UserId.EditValue = UserId.CurrentValue;
@@ -999,9 +987,6 @@ public partial class UAMS_20250216_1835 {
 
                 // Edit refer script
 
-                // Id
-                Id.HrefValue = "";
-
                 // UserId
                 UserId.HrefValue = "";
 
@@ -1027,11 +1012,6 @@ public partial class UAMS_20250216_1835 {
             if (!Config.ServerValidate)
                 return true;
             bool validateForm = true;
-                if (Id.Visible && Id.Required) {
-                    if (!Id.IsDetailKey && Empty(Id.FormValue)) {
-                        Id.AddErrorMessage(ConvertToString(Id.RequiredErrorMessage).Replace("%s", Id.Caption));
-                    }
-                }
                 if (UserId.Visible && UserId.Required) {
                     if (!UserId.IsDetailKey && Empty(UserId.FormValue)) {
                         UserId.AddErrorMessage(ConvertToString(UserId.RequiredErrorMessage).Replace("%s", UserId.Caption));

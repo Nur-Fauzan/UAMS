@@ -147,9 +147,6 @@ if (!participantsList.IsExport() && Empty(participantsList.CurrentAction) && par
 }
 @* Render list options (header, left) *@
 @participantsList.ListOptions.RenderHeader("left")
-@if (participantsList.Id.Visible) { // participantsList.Id.Visible (begin)
-        <th data-name="Id" class="@(participantsList.Id.HeaderCellClass)"><div id="elh_Participants_Id" class="Participants_Id">@Html.Raw(participantsList.RenderFieldHeader(participantsList.Id))</div></th>
-} @* participantsList.Id.Visible (end) *@
 @if (participantsList.UserId.Visible) { // participantsList.UserId.Visible (begin)
         <th data-name="UserId" class="@(participantsList.UserId.HeaderCellClass)"><div id="elh_Participants_UserId" class="Participants_UserId">@Html.Raw(participantsList.RenderFieldHeader(participantsList.UserId))</div></th>
 } @* participantsList.UserId.Visible (end) *@
@@ -179,14 +176,6 @@ if (!participantsList.IsExport() && Empty(participantsList.CurrentAction) && par
     <tr @Html.Raw(participantsList.RowAttributes)>
     @* Render list options (body, left) *@
     @participantsList.ListOptions.RenderBody("left", participantsList.RowCount)
-    @if (participantsList.Id.Visible) { // participantsList.Id.Visible (begin)
-        <td data-name="Id" @Html.Raw(participantsList.Id.CellAttributes)>
-<span id="el@(participantsList.RowIndex == "$rowindex$" ? "$rowindex$" : participantsList.RowCount)_Participants_Id" class="el_Participants_Id">
-<span @Html.Raw(participantsList.Id.ViewAttributes)>
-@Html.Raw(participantsList.Id.GetViewValue())</span>
-</span>
-</td>
-    } @* participantsList.Id.Visible (end) *@
     @if (participantsList.UserId.Visible) { // participantsList.UserId.Visible (begin)
         <td data-name="UserId" @Html.Raw(participantsList.UserId.CellAttributes)>
 <span id="el@(participantsList.RowIndex == "$rowindex$" ? "$rowindex$" : participantsList.RowCount)_Participants_UserId" class="el_Participants_UserId">

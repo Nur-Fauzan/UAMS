@@ -490,6 +490,8 @@ public class CreateAppointmentRequest
     public int CreatedBy { get; set; }
 
     public List<int> ParticipantIds { get; set; }
+
+    public string SelectedTimezone { get; set; }
 }
 
 public class CheckWorkingHoursRequest
@@ -520,37 +522,50 @@ public partial class AppointmentController : ApiController
     [HttpPost("create")]
     public IActionResult CreateAppointment([FromBody] CreateAppointmentRequest request)
     {
-        // Convert to UTC (Assuming frontend sends local time)
         DateTime startTimeUtc = TimeZoneInfo.ConvertTimeToUtc(request.StartTime);
         DateTime endTimeUtc = TimeZoneInfo.ConvertTimeToUtc(request.EndTime);
+        var participantIds = request.ParticipantIds.Select(id => Convert.ToInt32(id)).ToList();
         if (request.ParticipantIds.Count == 0)
         {
             return BadRequest("No participants selected.");
         }
+        if (startTimeUtc < DateTime.UtcNow)
+        {
+            return BadRequest("Cannot schedule an appointment in the past.");
+        }
 
-        // Get participant timezones using QueryBuilder
+        // Fetch participants' timezones
         var participantTimezones = QueryBuilder("Users")
             .Join("Timezones", "Users.PreferredTimezoneID", "Timezones.TimezoneID")
             .WhereIn("Users.Id", request.ParticipantIds)
             .Select("Users.Id", "Timezones.TimezoneName")
             .Get();
+        if (participantTimezones == null || !participantTimezones.Any())
+        {
+            return BadRequest("Could not fetch participant timezones.");
+        }
+
+        // Check working hours for each participant
         foreach (var participant in participantTimezones)
         {
             string timezoneName = participant.TimezoneName.ToString();
-            TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneName);
-
-            // Convert UTC time to participant's local time
-            DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(startTimeUtc, tzInfo);
-            DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(endTimeUtc, tzInfo);
-
-            // Validate working hours (09:00 - 17:00)
-            if (startLocal.TimeOfDay < TimeSpan.FromHours(9) || endLocal.TimeOfDay > TimeSpan.FromHours(17))
+            try
             {
-                return BadRequest($"Appointment time is outside working hours (09:00 - 17:00) for {timezoneName}.");
+                TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneName);
+                DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(startTimeUtc, tzInfo);
+                DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(endTimeUtc, tzInfo);
+                if (startLocal.TimeOfDay < TimeSpan.FromHours(8) || endLocal.TimeOfDay > TimeSpan.FromHours(17))
+                {
+                    return BadRequest($"Appointment time is outside working hours (08:00 - 17:00) for {timezoneName}.");
+                }
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return BadRequest($"Invalid timezone: {timezoneName}");
             }
         }
 
-        // Insert appointment in UTC using QueryBuilder
+        // Insert appointment in UTC
         var appointmentId = QueryBuilder("Appointments")
             .InsertGetId<int>(new
             {
@@ -558,23 +573,41 @@ public partial class AppointmentController : ApiController
                 Description = request.Description,
                 StartTime = startTimeUtc,
                 EndTime = endTimeUtc,
-                CreatedBy = CurrentUserID()
+                CreatedBy = CurrentUserID(),
+                Timezone = request.SelectedTimezone
             });
-        if (appointmentId == null)
+        if (appointmentId == 0)
         {
             return BadRequest("Failed to create appointment.");
         }
 
-        // Insert participants using QueryBuilder
-        foreach (var userId in request.ParticipantIds)
+        // Prevent inviting yourself
+        int currentUserId = Convert.ToInt32(CurrentUserID());
+        if (participantIds.Contains(currentUserId))
         {
-            QueryBuilder("Participants")
-                .Insert(new
-                {
-                    UserId = userId,
-                    AppointmentId = appointmentId,
-                    Status = userId == request.CreatedBy ? "Accepted" : "Pending"
-                });
+            return BadRequest("You cannot invite yourself to your own appointment.");
+        }
+
+        // Fetch existing invites to avoid duplicates
+        var existingInvites = QueryBuilder("Participants")
+            .WhereIn("UserId", participantIds)
+            .Where("AppointmentId", appointmentId)
+            .Select("UserId")
+            .Get()
+            .Select(p => Convert.ToInt32(p["UserId"])) // Ensure conversion to int
+            .ToList();
+        foreach (var userId in participantIds)
+        {
+            if (!existingInvites.Contains(userId)) 
+            {
+                QueryBuilder("Participants")
+                    .Insert(new
+                    {
+                        UserId = userId,
+                        AppointmentId = appointmentId,
+                        Status = "Pending"
+                    });
+            }
         }
         return Ok(new { Message = "Appointment created successfully!", AppointmentId = appointmentId });
     }
@@ -595,13 +628,10 @@ public partial class AppointmentController : ApiController
         {
             return BadRequest("Invalid timezone.");
         }
-
-        // Convert Start and End Time to UTC based on selected timezone
         DateTime startUtc = TimeZoneInfo.ConvertTimeToUtc(request.StartTime, selectedTzInfo);
         DateTime endUtc = TimeZoneInfo.ConvertTimeToUtc(request.EndTime, selectedTzInfo);
         foreach (var participantId in request.ParticipantIds)
         {
-            // Fetch participant's timezone from the database
             var participantTimezone = QueryBuilder("Users")
                 .Join("Timezones", "Users.PreferredTimezoneID", "Timezones.TimezoneID")
                 .Where("Users.Id", participantId)
@@ -609,16 +639,12 @@ public partial class AppointmentController : ApiController
                 .First();
             if (participantTimezone == null)
             {
-                continue; // Skip if no timezone found
+                continue;
             }
             string timezoneName = participantTimezone.TimezoneName.ToString();
             TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneName);
-
-            // Convert UTC time to participant's local time
             DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(startUtc, tzInfo);
             DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(endUtc, tzInfo);
-
-            // Validate working hours (09:00 - 17:00)
             if (startLocal.TimeOfDay < TimeSpan.FromHours(8) || endLocal.TimeOfDay > TimeSpan.FromHours(17))
             {
                 return Ok(new { isValid = false });

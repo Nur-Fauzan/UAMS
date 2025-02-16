@@ -197,7 +197,7 @@ public partial class UAMS_20250216_1835 {
         // Set field visibility
         public void SetVisibility()
         {
-            Id.SetVisibility();
+            Id.Visible = false;
             UserId.SetVisibility();
             AppointmentId.SetVisibility();
             Status.SetVisibility();
@@ -588,6 +588,7 @@ public partial class UAMS_20250216_1835 {
             // Common render codes for all row types
 
             // Id
+            Id.CellCssStyle = "white-space: nowrap;";
 
             // UserId
 
@@ -597,10 +598,6 @@ public partial class UAMS_20250216_1835 {
 
             // View row
             if (RowType == RowType.View) {
-                // Id
-                Id.ViewValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // UserId
                 UserId.ViewValue = UserId.CurrentValue;
                 string curVal = ConvertToString(UserId.CurrentValue);
@@ -652,10 +649,6 @@ public partial class UAMS_20250216_1835 {
                     Status.ViewValue = DbNullValue;
                 }
                 Status.ViewCustomAttributes = "";
-
-                // Id
-                Id.HrefValue = "";
-                Id.TooltipValue = "";
 
                 // UserId
                 UserId.HrefValue = "";

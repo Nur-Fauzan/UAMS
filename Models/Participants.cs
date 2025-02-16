@@ -107,6 +107,7 @@ public partial class UAMS_20250216_1835 {
                 IsAutoIncrement = true, // Autoincrement field
                 IsPrimaryKey = true, // Primary key field
                 Nullable = false, // NOT NULL field
+                Sortable = false, // Allow sort
                 DefaultErrorMessage = Language.Phrase("IncorrectInteger"),
                 SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"],
                 CustomMessage = Language.FieldPhrase("Participants", "Id", "CustomMsg"),
@@ -1255,6 +1256,7 @@ public partial class UAMS_20250216_1835 {
             // Common render codes
 
             // Id
+            Id.CellCssStyle = "white-space: nowrap;";
 
             // UserId
 
@@ -1405,12 +1407,10 @@ public partial class UAMS_20250216_1835 {
                 if (doc.Horizontal) { // Horizontal format, write header
                     doc.BeginExportRow();
                     if (exportType == "view") {
-                        doc.ExportCaption(Id);
                         doc.ExportCaption(UserId);
                         doc.ExportCaption(AppointmentId);
                         doc.ExportCaption(Status);
                     } else {
-                        doc.ExportCaption(Id);
                         doc.ExportCaption(UserId);
                         doc.ExportCaption(AppointmentId);
                         doc.ExportCaption(Status);
@@ -1451,12 +1451,10 @@ public partial class UAMS_20250216_1835 {
                     if (!doc.ExportCustom) {
                         doc.BeginExportRow(rowcnt); // Allow CSS styles if enabled
                         if (exportType == "view") {
-                            await doc.ExportField(Id);
                             await doc.ExportField(UserId);
                             await doc.ExportField(AppointmentId);
                             await doc.ExportField(Status);
                         } else {
-                            await doc.ExportField(Id);
                             await doc.ExportField(UserId);
                             await doc.ExportField(AppointmentId);
                             await doc.ExportField(Status);
