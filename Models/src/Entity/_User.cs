@@ -19,6 +19,9 @@ public class _User
     [Column("Name")]
     public required string Name { get; set; } = default!;
 
-    [Column("PreferredTimezone")]
-    public required string PreferredTimezone { get; set; } = default!;
+    [Column("PreferredTimezoneID")]
+    public required int? PreferredTimezoneId { get; set; }
+
+    [Column("UserLevelID")]
+    public int? UserLevelId { get; set; }
 }

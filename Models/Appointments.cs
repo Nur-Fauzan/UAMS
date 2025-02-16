@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// appointments
     /// </summary>
@@ -1152,7 +1152,7 @@ public partial class project1 {
             if (!Empty(sortUrl)) {
                 html += "<div class=\"ew-table-header-sort\">" + fld.SortIcon + "</div>";
             }
-            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter) {
+            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter && Security.CanSearch) {
                 html += "<div class=\"ew-filter-dropdown-btn\" data-ew-action=\"filter\" data-table=\"" + fld.TableVar + "\" data-field=\"" + fld.FieldVar +
                     "\"><div class=\"ew-table-header-filter\" role=\"button\" aria-haspopup=\"true\">" + Language.Phrase("Filter") +
                     (IsList(fld.EditValue) ? Language.Phrase("FilterCount").Replace("%c", ((IList)fld.EditValue).Count.ToString()) : "") +

@@ -87,7 +87,8 @@ loadjs.ready(["wrapper", "head"], function () {
 });
 </script>
 <input type="hidden" name="cmd" value="search">
-@if (!usersList.IsExport() && Empty(usersList.CurrentAction) && usersList.HasSearchFields()) { @* Show search form (begin) *@
+@if (Security.CanSearch) {
+if (!usersList.IsExport() && Empty(usersList.CurrentAction) && usersList.HasSearchFields()) { @* Show search form (begin) *@
 <div class="ew-extended-search container-fluid ps-2">
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
@@ -111,6 +112,7 @@ loadjs.ready(["wrapper", "head"], function () {
 </div>
 </div><!-- /.ew-extended-search -->
 } @* Show search form (end) *@
+}
 </div><!-- /.ew-search-panel -->
 </form>
 }
@@ -145,9 +147,6 @@ loadjs.ready(["wrapper", "head"], function () {
 }
 @* Render list options (header, left) *@
 @usersList.ListOptions.RenderHeader("left")
-@if (usersList.Id.Visible) { // usersList.Id.Visible (begin)
-        <th data-name="Id" class="@(usersList.Id.HeaderCellClass)"><div id="elh_Users_Id" class="Users_Id">@Html.Raw(usersList.RenderFieldHeader(usersList.Id))</div></th>
-} @* usersList.Id.Visible (end) *@
 @if (usersList._Username.Visible) { // usersList._Username.Visible (begin)
         <th data-name="_Username" class="@(usersList._Username.HeaderCellClass)"><div id="elh_Users__Username" class="Users__Username">@Html.Raw(usersList.RenderFieldHeader(usersList._Username))</div></th>
 } @* usersList._Username.Visible (end) *@
@@ -157,9 +156,12 @@ loadjs.ready(["wrapper", "head"], function () {
 @if (usersList._Name.Visible) { // usersList._Name.Visible (begin)
         <th data-name="_Name" class="@(usersList._Name.HeaderCellClass)"><div id="elh_Users__Name" class="Users__Name">@Html.Raw(usersList.RenderFieldHeader(usersList._Name))</div></th>
 } @* usersList._Name.Visible (end) *@
-@if (usersList.PreferredTimezone.Visible) { // usersList.PreferredTimezone.Visible (begin)
-        <th data-name="PreferredTimezone" class="@(usersList.PreferredTimezone.HeaderCellClass)"><div id="elh_Users_PreferredTimezone" class="Users_PreferredTimezone">@Html.Raw(usersList.RenderFieldHeader(usersList.PreferredTimezone))</div></th>
-} @* usersList.PreferredTimezone.Visible (end) *@
+@if (usersList.PreferredTimezoneID.Visible) { // usersList.PreferredTimezoneID.Visible (begin)
+        <th data-name="PreferredTimezoneID" class="@(usersList.PreferredTimezoneID.HeaderCellClass)"><div id="elh_Users_PreferredTimezoneID" class="Users_PreferredTimezoneID">@Html.Raw(usersList.RenderFieldHeader(usersList.PreferredTimezoneID))</div></th>
+} @* usersList.PreferredTimezoneID.Visible (end) *@
+@if (usersList.UserLevelID.Visible) { // usersList.UserLevelID.Visible (begin)
+        <th data-name="UserLevelID" class="@(usersList.UserLevelID.HeaderCellClass)"><div id="elh_Users_UserLevelID" class="Users_UserLevelID">@Html.Raw(usersList.RenderFieldHeader(usersList.UserLevelID))</div></th>
+} @* usersList.UserLevelID.Visible (end) *@
 @* Render list options (header, right) *@
 @usersList.ListOptions.RenderHeader("right")
     </tr>
@@ -180,14 +182,6 @@ loadjs.ready(["wrapper", "head"], function () {
     <tr @Html.Raw(usersList.RowAttributes)>
     @* Render list options (body, left) *@
     @usersList.ListOptions.RenderBody("left", usersList.RowCount)
-    @if (usersList.Id.Visible) { // usersList.Id.Visible (begin)
-        <td data-name="Id" @Html.Raw(usersList.Id.CellAttributes)>
-<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_Id" class="el_Users_Id">
-<span @Html.Raw(usersList.Id.ViewAttributes)>
-@Html.Raw(usersList.Id.GetViewValue())</span>
-</span>
-</td>
-    } @* usersList.Id.Visible (end) *@
     @if (usersList._Username.Visible) { // usersList._Username.Visible (begin)
         <td data-name="_Username" @Html.Raw(usersList._Username.CellAttributes)>
 <span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users__Username" class="el_Users__Username">
@@ -212,14 +206,22 @@ loadjs.ready(["wrapper", "head"], function () {
 </span>
 </td>
     } @* usersList._Name.Visible (end) *@
-    @if (usersList.PreferredTimezone.Visible) { // usersList.PreferredTimezone.Visible (begin)
-        <td data-name="PreferredTimezone" @Html.Raw(usersList.PreferredTimezone.CellAttributes)>
-<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_PreferredTimezone" class="el_Users_PreferredTimezone">
-<span @Html.Raw(usersList.PreferredTimezone.ViewAttributes)>
-@Html.Raw(usersList.PreferredTimezone.GetViewValue())</span>
+    @if (usersList.PreferredTimezoneID.Visible) { // usersList.PreferredTimezoneID.Visible (begin)
+        <td data-name="PreferredTimezoneID" @Html.Raw(usersList.PreferredTimezoneID.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_PreferredTimezoneID" class="el_Users_PreferredTimezoneID">
+<span @Html.Raw(usersList.PreferredTimezoneID.ViewAttributes)>
+@Html.Raw(usersList.PreferredTimezoneID.GetViewValue())</span>
 </span>
 </td>
-    } @* usersList.PreferredTimezone.Visible (end) *@
+    } @* usersList.PreferredTimezoneID.Visible (end) *@
+    @if (usersList.UserLevelID.Visible) { // usersList.UserLevelID.Visible (begin)
+        <td data-name="UserLevelID" @Html.Raw(usersList.UserLevelID.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_UserLevelID" class="el_Users_UserLevelID">
+<span @Html.Raw(usersList.UserLevelID.ViewAttributes)>
+@Html.Raw(usersList.UserLevelID.GetViewValue())</span>
+</span>
+</td>
+    } @* usersList.UserLevelID.Visible (end) *@
     @* Render list options (body, right) *@
     @usersList.ListOptions.RenderBody("right", usersList.RowCount)
     </tr>

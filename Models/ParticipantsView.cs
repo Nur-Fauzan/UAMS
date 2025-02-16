@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// participantsView
     /// </summary>
@@ -36,7 +36,7 @@ public partial class project1 {
         public string PageID = "view";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "participantsView";
@@ -481,6 +481,9 @@ public partial class project1 {
             if (UseAjaxActions)
                 InlineDelete = true;
 
+            // Set up lookup cache
+            await SetupLookupOptions(Status);
+
             // Check modal
             if (IsModal)
                 SkipHeaderFooter = true;
@@ -565,6 +568,8 @@ public partial class project1 {
 
             // Set LoginStatus, Page Rendering and Page Render
             if (!IsApi() && !IsTerminated) {
+                SetupLoginStatus(); // Setup login status
+
                 // Pass login status to client side
                 SetClientVar("login", LoginStatus);
 
@@ -596,7 +601,7 @@ public partial class project1 {
                 item.Body = "<a class=\"ew-action ew-add\" title=\"" + addTitle + "\" data-caption=\"" + addTitle + "\" data-ew-action=\"modal\" data-url=\"" + HtmlEncode(AppPath(AddUrl)) + "\">" + Language.Phrase("ViewPageAddLink") + "</a>";
             else
                 item.Body = "<a class=\"ew-action ew-add\" title=\"" + addTitle + "\" data-caption=\"" + addTitle + "\" href=\"" + HtmlEncode(AppPath(AddUrl)) + "\">" + Language.Phrase("ViewPageAddLink") + "</a>";
-                item.Visible = AddUrl != "";
+                item.Visible = AddUrl != "" && Security.CanAdd;
 
             // Edit
             item = option.Add("edit");
@@ -605,7 +610,7 @@ public partial class project1 {
                 item.Body = "<a class=\"ew-action ew-edit\" title=\"" + editTitle + "\" data-caption=\"" + editTitle + "\" data-ew-action=\"modal\" data-url=\"" + HtmlEncode(AppPath(EditUrl)) + "\">" + Language.Phrase("ViewPageEditLink") + "</a>";
             else
                 item.Body = "<a class=\"ew-action ew-edit\" title=\"" + editTitle + "\" data-caption=\"" + editTitle + "\" href=\"" + HtmlEncode(AppPath(EditUrl)) + "\">" + Language.Phrase("ViewPageEditLink") + "</a>";
-                item.Visible = EditUrl != "";
+                item.Visible = EditUrl != "" && Security.CanEdit;
 
             // Copy
             item = option.Add("copy");
@@ -614,7 +619,7 @@ public partial class project1 {
                 item.Body = "<a class=\"ew-action ew-copy\" title=\"" + copyTitle + "\" data-caption=\"" + copyTitle + "\" data-ew-action=\"modal\" data-url=\"" + HtmlEncode(AppPath(CopyUrl)) + "\" data-btn=\"AddBtn\">" + Language.Phrase("ViewPageCopyLink") + "</a>";
             else
                 item.Body = "<a class=\"ew-action ew-copy\" title=\"" + copyTitle + "\" data-caption=\"" + copyTitle + "\" href=\"" + HtmlEncode(AppPath(CopyUrl)) + "\">" + Language.Phrase("ViewPageCopyLink") + "</a>";
-                item.Visible = CopyUrl != "";
+                item.Visible = CopyUrl != "" && Security.CanAdd;
 
             // Delete
             item = option.Add("delete");
@@ -623,7 +628,7 @@ public partial class project1 {
                 (InlineDelete || IsModal ? " data-ew-action=\"inline-delete\"" : "") +
                 " title=\"" + Language.Phrase("ViewPageDeleteLink", true) + "\" data-caption=\"" + Language.Phrase("ViewPageDeleteLink", true) +
                 "\" href=\"" + HtmlEncode(url) + "\">" + Language.Phrase("ViewPageDeleteLink") + "</a>";
-            item.Visible = DeleteUrl != "";
+            item.Visible = DeleteUrl != "" && Security.CanDelete;
 
             // Set up action default
             option = options["action"];
@@ -727,7 +732,11 @@ public partial class project1 {
                 AppointmentId.ViewCustomAttributes = "";
 
                 // Status
-                Status.ViewValue = ConvertToString(Status.CurrentValue); // DN
+                if (!Empty(Status.CurrentValue)) {
+                    Status.ViewValue = Status.OptionCaption(ConvertToString(Status.CurrentValue));
+                } else {
+                    Status.ViewValue = DbNullValue;
+                }
                 Status.ViewCustomAttributes = "";
 
                 // Id

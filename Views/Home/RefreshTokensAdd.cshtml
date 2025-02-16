@@ -45,6 +45,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "ExpiryDate": @Html.Raw(refreshTokensAdd.ExpiryDate.ToClientList(refreshTokensAdd)),
         })
         .build();
     window[form.id] = form;
@@ -97,12 +98,25 @@ loadjs.ready("head", function() {
 } @* refreshTokensAdd._Token.Visible (end) *@
 @if (refreshTokensAdd.ExpiryDate.Visible) { // refreshTokensAdd.ExpiryDate.Visible (begin)
     <div id="r_ExpiryDate" @Html.Raw(refreshTokensAdd.ExpiryDate.RowAttributes)>
-        <label id="elh_RefreshTokens_ExpiryDate" for="x_ExpiryDate" class="@(refreshTokensAdd.LeftColumnClass)">@Html.Raw(refreshTokensAdd.ExpiryDate.Caption)@Html.Raw(refreshTokensAdd.ExpiryDate.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <label id="elh_RefreshTokens_ExpiryDate" class="@(refreshTokensAdd.LeftColumnClass)">@Html.Raw(refreshTokensAdd.ExpiryDate.Caption)@Html.Raw(refreshTokensAdd.ExpiryDate.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
         <div class="@(refreshTokensAdd.RightColumnClass)"><div @Html.Raw(refreshTokensAdd.ExpiryDate.CellAttributes)>
 <span id="el_RefreshTokens_ExpiryDate">
-<input type="@(refreshTokensAdd.ExpiryDate.InputTextType)" name="x_ExpiryDate" id="x_ExpiryDate" data-table="RefreshTokens" data-field="x_ExpiryDate" value="@Html.Raw(refreshTokensAdd.ExpiryDate.EditValue)" placeholder="@Html.Raw(HtmlEncode(refreshTokensAdd.ExpiryDate.PlaceHolder))" data-format-pattern="@(refreshTokensAdd.ExpiryDate.FormatPattern)"@Html.Raw(refreshTokensAdd.ExpiryDate.EditAttributes) aria-describedby="x_ExpiryDate_help">
+<span>@{
+    if (IsRTL) {
+        refreshTokensAdd.ExpiryDate.EditAttrs["dir"] = "rtl";
+    }
+}</span>
+<span id="as_x_ExpiryDate" class="ew-auto-suggest">
+    <input type="text" class="form-control" name="sv_x_ExpiryDate" id="sv_x_ExpiryDate" value="@(RemoveHtml(ConvertToString(refreshTokensAdd.ExpiryDate.EditValue)))" autocomplete="off" placeholder="@Html.Raw(HtmlEncode(refreshTokensAdd.ExpiryDate.PlaceHolder))" data-placeholder="@Html.Raw(HtmlEncode(refreshTokensAdd.ExpiryDate.PlaceHolder))" data-format-pattern="@(refreshTokensAdd.ExpiryDate.FormatPattern)" @Html.Raw(refreshTokensAdd.ExpiryDate.EditAttributes) aria-describedby="x_ExpiryDate_help">
+</span>
+<selection-list hidden class="form-control" data-table="RefreshTokens" data-field="x_ExpiryDate" data-input="sv_x_ExpiryDate" data-value-separator="@(refreshTokensAdd.ExpiryDate.DisplayValueSeparatorAttribute)" name="x_ExpiryDate" id="x_ExpiryDate" value="@(HtmlEncode(refreshTokensAdd.ExpiryDate.CurrentValue))"></selection-list>
 @Html.Raw(refreshTokensAdd.ExpiryDate.GetCustomMessage)
 <div class="invalid-feedback">@Html.Raw(refreshTokensAdd.ExpiryDate.GetErrorMessage())</div>
+<script>
+loadjs.ready(["fRefreshTokensadd"], function() {
+    fRefreshTokensadd.createAutoSuggest(Object.assign({"id":"x_ExpiryDate","forceSelect":false}, { lookupAllDisplayFields: @(refreshTokensAdd.ExpiryDate.Lookup.LookupAllDisplayFields ? "true" : "false") }, ew.vars.tables.RefreshTokens.fields.ExpiryDate.autoSuggestOptions));
+});
+</script>
 @if (!refreshTokensAdd.ExpiryDate.ReadOnly && !refreshTokensAdd.ExpiryDate.Disabled && !refreshTokensAdd.ExpiryDate.EditAttrs.Is("readonly") && !refreshTokensAdd.ExpiryDate.EditAttrs.Is("disabled")) {
 <script>
 loadjs.ready(["fRefreshTokensadd", "datetimepicker"], function () {

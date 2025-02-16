@@ -9,7 +9,6 @@ public class CustomUserStore : IUserStore<ApplicationUser>,
     // Constructor
     public CustomUserStore()
     {
-        throw new NotImplementedException();
     }
 
     // CreateAsync
@@ -26,17 +25,49 @@ public class CustomUserStore : IUserStore<ApplicationUser>,
     public void Dispose() {}
 
     // FindByIdAsync
-    public Task<ApplicationUser?> FindByIdAsync(string userId,
+    public async Task<ApplicationUser?> FindByIdAsync(string userId,
         CancellationToken cancellationToken = default(CancellationToken))
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (Empty(userId))
+            throw new ArgumentNullException(nameof(userId));
+        string filter = Config.UserIdFilter.Replace("%u", AdjustSql(userId, Config.UserTableDbId));
+        string sql = UserTable.GetSql(filter);
+        var user = await UserTableConn.GetRowAsync(sql);
+        return user != null
+            ? new ApplicationUser {
+                    Id = ConvertToString(user[Config.UserPrimaryKeyFieldName]),
+                    UserName = ConvertToString(user[Config.LoginUsernameFieldName]),
+                    Email = !Empty(Config.UserEmailFieldName) ? ConvertToString(user[Config.UserEmailFieldName]) : "",
+                    UserId = !Empty(Config.UserIdFieldName) ? ConvertToString(user[Config.UserIdFieldName]) : "",
+                    ParentUserId = !Empty(Config.ParentUserIdFieldName) ? ConvertToString(user[Config.ParentUserIdFieldName]) : "",
+                    UserLevelId = !Empty(Config.UserLevelFieldName) ? ConvertToString(user[Config.UserLevelFieldName]) : "",
+                    IsAuthenticated = true
+                }
+            : new ApplicationUser();
     }
 
     // FindByNameAsync
-    public Task<ApplicationUser?> FindByNameAsync(string userName,
+    public async Task<ApplicationUser?> FindByNameAsync(string userName,
         CancellationToken cancellationToken = default(CancellationToken))
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (userName == null)
+            throw new ArgumentNullException(nameof(userName));
+        string filter = Config.UserNameFilter.Replace("%u", AdjustSql(userName, Config.UserTableDbId));
+        string sql = UserTable.GetSql(filter);
+        var user = await UserTableConn.GetRowAsync(sql);
+        return user != null
+            ? new ApplicationUser {
+                    Id = ConvertToString(user[Config.UserPrimaryKeyFieldName]),
+                    UserName = ConvertToString(user[Config.LoginUsernameFieldName]),
+                    Email = !Empty(Config.UserEmailFieldName) ? ConvertToString(user[Config.UserEmailFieldName]) : "",
+                    UserId = !Empty(Config.UserIdFieldName) ? ConvertToString(user[Config.UserIdFieldName]) : "",
+                    ParentUserId = !Empty(Config.ParentUserIdFieldName) ? ConvertToString(user[Config.ParentUserIdFieldName]) : "",
+                    UserLevelId = !Empty(Config.UserLevelFieldName) ? ConvertToString(user[Config.UserLevelFieldName]) : "",
+                    IsAuthenticated = true
+                }
+            : new ApplicationUser();
     }
 
     // GetNormalizedUserNameAsync
@@ -50,13 +81,19 @@ public class CustomUserStore : IUserStore<ApplicationUser>,
     // GetUserIdAsync
     public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
+        return Task.FromResult(user.Id);
     }
 
     // GetUserNameAsync
     public Task<string?> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
+        return Task.FromResult<string?>(user.UserName);
     }
 
     // HasPasswordAsync

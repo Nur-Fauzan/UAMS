@@ -1,0 +1,262 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (timezonesList.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = timezonesList.UseLayout ? "_Layout" : "";
+}
+@if (!timezonesList.IsExport()) {
+<script>
+var currentTable = @Html.Raw(ConvertToJson(timezonesList.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Timezones: currentTable } });
+var currentPageID = ew.PAGE_ID = "list";
+var currentForm;
+var @(timezonesList.FormName);
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("@(timezonesList.FormName)")
+        .setPageId("list")
+        .setSubmitWithFetch(@(timezonesList.UseAjaxActions ? "true" : "false"))
+        .setFormKeyCountName("@(timezonesList.FormKeyCountName)")
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+}
+@if (!timezonesList.IsExport()) {
+<div class="btn-toolbar ew-toolbar">
+@if (timezonesList.TotalRecords > 0 && timezonesList.ExportOptions.Visible) {
+    timezonesList.ExportOptions.Render("body");
+}
+@if (timezonesList.ImportOptions.Visible) {
+    timezonesList.ImportOptions.Render("body");
+}
+@if (timezonesList.SearchOptions.Visible) {
+    timezonesList.SearchOptions.Render("body");
+}
+@if (timezonesList.FilterOptions.Visible) {
+    timezonesList.FilterOptions.Render("body");
+}
+</div>
+}
+@if (!timezonesList.IsModal) {
+<form name="fTimezonessrch" id="fTimezonessrch" class="ew-form ew-ext-search-form" action="@AppPath(CurrentPageName())" novalidate autocomplete="off">
+<div id="fTimezonessrch_search_panel" class="mb-2 mb-sm-0 @(timezonesList.SearchPanelClass)"><!-- .ew-search-panel -->
+<script>
+var currentTable = @Html.Raw(ConvertToJson(timezonesList.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Timezones: currentTable } });
+var currentForm;
+var fTimezonessrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery,
+        fields = currentTable.fields;
+
+    // Form object for search
+    let form = new ew.FormBuilder()
+        .setId("fTimezonessrch")
+        .setPageId("list")
+@if (timezonesList.UseAjaxActions) {
+        <text>.setSubmitWithFetch(true)</text>
+}
+
+        // Dynamic selection lists
+        .setLists({
+        })
+
+        // Filters
+        .setFilterList(@Html.Raw(timezonesList.GetFilterList()))
+        .build();
+    window[form.id] = form;
+    currentSearchForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<input type="hidden" name="cmd" value="search">
+@if (Security.CanSearch) {
+if (!timezonesList.IsExport() && Empty(timezonesList.CurrentAction) && timezonesList.HasSearchFields()) { @* Show search form (begin) *@
+<div class="ew-extended-search container-fluid ps-2">
+<div class="row mb-0">
+    <div class="col-sm-auto px-0 pe-sm-2">
+        <div class="ew-basic-search input-group">
+            <input type="search" name="@(Config.TableBasicSearch)" id="@(Config.TableBasicSearch)" class="form-control ew-basic-search-keyword" value="@Html.Raw(HtmlEncode(timezonesList.BasicSearch.SessionKeyword))" placeholder="@(HtmlEncode(Language.Phrase("Search")))" aria-label="@(HtmlEncode(Language.Phrase("Search")))">
+            <input type="hidden" name="@(Config.TableBasicSearchType)" id="@(Config.TableBasicSearchType)" class="ew-basic-search-type" value="@(HtmlEncode(timezonesList.BasicSearch.SessionType))">
+            <button type="button" data-bs-toggle="dropdown" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false">
+                <span id="searchtype">@Html.Raw(timezonesList.BasicSearch.TypeNameShort)</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <button type="button" class="dropdown-item@(timezonesList.BasicSearch.SessionType == "" ? " active" : "")" form="fTimezonessrch" data-ew-action="search-type">@Html.Raw(Language.Phrase("QuickSearchAuto"))</button>
+                <button type="button" class="dropdown-item@(timezonesList.BasicSearch.SessionType == "=" ? " active" : "")" form="fTimezonessrch" data-ew-action="search-type" data-search-type="=">@Html.Raw(Language.Phrase("QuickSearchExact"))</button>
+                <button type="button" class="dropdown-item@(timezonesList.BasicSearch.SessionType == "AND" ? " active" : "")" form="fTimezonessrch" data-ew-action="search-type" data-search-type="AND">@Html.Raw(Language.Phrase("QuickSearchAll"))</button>
+                <button type="button" class="dropdown-item@(timezonesList.BasicSearch.SessionType == "OR" ? " active" : "")" form="fTimezonessrch" data-ew-action="search-type" data-search-type="OR">@Html.Raw(Language.Phrase("QuickSearchAny"))</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-auto mb-3">
+        <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit">@Html.Raw(Language.Phrase("SearchBtn"))</button>
+    </div>
+</div>
+</div><!-- /.ew-extended-search -->
+} @* Show search form (end) *@
+}
+</div><!-- /.ew-search-panel -->
+</form>
+}
+@timezonesList.ShowPageHeader()
+@timezonesList.ShowMessages()
+<main class="list @(timezonesList.TotalRecords == 0 && !timezonesList.IsAdd ? " ew-no-record" : "")">
+<div id="ew-header-options">
+    @timezonesList.HeaderOptions.RenderBody()
+</div>
+<div id="ew-list">
+@if (timezonesList.TotalRecords > 0 || !Empty(timezonesList.CurrentAction)) {
+<div class="card ew-card ew-grid@(timezonesList.IsAddOrEdit ? " ew-grid-add-edit" : "") @(timezonesList.TableGridClass)">
+<form name="@(timezonesList.FormName)" id="@(timezonesList.FormName)" class="ew-form ew-list-form" action="@AppPath(timezonesList.PageName)" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+@if (timezonesList.IsModal) {
+<input type="hidden" name="modal" value="1">
+}
+<div id="gmp_Timezones" class="card-body ew-grid-middle-panel @(timezonesList.TableContainerClass)" style="@(timezonesList.TableContainerStyle)">
+@if (timezonesList.TotalRecords > 0 || timezonesList.IsGridEdit || timezonesList.IsMultiEdit) {
+<table id="tbl_Timezoneslist" class="@(timezonesList.TableClass)"><!-- .ew-table -->
+<thead>
+    <tr class="ew-table-header">
+@{
+    // Header row
+    timezonesList.RowType = RowType.Header;
+
+    // Render list options
+    await timezonesList.RenderListOptions();
+}
+@* Render list options (header, left) *@
+@timezonesList.ListOptions.RenderHeader("left")
+@if (timezonesList.TimezoneID.Visible) { // timezonesList.TimezoneID.Visible (begin)
+        <th data-name="TimezoneID" class="@(timezonesList.TimezoneID.HeaderCellClass)"><div id="elh_Timezones_TimezoneID" class="Timezones_TimezoneID">@Html.Raw(timezonesList.RenderFieldHeader(timezonesList.TimezoneID))</div></th>
+} @* timezonesList.TimezoneID.Visible (end) *@
+@if (timezonesList.TimezoneName.Visible) { // timezonesList.TimezoneName.Visible (begin)
+        <th data-name="TimezoneName" class="@(timezonesList.TimezoneName.HeaderCellClass)"><div id="elh_Timezones_TimezoneName" class="Timezones_TimezoneName">@Html.Raw(timezonesList.RenderFieldHeader(timezonesList.TimezoneName))</div></th>
+} @* timezonesList.TimezoneName.Visible (end) *@
+@if (timezonesList.UtcOffset.Visible) { // timezonesList.UtcOffset.Visible (begin)
+        <th data-name="UtcOffset" class="@(timezonesList.UtcOffset.HeaderCellClass)"><div id="elh_Timezones_UtcOffset" class="Timezones_UtcOffset">@Html.Raw(timezonesList.RenderFieldHeader(timezonesList.UtcOffset))</div></th>
+} @* timezonesList.UtcOffset.Visible (end) *@
+@* Render list options (header, right) *@
+@timezonesList.ListOptions.RenderHeader("right")
+    </tr>
+</thead>
+<tbody data-page="@(timezonesList.PageNumber)">
+@{
+    await timezonesList.SetupGrid();
+    bool eof = timezonesList.Recordset == null; // DN
+}
+@while (timezonesList.RecordCount < timezonesList.StopRecord || SameString(timezonesList.RowIndex, "$rowindex$")) { // Begin While
+    if (!eof && !SameString(timezonesList.RowIndex, "$rowindex$") &&
+        (!timezonesList.IsGridAdd || timezonesList.CurrentMode == "copy") &&
+        (!((timezonesList.IsCopy || timezonesList.IsAdd) && timezonesList.RowIndex is int rowIndex && rowIndex == 0))) // DN
+        eof = !await timezonesList.Recordset.ReadAsync();
+    timezonesList.RecordCount++;
+    if (timezonesList.RecordCount >= timezonesList.StartRecord) {
+        await timezonesList.SetupRow();
+    <tr @Html.Raw(timezonesList.RowAttributes)>
+    @* Render list options (body, left) *@
+    @timezonesList.ListOptions.RenderBody("left", timezonesList.RowCount)
+    @if (timezonesList.TimezoneID.Visible) { // timezonesList.TimezoneID.Visible (begin)
+        <td data-name="TimezoneID" @Html.Raw(timezonesList.TimezoneID.CellAttributes)>
+<span id="el@(timezonesList.RowIndex == "$rowindex$" ? "$rowindex$" : timezonesList.RowCount)_Timezones_TimezoneID" class="el_Timezones_TimezoneID">
+<span @Html.Raw(timezonesList.TimezoneID.ViewAttributes)>
+@Html.Raw(timezonesList.TimezoneID.GetViewValue())</span>
+</span>
+</td>
+    } @* timezonesList.TimezoneID.Visible (end) *@
+    @if (timezonesList.TimezoneName.Visible) { // timezonesList.TimezoneName.Visible (begin)
+        <td data-name="TimezoneName" @Html.Raw(timezonesList.TimezoneName.CellAttributes)>
+<span id="el@(timezonesList.RowIndex == "$rowindex$" ? "$rowindex$" : timezonesList.RowCount)_Timezones_TimezoneName" class="el_Timezones_TimezoneName">
+<span @Html.Raw(timezonesList.TimezoneName.ViewAttributes)>
+@Html.Raw(timezonesList.TimezoneName.GetViewValue())</span>
+</span>
+</td>
+    } @* timezonesList.TimezoneName.Visible (end) *@
+    @if (timezonesList.UtcOffset.Visible) { // timezonesList.UtcOffset.Visible (begin)
+        <td data-name="UtcOffset" @Html.Raw(timezonesList.UtcOffset.CellAttributes)>
+<span id="el@(timezonesList.RowIndex == "$rowindex$" ? "$rowindex$" : timezonesList.RowCount)_Timezones_UtcOffset" class="el_Timezones_UtcOffset">
+<span @Html.Raw(timezonesList.UtcOffset.ViewAttributes)>
+@Html.Raw(timezonesList.UtcOffset.GetViewValue())</span>
+</span>
+</td>
+    } @* timezonesList.UtcOffset.Visible (end) *@
+    @* Render list options (body, right) *@
+    @timezonesList.ListOptions.RenderBody("right", timezonesList.RowCount)
+    </tr>
+    } @* End if *@
+
+    // Reset for template row
+    if (SameString(timezonesList.RowIndex, "$rowindex$"))
+        timezonesList.RowIndex = 0;
+
+    // Reset inline add/copy row
+    if ((timezonesList.IsCopy || timezonesList.IsAdd) && timezonesList.RowIndex is int rowIndex2 && rowIndex2 == 0)
+        timezonesList.RowIndex = 1;
+} @* End While *@
+</tbody>
+</table><!-- /.ew-table -->
+} @* End If TotalRecords > 0 *@
+</div><!-- /.ew-grid-middle-panel -->
+@if (Empty(timezonesList.CurrentAction) && !timezonesList.UseAjaxActions) {
+<input type="hidden" name="action" id="action" value="">
+}
+</form><!-- /.ew-list-form -->
+@{ timezonesList.CloseRecordset(); }
+@if (!timezonesList.IsExport()) {
+<div class="card-footer ew-grid-lower-panel">
+@if (!timezonesList.IsGridAdd && !(timezonesList.IsGridEdit && timezonesList.ModalGridEdit) && !timezonesList.IsMultiEdit) {
+@Html.Raw(timezonesList.Pager.Render())
+}
+<div class="ew-list-other-options">
+@timezonesList.OtherOptions.RenderBody("bottom")
+</div>
+</div>
+}
+</div><!-- /.ew-grid -->
+} else { // Show other options
+<div class="ew-list-other-options">
+@timezonesList.OtherOptions.ForEach(opt => opt.ButtonClass = "").RenderBody()
+</div>
+}
+</div>
+<div id="ew-footer-options">
+    @timezonesList.FooterOptions.RenderBody()
+</div>
+</main>
+@timezonesList.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+@if (!timezonesList.IsExport()) {
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Timezones");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>
+}

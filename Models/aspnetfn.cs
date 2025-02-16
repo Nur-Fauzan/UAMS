@@ -1,9 +1,9 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     // Static constructor
-    static project1()
+    static UAMS_20250216_1835()
     {
         // Override Dapper TypeMapProvider to use ColumnAttribute
         SqlMapper.TypeMapProvider = type => {
@@ -1412,7 +1412,7 @@ public partial class project1 {
             { "API_JWT_TOKEN", GetJwtToken() }, // API JWT token
             { "IMAGE_FOLDER", "wwwroot/images/" }, // Image folder
             { "SESSION_TIMEOUT", Config.SessionTimeout > 0 ? SessionTimeoutTime() : 0 }, // Session timeout time (seconds)
-            { "TIMEOUT_URL", AppPath("index") }, // Timeout URL // DN
+            { "TIMEOUT_URL", AppPath("logout") }, // Timeout URL // DN
             { "SERVER_SEARCH_FILTER", Config.SearchFilterOption == "Server" },
             { "CLIENT_SEARCH_FILTER", Config.SearchFilterOption == "Client" }
         };
@@ -1425,7 +1425,13 @@ public partial class project1 {
     /// <returns>Whether path is remote</returns>
     public static bool IsRemote([NotNullWhen(true)]string? path) => Regex.IsMatch(path ?? "", Config.RemoteFilePattern);
 
-    public static object? FindUserByUserName(string username) => null;
+    /// <summary>
+    /// Get an user entity by user name
+    /// </summary>
+    /// <param name="username">User name</param>
+    /// <returns>Current user entity</returns>
+    public static Entities._User? FindUserByUserName(string username) =>
+        ResolveTable<Entities._User>().First<Entities._User>(qb => qb.Where("Username", username));
 
     /// <summary>
     /// Get current user name
@@ -1445,7 +1451,23 @@ public partial class project1 {
     /// <returns>Current user primary Key</returns>
     public static object? CurrentUserPrimaryKey() => ResolveSecurity().CurrentUserPrimaryKey;
 
-    public static object? CurrentUser() => null;
+    /// <summary>
+    /// Get current user entity
+    /// </summary>
+    /// <returns>Current user entity</returns>
+    public static Entities._User? CurrentUser()
+    {
+        if (CurrentUserEntity is Entities._User user)
+            return user;
+        var pk = CurrentUserPrimaryKey();
+        if (pk != null) {
+            var entity = ResolveTable<Entities._User>().Find<Entities._User>(pk);
+            if (entity != null)
+                CurrentUserEntity = entity;
+            return entity;
+        }
+        return null;
+    }
 
     /// <summary>
     /// Get current user identifier (user ID or user name)
@@ -1503,6 +1525,21 @@ public partial class project1 {
     /// <returns>Field value</returns>
     public static object? CurrentUserInfo(string fldname)
     {
+        if (Security != null) {
+            return Security.CurrentUserInfo(fldname);
+        } else if (!Empty(Config.UserTable) && !IsSysAdmin() && UserTableConn != null) {
+            object? info = null;
+            string filter = GetUserFilter(Config.LoginUsernameFieldName, CurrentUserName());
+            if (!Empty(filter)) {
+                string sql = UserTable.GetSql(filter);
+                var row = UserTableConn.GetRow(sql);
+                if (row != null)
+                    info = GetUserInfo<object>(fldname, row);
+            }
+            if (info == null && IsAuthenticated())
+                info = User?.FindFirst(fldname)?.Value;
+            return info;
+        }
         return null;
     }
 
@@ -1517,6 +1554,11 @@ public partial class project1 {
         object? info = null;
         if (row != null && row.TryGetValue(fieldName, out object? value)) {
             info = value;
+            var fld = Resolve("usertable")?.Fields[fieldName];
+            if (fld?.IsEncrypted ?? false)
+                info = AesDecrypt(ConvertToString(info));
+            if (fieldName == Config.LoginPasswordFieldName && !Config.EncryptedPassword && !(fld?.Raw ?? false)) // Password is saved HTML-encoded
+                info = HtmlDecode(info);
         }
         return ChangeType<T>(info);
     }
@@ -1529,6 +1571,9 @@ public partial class project1 {
     /// <returns>Filter</returns>
     public static string GetUserFilter(string fieldName, object? val)
     {
+        var fld = UserTable.Fields[fieldName];
+        if (fld != null)
+            return "(" + QuotedName(fld.Name, Config.UserTableDbId) + " = " + QuotedValue(val, fld.DataType, Config.UserTableDbId) + ")";
         return "(0=1)"; // Show no records
     }
 
@@ -1621,10 +1666,11 @@ public partial class project1 {
 
         // Menu items // DN
         List<MenuItem> menuItems = [
-            new(1, "mi_Users", "UsersList", -1, true, false, false, "", "", false, true),
-            new(2, "mi_Appointments", "AppointmentsList", -1, true, false, false, "", "", false, true),
-            new(3, "mi_Participants", "ParticipantsList", -1, true, false, false, "", "", false, true),
-            new(4, "mi_RefreshTokens", "RefreshTokensList", -1, true, false, false, "", "", false, true),
+            new(2, "mi_Appointments", "AppointmentsList", -1, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Appointments", false, false, "", "", false, true),
+            new(3, "mi_Participants", "ParticipantsList", -1, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Participants", false, false, "", "", false, true),
+            new(9, "mci_User_Management", "", -1, true, false, true, "", "", false, true),
+            new(1, "mi_Users", "UsersList", 9, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}Users", false, false, "", "", false, true),
+            new(7, "mi_UserLevels", "UserLevelsList", 9, "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}UserLevels", false, false, "", "", false, true),
         ];
 
         // Navbar menu
@@ -1678,6 +1724,16 @@ public partial class project1 {
         LoginStatus["loginTitle"] = Language.Phrase("Login", true);
         LoginStatus["loginText"] = Language.Phrase("Login");
         LoginStatus["canLogin"] = !(bool)LoginStatus["canLogout"] && currentPage != loginPage && !Empty(loginPage) && !Empty(loginUrl) && !IsLoggedIn() && !IsLoggingIn2FA();
+        string personalDataPage = "personaldata";
+        string personalDataUrl = GetUrl(personalDataPage);
+        if (currentPage != personalDataPage)
+            LoginStatus["personalData"] = new Dictionary<string, object>() {
+                { "ew-action", "redirect" },
+                { "url", personalDataUrl }
+            };
+        LoginStatus["hasPersonalData"] = !Empty(personalDataPage) && IsLoggedIn() && !IsSysAdmin();
+        LoginStatus["personalDataUrl"] = personalDataUrl;
+        LoginStatus["personalDataText"] = Language.Phrase("PersonalDataBtn");
         LoginStatusEventHandler?.Invoke(LoginStatus, EventArgs.Empty);
     }
 
@@ -2066,6 +2122,18 @@ public partial class project1 {
     /// <param name="dbid">Database ID</param>
     /// <returns>DatabaseConnection instance</returns>
     public static async Task<dynamic> GetConnection2Async(string dbid = "DB") => await GetConnectionAsync(dbid, Config.SecondaryConnectionName); // DN
+
+    /// <summary>
+    /// Get user table object
+    /// </summary>
+    /// <returns>DatabaseConnection instance</returns>
+    public static Users UserTable => Resolve("usertable")!; // DN
+
+    /// <summary>
+    /// Get user table connection object
+    /// </summary>
+    /// <returns>DatabaseConnection instance</returns>
+    public static DatabaseConnection<SqlConnection, SqlDbType> UserTableConn => UserTable.Connection; // DN
 
     /// <summary>
     /// Get database connection info
@@ -2533,7 +2601,7 @@ public partial class project1 {
                 string wrkid = filter.ID.StartsWith("@@") ? filter.ID.Substring(2) : filter.ID;
                 if (!Empty(method))
                     //wrk = ConvertToString(Invoke(method, [exp, dbid]));
-                    wrk = ConvertToString(typeof(project1).GetMethod(method)?.Invoke(null, [exp, dbid]));
+                    wrk = ConvertToString(typeof(UAMS_20250216_1835).GetMethod(method)?.Invoke(null, [exp, dbid]));
                 break;
             }
         }
@@ -5088,7 +5156,7 @@ public partial class project1 {
     /// <param name="parameters">Parameters</param>
     /// <returns>Returned value of the method</returns>
     public static object? Invoke(string name, object?[]? parameters = null) =>
-        typeof(project1).GetMethod(name)?.Invoke(null, parameters);
+        typeof(UAMS_20250216_1835).GetMethod(name)?.Invoke(null, parameters);
 
     /// <summary>
     /// Get method
@@ -5124,7 +5192,7 @@ public partial class project1 {
     /// <param name="name">Property name</param>
     /// <returns>Property value</returns>
     public static object? GetPropertyValue(string name) =>
-        typeof(project1).GetProperty(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Instance)?.GetValue(null);
+        typeof(UAMS_20250216_1835).GetProperty(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Instance)?.GetValue(null);
 
     /// <summary>
     /// Get property value of an object
@@ -5772,6 +5840,20 @@ public partial class project1 {
     public static bool ValidApiRequest()
     {
         if (IsApi()) {
+            // Security
+            Security = ResolveSecurity();
+
+            // Login user if not anonymous user and not already logged in
+            if (!IsLoggedIn() && !Empty(ClaimValue(ClaimTypes.Name)))
+                Security.LoginUser(
+                    ClaimValue(ClaimTypes.Name),
+                    ClaimValue("UserId"),
+                    ClaimValue("ParentUserId"),
+                    ClaimValue("UserLevelId"),
+                    ClaimValue("UserPrimaryKey"),
+                    ConvertToInt(ClaimValue("Permission"))
+                );
+
             // Already authenticated by JwtBearerDefaults.AuthenticationScheme if IsApi(), see Program.cs
             return true;
         }

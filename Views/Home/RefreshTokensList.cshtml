@@ -87,7 +87,8 @@ loadjs.ready(["wrapper", "head"], function () {
 });
 </script>
 <input type="hidden" name="cmd" value="search">
-@if (!refreshTokensList.IsExport() && Empty(refreshTokensList.CurrentAction) && refreshTokensList.HasSearchFields()) { @* Show search form (begin) *@
+@if (Security.CanSearch) {
+if (!refreshTokensList.IsExport() && Empty(refreshTokensList.CurrentAction) && refreshTokensList.HasSearchFields()) { @* Show search form (begin) *@
 <div class="ew-extended-search container-fluid ps-2">
 <div class="row mb-0">
     <div class="col-sm-auto px-0 pe-sm-2">
@@ -111,6 +112,7 @@ loadjs.ready(["wrapper", "head"], function () {
 </div>
 </div><!-- /.ew-extended-search -->
 } @* Show search form (end) *@
+}
 </div><!-- /.ew-search-panel -->
 </form>
 }

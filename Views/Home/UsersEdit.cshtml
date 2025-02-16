@@ -31,11 +31,11 @@ loadjs.ready(["wrapper", "head"], function () {
         // Add fields
         .setFields([
 
-            ["Id", [fields.Id.visible && fields.Id.required ? ew.Validators.required(fields.Id.caption) : null], fields.Id.isInvalid],
             ["_Username", [fields._Username.visible && fields._Username.required ? ew.Validators.required(fields._Username.caption) : null], fields._Username.isInvalid],
             ["PasswordHash", [fields.PasswordHash.visible && fields.PasswordHash.required ? ew.Validators.required(fields.PasswordHash.caption) : null], fields.PasswordHash.isInvalid],
             ["_Name", [fields._Name.visible && fields._Name.required ? ew.Validators.required(fields._Name.caption) : null], fields._Name.isInvalid],
-            ["PreferredTimezone", [fields.PreferredTimezone.visible && fields.PreferredTimezone.required ? ew.Validators.required(fields.PreferredTimezone.caption) : null], fields.PreferredTimezone.isInvalid]
+            ["PreferredTimezoneID", [fields.PreferredTimezoneID.visible && fields.PreferredTimezoneID.required ? ew.Validators.required(fields.PreferredTimezoneID.caption) : null], fields.PreferredTimezoneID.isInvalid],
+            ["UserLevelID", [fields.UserLevelID.visible && fields.UserLevelID.required ? ew.Validators.required(fields.UserLevelID.caption) : null], fields.UserLevelID.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -51,6 +51,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "PreferredTimezoneID": @Html.Raw(usersEdit.PreferredTimezoneID.ToClientList(usersEdit)),
+            "UserLevelID": @Html.Raw(usersEdit.UserLevelID.ToClientList(usersEdit)),
         })
         .build();
     window[form.id] = form;
@@ -74,18 +76,6 @@ loadjs.ready("head", function() {
 }
 <input type="hidden" name="@(usersEdit.OldKeyName)" value="@Html.Raw(usersEdit.OldKey)">
 <div class="ew-edit-div"><!-- page* -->
-@if (usersEdit.Id.Visible) { // usersEdit.Id.Visible (begin)
-    <div id="r_Id" @Html.Raw(usersEdit.Id.RowAttributes)>
-        <label id="elh_Users_Id" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.Id.Caption)@Html.Raw(usersEdit.Id.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
-        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.Id.CellAttributes)>
-<span id="el_Users_Id">
-<span @Html.Raw(usersEdit.Id.ViewAttributes)>
-<input type="text" readonly class="form-control-plaintext" value="@Html.Raw(RemoveHtml(ConvertToString(usersEdit.Id.EditValue)))"></span>
-<input type="hidden" data-table="Users" data-field="x_Id" data-hidden="1" name="x_Id" id="x_Id" value="@Html.Raw(HtmlEncode(usersEdit.Id.CurrentValue))">
-</span>
-</div></div>
-    </div>
-} @* usersEdit.Id.Visible (end) *@
 @if (usersEdit._Username.Visible) { // usersEdit._Username.Visible (begin)
     <div id="r__Username" @Html.Raw(usersEdit._Username.RowAttributes)>
         <label id="elh_Users__Username" for="x__Username" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit._Username.Caption)@Html.Raw(usersEdit._Username.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
@@ -103,7 +93,10 @@ loadjs.ready("head", function() {
         <label id="elh_Users_PasswordHash" for="x_PasswordHash" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.PasswordHash.Caption)@Html.Raw(usersEdit.PasswordHash.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
         <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.PasswordHash.CellAttributes)>
 <span id="el_Users_PasswordHash">
-<input type="@(usersEdit.PasswordHash.InputTextType)" name="x_PasswordHash" id="x_PasswordHash" data-table="Users" data-field="x_PasswordHash" value="@Html.Raw(usersEdit.PasswordHash.EditValue)" size="30" maxlength="255" placeholder="@Html.Raw(HtmlEncode(usersEdit.PasswordHash.PlaceHolder))" data-format-pattern="@(usersEdit.PasswordHash.FormatPattern)"@Html.Raw(usersEdit.PasswordHash.EditAttributes) aria-describedby="x_PasswordHash_help">
+<div class="input-group">
+    <input type="password" name="x_PasswordHash" id="x_PasswordHash" autocomplete="new-password" data-field="x_PasswordHash" value="@(usersEdit.PasswordHash.EditValue)" size="30" maxlength="255" placeholder="@(HtmlEncode(usersEdit.PasswordHash.PlaceHolder))"@Html.Raw(usersEdit.PasswordHash.EditAttributes) aria-describedby="x_PasswordHash_help">
+    <button type="button" class="btn btn-default ew-toggle-password rounded-end" data-ew-action="password"><i class="fa-solid fa-eye"></i></button>
+</div>
 @Html.Raw(usersEdit.PasswordHash.GetCustomMessage)
 <div class="invalid-feedback">@Html.Raw(usersEdit.PasswordHash.GetErrorMessage())</div>
 </span>
@@ -122,19 +115,98 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 } @* usersEdit._Name.Visible (end) *@
-@if (usersEdit.PreferredTimezone.Visible) { // usersEdit.PreferredTimezone.Visible (begin)
-    <div id="r_PreferredTimezone" @Html.Raw(usersEdit.PreferredTimezone.RowAttributes)>
-        <label id="elh_Users_PreferredTimezone" for="x_PreferredTimezone" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.PreferredTimezone.Caption)@Html.Raw(usersEdit.PreferredTimezone.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
-        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.PreferredTimezone.CellAttributes)>
-<span id="el_Users_PreferredTimezone">
-<input type="@(usersEdit.PreferredTimezone.InputTextType)" name="x_PreferredTimezone" id="x_PreferredTimezone" data-table="Users" data-field="x_PreferredTimezone" value="@Html.Raw(usersEdit.PreferredTimezone.EditValue)" size="30" maxlength="50" placeholder="@Html.Raw(HtmlEncode(usersEdit.PreferredTimezone.PlaceHolder))" data-format-pattern="@(usersEdit.PreferredTimezone.FormatPattern)"@Html.Raw(usersEdit.PreferredTimezone.EditAttributes) aria-describedby="x_PreferredTimezone_help">
-@Html.Raw(usersEdit.PreferredTimezone.GetCustomMessage)
-<div class="invalid-feedback">@Html.Raw(usersEdit.PreferredTimezone.GetErrorMessage())</div>
+@if (usersEdit.PreferredTimezoneID.Visible) { // usersEdit.PreferredTimezoneID.Visible (begin)
+    <div id="r_PreferredTimezoneID" @Html.Raw(usersEdit.PreferredTimezoneID.RowAttributes)>
+        <label id="elh_Users_PreferredTimezoneID" for="x_PreferredTimezoneID" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.PreferredTimezoneID.Caption)@Html.Raw(usersEdit.PreferredTimezoneID.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.PreferredTimezoneID.CellAttributes)>
+<span id="el_Users_PreferredTimezoneID">
+    <select
+        id="x_PreferredTimezoneID"
+        name="x_PreferredTimezoneID"
+        class="form-select ew-select@(usersEdit.PreferredTimezoneID.IsInvalidClass)"
+        data-select2-id="fUsersedit_x_PreferredTimezoneID"
+        data-table="Users"
+        data-field="x_PreferredTimezoneID"
+        data-value-separator="@(usersEdit.PreferredTimezoneID.DisplayValueSeparatorAttribute)"
+        data-placeholder="@(HtmlEncode(usersEdit.PreferredTimezoneID.PlaceHolder))"
+        @Html.Raw(usersEdit.PreferredTimezoneID.EditAttributes)>
+        @(usersEdit.PreferredTimezoneID.SelectOptionListHtml("x_PreferredTimezoneID"))
+    </select>
+    @Html.Raw(usersEdit.PreferredTimezoneID.GetCustomMessage)
+    <div class="invalid-feedback">@Html.Raw(usersEdit.PreferredTimezoneID.GetErrorMessage())</div>
+@Html.Raw(usersEdit.PreferredTimezoneID.Lookup.GetParamTag(usersEdit, "p_x_PreferredTimezoneID"))
+<script>
+loadjs.ready("fUsersedit", function() {
+    var options = { name: "x_PreferredTimezoneID", selectId: "fUsersedit_x_PreferredTimezoneID" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fUsersedit.lists.PreferredTimezoneID?.lookupOptions.length) {
+        options.data = { id: "x_PreferredTimezoneID", form: "fUsersedit" };
+    } else {
+        options.ajax = { id: "x_PreferredTimezoneID", form: "fUsersedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.Users.fields.PreferredTimezoneID.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
-} @* usersEdit.PreferredTimezone.Visible (end) *@
+} @* usersEdit.PreferredTimezoneID.Visible (end) *@
+@if (usersEdit.UserLevelID.Visible) { // usersEdit.UserLevelID.Visible (begin)
+    <div id="r_UserLevelID" @Html.Raw(usersEdit.UserLevelID.RowAttributes)>
+        <label id="elh_Users_UserLevelID" for="x_UserLevelID" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.UserLevelID.Caption)@Html.Raw(usersEdit.UserLevelID.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.UserLevelID.CellAttributes)>
+@if (!Security.IsAdmin && Security.IsLoggedIn) { // Non system admin
+<span id="el_Users_UserLevelID">
+<span class="form-control-plaintext">@Html.Raw(usersEdit.UserLevelID.DisplayValue(usersEdit.UserLevelID.EditValue))</span>
+</span>
+} else {
+<span id="el_Users_UserLevelID">
+    <select
+        id="x_UserLevelID"
+        name="x_UserLevelID"
+        class="form-select ew-select@(usersEdit.UserLevelID.IsInvalidClass)"
+        data-select2-id="fUsersedit_x_UserLevelID"
+        data-table="Users"
+        data-field="x_UserLevelID"
+        data-value-separator="@(usersEdit.UserLevelID.DisplayValueSeparatorAttribute)"
+        data-placeholder="@(HtmlEncode(usersEdit.UserLevelID.PlaceHolder))"
+        @Html.Raw(usersEdit.UserLevelID.EditAttributes)>
+        @(usersEdit.UserLevelID.SelectOptionListHtml("x_UserLevelID"))
+    </select>
+    @Html.Raw(usersEdit.UserLevelID.GetCustomMessage)
+    <div class="invalid-feedback">@Html.Raw(usersEdit.UserLevelID.GetErrorMessage())</div>
+@Html.Raw(usersEdit.UserLevelID.Lookup.GetParamTag(usersEdit, "p_x_UserLevelID"))
+<script>
+loadjs.ready("fUsersedit", function() {
+    var options = { name: "x_UserLevelID", selectId: "fUsersedit_x_UserLevelID" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fUsersedit.lists.UserLevelID?.lookupOptions.length) {
+        options.data = { id: "x_UserLevelID", form: "fUsersedit" };
+    } else {
+        options.ajax = { id: "x_UserLevelID", form: "fUsersedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.Users.fields.UserLevelID.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+}
+</div></div>
+    </div>
+} @* usersEdit.UserLevelID.Visible (end) *@
 </div><!-- /page* -->
+    <input type="hidden" data-table="Users" data-field="x_Id" data-hidden="1" name="x_Id" id="x_Id" value="@Html.Raw(HtmlEncode(usersEdit.Id.CurrentValue))">
 @{ usersEdit.CloseRecordset(); }
 @Html.Raw(usersEdit.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
     <div class="@(usersEdit.OffsetColumnClass)"><!-- buttons offset -->

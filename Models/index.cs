@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// index
     /// </summary>
@@ -38,7 +38,7 @@ public partial class project1 {
         public string PageID = "index";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "index";
@@ -140,7 +140,7 @@ public partial class project1 {
         }
 
         // Page name
-        public string PageName => "RefreshTokensDelete";
+        public string PageName => "logout";
 
         // Page URL
         public string PageUrl
@@ -279,10 +279,34 @@ public partial class project1 {
             // Create token
             CreateToken();
             CurrentBreadcrumb = new();
-            return Terminate("UsersList"); // Exit and go to default page
+            if (!Security.IsLoggedIn)
+                await Security.AutoLoginAsync();
+            Security.LoadUserLevel(); // Load User Level
+            string url = "";
+            var tableList = Config.UserLevelTablePermissions;
+            for (var i = 0; i < tableList.Count; i++) {
+                if (tableList[i].TableName == "Users") {
+                    if (Security.AllowList(tableList[i].ProjectId + tableList[i].TableName)) {
+                        url = tableList[i].Url;
+                        break;
+                    }
+                } else if (url == "") {
+                    if (!Empty(tableList[i].Url) && Security.AllowList(tableList[i].ProjectId + tableList[i].TableName))
+                        url = tableList[i].Url;
+                }
+            }
+            if (!Empty(url)) {
+                return Terminate(url);
+            } else if (Security.IsLoggedIn) {
+                FailureMessage = DeniedMessage() + "<br><br><a href=\"" + AppPath("logout") + "\">" + Language.Phrase("BackToLogin") + "</a>";
+            } else {
+                return Terminate("login"); // Exit and go to login page
+            }
 
             // Set LoginStatus, Page Rendering and Page Render
             if (!IsApi() && !IsTerminated) {
+                SetupLoginStatus(); // Setup login status
+
                 // Pass login status to client side
                 SetClientVar("login", LoginStatus);
             }

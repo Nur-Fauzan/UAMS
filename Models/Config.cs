@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     // Configuration
     public static partial class Config
     {
@@ -72,23 +72,23 @@ public partial class project1 {
         // Project
         public const string ProjectNamespace = "ASPNETMaker2024";
 
-        public const string ProjectClassName = "ASPNETMaker2024.Models.project1"; // DN
+        public const string ProjectClassName = "ASPNETMaker2024.Models.UAMS_20250216_1835"; // DN
 
         public static string PathDelimiter = ConvertToString(Path.DirectorySeparatorChar); // Physical path delimiter // DN
 
         public static short UnformatYear = 50; // Unformat year
 
-        public const string ProjectName = "project1"; // Project name
+        public const string ProjectName = "UAMS_20250216_1835"; // Project name
 
         public static string ControllerName { get; set; } = "Home"; // Controller name // DN
 
-        public const string ProjectId = "{B73364AA-7E30-4718-8997-141A815ECA58}"; // Project ID (GUID)
+        public const string ProjectId = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}"; // Project ID (GUID)
 
-        public static string RandomKey = "95zH60scrb660GSq"; // Random key for encryption // DN
+        public static string RandomKey = "tQcRmCQzli3Y6lzc"; // Random key for encryption // DN
 
         public static string EncryptionKey = ""; // Encryption key for data protection
 
-        public static string ProjectStylesheetFilename = "css/project1.css"; // Project stylesheet file name (relative to wwwroot)
+        public static string ProjectStylesheetFilename = "css/UAMS_20250216_1835.css"; // Project stylesheet file name (relative to wwwroot)
 
         public static bool UseCompressedStylesheet = true; // Compressed stylesheet
 
@@ -159,9 +159,9 @@ public partial class project1 {
         // case-insensitive password, convert the clear text passwords to lower case
         // first before calculating hash. Otherwise, existing users will not be able
         // to login. Hashed password is irreversible, it will be reset during password recovery.
-        public static bool EncryptedPassword { get; set; } = false; // Encrypted password
+        public static bool EncryptedPassword { get; set; } = true; // Encrypted password
 
-        public static bool CaseSensitivePassword { get; set; } = false; // Case Sensitive password
+        public static bool CaseSensitivePassword { get; set; } = true; // Case Sensitive password
 
         public static Encoding Md5Encoding { get; set; } = Encoding.Unicode; // Encoding for computing MD5 hash // DN
 
@@ -400,7 +400,7 @@ public partial class project1 {
         public static string AuditTrailFieldNameNewvalue = ""; // New Value field name
 
         // Export Log
-        public static string ExportPath = "export-b73364aa-7e30-4718-8997-141a815eca58"; // Export folder
+        public static string ExportPath = "export-ee5ecaba-974c-4bd5-866a-c63f74cceed2"; // Export folder
 
         public static string ExportLogDbId = "DB"; // DB ID
 
@@ -470,9 +470,9 @@ public partial class project1 {
 
         public static bool EncryptUserNameAndPassword = false; // Encrypt user name / password
 
-        public static string AdminUserName = ""; // Administrator user name
+        public static string AdminUserName = "admin"; // Administrator user name
 
-        public static string AdminPassword = ""; // Administrator password
+        public static string AdminPassword = "Admin123"; // Administrator password
 
         public static bool UseCustomLogin { get; set; } = true; // Use custom login (Windows/LDAP/User_CustomValidate)
 
@@ -494,23 +494,59 @@ public partial class project1 {
 
         public static string SamlAuthenticationType = "Federation"; // DN
 
+        // User Level table/field
+        public static string UserLevelDbId = "DB"; // Database ID
+
+        public static string UserLevelTableName = "UserLevels"; // User level (table name)
+
+        public static string UserLevelIdFieldName = "UserLevelID"; // Id (field name)
+
+        public static string UserLevelNameFieldName = "UserLevelName"; // Name (field name)
+
+        public static string UserLevelTable = "dbo.UserLevels"; // For SQL
+
+        public static string UserLevelIdField = "UserLevelID"; // For SQL
+
+        public static string UserLevelNameField = "UserLevelName"; // For SQL
+
+        // User Level Permissions table/field
+        public static string UserLevelPrivDbId = "DB"; // Database ID
+
+        public static string UserLevelPrivTableName = "UserLevelPermissions"; // User level permissions (table name)
+
+        public static string UserLevelPrivTableNameFieldName = "TableName"; // Table name (field name)
+
+        public static string UserLevelPrivUserLevelIdFieldName = "UserLevelID"; // User level ID (field name)
+
+        public static string UserLevelPrivPrivFieldName = "Permission"; // Priv (field name)
+
+        public static string UserLevelPrivTable = "dbo.UserLevelPermissions"; // For SQL
+
+        public static string UserLevelPrivTableNameField = "TableName"; // For SQL
+
+        public static string UserLevelPrivUserLevelIdField = "UserLevelID"; // For SQL
+
+        public static string UserLevelPrivPrivField = "Permission"; // For SQL
+
+        public static int UserLevelPrivTableNameFieldSize = 255;
+
         // User ID
         public static int DefaultUserIdAllowSecurity = 360;
 
         // User table/field names
-        public static string UserTableName = "";
+        public static string UserTableName = "Users";
 
-        public static string UserPrimaryKeyFieldName = "";
+        public static string UserPrimaryKeyFieldName = "Id";
 
-        public static string LoginUsernameFieldName = "";
+        public static string LoginUsernameFieldName = "Username";
 
-        public static string LoginPasswordFieldName = "";
+        public static string LoginPasswordFieldName = "PasswordHash";
 
-        public static string UserIdFieldName = "";
+        public static string UserIdFieldName = "Id";
 
         public static string ParentUserIdFieldName = "";
 
-        public static string UserLevelFieldName = "";
+        public static string UserLevelFieldName = "UserLevelID";
 
         public static string UserProfileFieldName = "";
 
@@ -531,6 +567,19 @@ public partial class project1 {
         public static int UserImageSize = 40;
 
         public static bool UserImageCrop = true;
+
+        // User table filters
+        public static string UserTableDbId = "DB";
+
+        public static string UserTable = "dbo.Users";
+
+        public static string UserNameFilter = "([Username] = '%u')";
+
+        public static string UserIdFilter = "([Id] = %u)";
+
+        public static string UserEmailFilter = "";
+
+        public static string UserActivateFilter = "";
 
         public static string SearchFilterOption = "Client";
 
@@ -918,6 +967,10 @@ public partial class project1 {
             {"Appointments", typeof(Appointments)},
             {"Participants", typeof(Participants)},
             {"RefreshTokens", typeof(RefreshTokens)},
+            {"Timezones", typeof(Timezones)},
+            {"UserLevels", typeof(UserLevels)},
+            {"UserLevelPermissions", typeof(UserLevelPermissions)},
+            {"usertable", typeof(Users)},
         };
 
         // Database IDs // DN
@@ -927,6 +980,9 @@ public partial class project1 {
             {"Appointments", "DB"},
             {"Participants", "DB"},
             {"RefreshTokens", "DB"},
+            {"Timezones", "DB"},
+            {"UserLevels", "DB"},
+            {"UserLevelPermissions", "DB"},
         };
 
         // Secondary connection name // DN

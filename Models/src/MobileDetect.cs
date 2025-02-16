@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// Mobile Detect class
     /// Based on https://github.com/serbanghita/Mobile-Detect

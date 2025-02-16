@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// appointmentsAdd
     /// </summary>
@@ -36,7 +36,7 @@ public partial class project1 {
         public string PageID = "add";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "appointmentsAdd";
@@ -647,6 +647,8 @@ public partial class project1 {
 
             // Set LoginStatus, Page Rendering and Page Render
             if (!IsApi() && !IsTerminated) {
+                SetupLoginStatus(); // Setup login status
+
                 // Pass login status to client side
                 SetClientVar("login", LoginStatus);
 

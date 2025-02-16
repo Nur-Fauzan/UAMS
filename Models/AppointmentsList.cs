@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// appointmentsList
     /// </summary>
@@ -36,7 +36,7 @@ public partial class project1 {
         public string PageID = "list";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "appointmentsList";
@@ -858,6 +858,8 @@ public partial class project1 {
             }
 
             // Build filter
+            if (!Security.CanList)
+                Filter = "(0=1)"; // Filter all records
             AddFilter(ref Filter, DbDetailFilter);
             AddFilter(ref Filter, SearchWhere);
 
@@ -918,6 +920,8 @@ public partial class project1 {
 
                 // Set no record found message
                 if ((Empty(CurrentAction) || IsSearch) && TotalRecords == 0) {
+                    if (!Security.CanList)
+                        WarningMessage = DeniedMessage();
                     if (SearchWhere == "0=101")
                         WarningMessage = Language.Phrase("EnterSearchCriteria");
                     else
@@ -964,6 +968,8 @@ public partial class project1 {
 
             // Set LoginStatus, Page Rendering and Page Render
             if (!IsApi() && !IsTerminated) {
+                SetupLoginStatus(); // Setup login status
+
                 // Pass login status to client side
                 SetClientVar("login", LoginStatus);
 
@@ -1173,6 +1179,8 @@ public partial class project1 {
         // Return basic search WHERE clause based on search keyword and type
         public string BasicSearchWhere(bool def = false) {
             string searchStr = "";
+            if (!Security.CanSearch)
+                return "";
 
             // Fields to search
             List<DbField> searchFlds = [];
@@ -1309,25 +1317,25 @@ public partial class project1 {
             // "view"
             item = ListOptions.Add("view");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanView;
             item.OnLeft = false;
 
             // "edit"
             item = ListOptions.Add("edit");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanEdit;
             item.OnLeft = false;
 
             // "copy"
             item = ListOptions.Add("copy");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanAdd;
             item.OnLeft = false;
 
             // "delete"
             item = ListOptions.Add("delete");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanDelete;
             item.OnLeft = false;
 
             // List actions
@@ -1391,7 +1399,7 @@ public partial class project1 {
             // "view"
             listOption = ListOptions["view"];
             string viewcaption = Language.Phrase("ViewLink", true);
-            isVisible = true;
+            isVisible = Security.CanView;
             if (isVisible) {
                 if (ModalView && !IsMobile())
                     listOption?.SetBody($@"<a class=""ew-row-link ew-view"" title=""{viewcaption}"" data-table=""Appointments"" data-caption=""{viewcaption}"" data-ew-action=""modal"" data-action=""view"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(ViewUrl)) + "\" data-btn=\"null\">" + Language.Phrase("ViewLink") + "</a>");
@@ -1404,7 +1412,7 @@ public partial class project1 {
             // "edit"
             listOption = ListOptions["edit"];
             string editcaption = Language.Phrase("EditLink", true);
-            isVisible = true;
+            isVisible = Security.CanEdit;
             if (isVisible) {
                 if (ModalEdit && !IsMobile())
                     listOption?.SetBody($@"<a class=""ew-row-link ew-edit"" title=""{editcaption}"" data-table=""Appointments"" data-caption=""{editcaption}"" data-ew-action=""modal"" data-action=""edit"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(EditUrl)) + "\" data-btn=\"SaveBtn\">" + Language.Phrase("EditLink") + "</a>");
@@ -1417,7 +1425,7 @@ public partial class project1 {
             // "copy"
             listOption = ListOptions["copy"];
             string copycaption = Language.Phrase("CopyLink", true);
-            isVisible = true;
+            isVisible = Security.CanAdd;
             if (isVisible) {
                 if (ModalAdd && !IsMobile())
                     listOption?.SetBody($@"<a class=""ew-row-link ew-copy"" title=""{copycaption}"" data-table=""Appointments"" data-caption=""{copycaption}"" data-ew-action=""modal"" data-action=""add"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(CopyUrl)) + "\" data-btn=\"AddBtn\">" + Language.Phrase("CopyLink") + "</a>");
@@ -1429,7 +1437,7 @@ public partial class project1 {
 
             // "delete"
             listOption = ListOptions["delete"];
-            isVisible = true;
+            isVisible = Security.CanDelete;
             if (isVisible) {
                 string deleteCaption = Language.Phrase("DeleteLink");
                 string deleteTitle = Language.Phrase("DeleteLink", true);
@@ -1507,7 +1515,7 @@ public partial class project1 {
                 item.Body = $@"<a class=""ew-add-edit ew-add"" title=""{addTitle}"" data-table=""Appointments"" data-caption=""{addTitle}"" data-ew-action=""modal"" data-action=""add"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(AddUrl)) + "\" data-btn=\"AddBtn\">" + Language.Phrase("AddLink") + "</a>";
             else
                 item.Body = $@"<a class=""ew-add-edit ew-add"" title=""{addTitle}"" data-caption=""{addTitle}"" href=""" + HtmlEncode(AppPath(AddUrl)) + "\">" + Language.Phrase("AddLink") + "</a>";
-            item.Visible = AddUrl != "";
+            item.Visible = AddUrl != "" && Security.CanAdd;
             option = options["action"];
 
             // Show column list for column visibility
@@ -2062,6 +2070,10 @@ public partial class project1 {
             // Hide search options
             if (IsExport() || !Empty(CurrentAction) && CurrentAction != "search")
                 SearchOptions.HideAllOptions();
+            if (!Security.CanSearch) {
+                SearchOptions.HideAllOptions();
+                FilterOptions.HideAllOptions();
+            }
         }
 
         // Check if any search fields

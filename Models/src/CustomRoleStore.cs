@@ -5,9 +5,15 @@ namespace ASPNETMaker2024.Models;
 /// </summary>
 public class CustomRoleStore : IRoleStore<ApplicationRole>
 {
+    private UAMS_20250216_1835.UserLevels _table;
+
+    private DatabaseConnection<SqlConnection, SqlDbType> _conn;
+
     // Constructor
     public CustomRoleStore()
     {
+        _table = Resolve(Config.UserLevelTableName) ?? throw new Exception($"Failed to resolve user table '{Config.UserLevelTableName}'");
+        _conn = GetConnection(Config.UserLevelDbId);
     }
 
     // CreateAsync
@@ -22,15 +28,31 @@ public class CustomRoleStore : IRoleStore<ApplicationRole>
     public void Dispose() {}
 
     // FindByIdAsync
-    public Task<ApplicationRole?> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+    public async Task<ApplicationRole?> FindByIdAsync(string roleId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (Empty(roleId))
+            throw new ArgumentNullException(nameof(roleId));
+        string sql = _table.GetSql(Config.UserLevelIdField + " = "+ AdjustSql(roleId, Config.UserLevelDbId));
+        var role = await _conn.GetRowAsync(sql);
+        return new ApplicationRole {
+            Id = ConvertToString(role?[Config.UserLevelIdFieldName]),
+            Name = ConvertToString(role?[Config.UserLevelNameFieldName])
+        };
     }
 
     // FindByNameAsync
-    public Task<ApplicationRole?> FindByNameAsync(string roleName, CancellationToken cancellationToken)
+    public async Task<ApplicationRole?> FindByNameAsync(string roleName, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (Empty(roleName))
+            throw new ArgumentNullException(nameof(roleName));
+        string sql = _table.GetSql(Config.UserLevelNameField + " = "+ AdjustSql(roleName, Config.UserLevelDbId));
+        var role = await _conn.GetRowAsync(sql);
+        return new ApplicationRole {
+            Id = ConvertToString(role?[Config.UserLevelIdFieldName]),
+            Name = ConvertToString(role?[Config.UserLevelNameFieldName])
+        };
     }
 
     // GetNormalizedRoleNameAsync
@@ -40,13 +62,19 @@ public class CustomRoleStore : IRoleStore<ApplicationRole>
     // GetRoleIdAsync
     public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (role == null)
+            throw new ArgumentNullException(nameof(role));
+        return Task.FromResult(role.Id);
     }
 
     // GetRoleNameAsync
     public Task<string?> GetRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+        if (role == null)
+            throw new ArgumentNullException(nameof(role));
+        return Task.FromResult<string?>(role.Name);
     }
 
     // SetNormalizedRoleNameAsync

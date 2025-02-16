@@ -15,6 +15,7 @@ public abstract class ApiController : Controller
 /// <example>
 /// api/list/cars
 /// </example>
+[Authorize(Policy = "ApiUserLevel")]
 public class ListController : ApiController
 {
     [HttpGet("{table}")]
@@ -35,6 +36,7 @@ public class ListController : ApiController
 /// <example>
 /// api/view/cars/1/...
 /// </example>
+[Authorize(Policy = "ApiUserLevel")]
 public class ViewController : ApiController
 {
     [HttpGet("{table}/{**key}")]
@@ -55,6 +57,7 @@ public class ViewController : ApiController
 /// <example>
 /// api/add
 /// </example>
+[Authorize(Policy = "ApiUserLevel")]
 public class AddController : ApiController
 {
     [HttpPost("{table}")]
@@ -75,6 +78,7 @@ public class AddController : ApiController
 /// <example>
 /// api/edit/cars/1/...
 /// </example>
+[Authorize(Policy = "ApiUserLevel")]
 public class EditController : ApiController
 {
     [HttpPost("{table}/{**key}")]
@@ -95,6 +99,7 @@ public class EditController : ApiController
 /// <example>
 /// api/delete/cars/1/...
 /// </example>
+[Authorize(Policy = "ApiUserLevel")]
 public class DeleteController : ApiController
 {
     [HttpGet("{table}/{**key}")]
@@ -116,6 +121,7 @@ public class DeleteController : ApiController
 /// <example>
 /// api/export/cars
 /// </example>
+[Authorize(Policy = "ApiUserLevelLite")]
 public class ExportController : ApiController
 {
     /// <summary>
@@ -220,6 +226,7 @@ public class FileController : ApiController
     /// <param name="field">Field name</param>
     /// <param name="key">Primary key</param>
     /// <returns>File result</returns>
+    [Authorize(Policy = "UserLevel")]
     [HttpGet("{table}/{field}/{**key}")]
     public async Task<IActionResult> GetFile([FromRoute] string table, [FromRoute] string field, [FromRoute] string key)
     {
@@ -233,6 +240,7 @@ public class FileController : ApiController
     /// <param name="table">Table name</param>
     /// <param name="fn">File path</param>
     /// <returns>File result</returns>
+    [Authorize(Policy = "UserLevel")]
     [HttpGet("{table}/{fn}")]
     public async Task<IActionResult> GetFile([FromRoute] string table, [FromRoute] string fn)
     {
@@ -260,6 +268,7 @@ public class FileController : ApiController
 /// <example>
 /// api/upload
 /// </example>
+[Authorize(Policy = "ApiUserLevel")]
 public class UploadController : ApiController
 {
     [HttpPost]
@@ -274,6 +283,7 @@ public class UploadController : ApiController
 /// api/jupload
 /// </example>
 [AutoValidateAntiforgeryToken]
+[Authorize(Policy = "UserLevel")]
 [ApiExplorerSettings(IgnoreApi = true)]
 public class JUploadController : ApiController
 {
@@ -294,6 +304,7 @@ public class JUploadController : ApiController
 /// api/session
 /// </example>
 [AutoValidateAntiforgeryToken]
+[Authorize(Policy = "UserLevel")]
 [ApiExplorerSettings(IgnoreApi = true)]
 public class SessionController : ApiController
 {
@@ -311,6 +322,7 @@ public class SessionController : ApiController
 /// <example>
 /// api/lookup
 /// </example>
+[Authorize(Policy = "UserLevel")]
 [ApiExplorerSettings(IgnoreApi = true)]
 public class LookupController : ApiController
 {
@@ -333,7 +345,10 @@ public class LookupController : ApiController
                 dynamic? obj = Resolve(page); // Get object
                 dynamic? tbl = obj?.FieldByName(fieldName)?.Lookup?.GetTable(); // Get table
                 if (tbl != null) {
-                    object res = await obj?.Lookup(req) ?? new { success = false, error = Language.Phrase("FailedToCreate"), version = Config.ProductVersion };
+                    Security.LoadTablePermissions(tbl.TableVar);
+                    object res = Security.CanLookup
+                        ? await obj?.Lookup(req) ?? new { success = false, error = Language.Phrase("FailedToCreate"), version = Config.ProductVersion }
+                        : new { success = false, error = "401 " + Language.Phrase("401"), version = Config.ProductVersion };
                     responses.Add(res);
                 }
             }
@@ -349,6 +364,7 @@ public class LookupController : ApiController
 /// api/chart
 /// </example>
 [AutoValidateAntiforgeryToken]
+[Authorize(Policy = "UserLevel")]
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ChartController : ApiController
 {
@@ -357,5 +373,105 @@ public class ChartController : ApiController
     {
         var exporter = new ChartExporter(this);
         return await exporter.Export();
+    }
+}
+
+/// <summary>
+/// Permissions
+/// </summary>
+/// <example>
+/// api/permissions/{userlevel}
+/// </example>
+[Authorize(Policy = "ApiUserLevel")]
+public class PermissionsController : ApiController
+{
+    [AllowAnonymous]
+    [HttpGet("{userlevel?}")]
+    public IActionResult Get([FromRoute] string userlevel)
+    {
+        if (!ValidApiRequest())
+            return new EmptyResult();
+        Security.SetupUserLevel();
+
+        // Check user level
+        int userLevel = -2; // Default anonymous
+        List<int> userLevels = [];
+        userLevels.Add(userLevel);
+        if (Security.IsLoggedIn) {
+            if (Security.IsSysAdmin && IsNumeric(userlevel) && userlevel != "-1") { // Get permissions for user level
+                if (Security.UserLevelIDExists(ConvertToInt(userlevel))) { // Make sure user level exists
+                    userLevel = ConvertToInt(userlevel);
+                    userLevels.Clear();
+                    userLevels.Add(userLevel);
+                }
+            } else { // Get current user permissions
+                userLevel = ConvertToInt(Security.CurrentUserLevelID);
+                userLevels = Security.UserLevelID;
+            }
+        }
+        Dictionary<string, int> privs = new();
+        var wrkTable = Config.UserLevelTablePermissions;
+        foreach (var table in wrkTable) {
+            if (table.Allowed) {
+                int priv = 0;
+                foreach (int lvl in userLevels)
+                    priv |= Security.GetUserLevelPriv(table.ProjectId + table.TableName, lvl);
+                privs.Add(table.TableVar, priv);
+            }
+        }
+        return Json(new { userlevel = userLevel, permissions = privs });
+    }
+
+    // Post with route
+    [HttpPost("{userlevel}")]
+    public async Task<IActionResult> PostWithRoute([FromRoute] string userlevel, [FromBody] Dictionary<string, int> permissions)
+    {
+        if (!ValidApiRequest())
+            return new EmptyResult();
+        await Security.SetupUserLevels();
+
+        // Check if admin
+        if (!Security.IsSysAdmin)
+            return new EmptyResult();
+
+        // Check user level
+        int userLevel;
+        if (IsNumeric(userlevel) && userlevel != "-1") { // Set permissions for user level
+            userLevel = ConvertToInt(userlevel);
+        } else {
+            return new EmptyResult();
+        }
+        Dictionary<string, int> privs = new();
+        Dictionary<string, int> privsOut = new();
+        var wrkTable = Config.UserLevelTablePermissions;
+        foreach (var table in wrkTable) {
+            if (table.Allowed && permissions.ContainsKey(table.TableVar)) {
+                int priv = permissions[table.TableVar];
+                privs.Add(table.ProjectId + table.TableName, priv);
+                privsOut.Add(table.TableName, priv);
+            }
+        }
+        var mi = Security.GetType().GetMethod("UpdatePermissions", BindingFlags.Public | BindingFlags.Instance);
+        if (mi?.Invoke(Security, [userLevel, privs]) is Task<bool> res)
+            await res; // Update Permissions
+        return Json(new { success = true, userlevel = userLevel, permissions = privsOut });
+    }
+}
+
+/// <summary>
+/// Enable/Disable Chat
+/// </summary>
+[Authorize(Policy = "UserLevel")]
+[ApiExplorerSettings(IgnoreApi = true)]
+public class ChatController : ApiController
+{
+    [HttpGet("{enabled}")]
+    public async Task<IActionResult> Get([FromRoute] string enabled)
+    {
+        if (!IsSysAdmin()) {
+            if (await ResolveProfile().SetUserName(CurrentUserName()).SetChatEnabled(ConvertToBool(enabled)).SaveToStorageAsync())
+                return Json(new { success = true });
+        }
+        return Json(new { success = false });
     }
 }

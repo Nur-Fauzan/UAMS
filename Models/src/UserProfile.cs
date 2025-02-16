@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
 
     #pragma warning disable 169
     /// <summary>
@@ -302,6 +302,24 @@ public partial class project1 {
             // Load from database
             if (Empty(GetUserName())) // Empty user name
                 return false;
+            string filter = GetUserFilter(Config.LoginUsernameFieldName, GetUserName());
+            // Get SQL from GetSql method in <UserTable> class
+            string sql = UserTable.GetSql(filter); // DN
+            try {
+                var row = await UserTableConn.GetRowAsync(sql);
+                if (row != null && !Empty(Config.UserProfileFieldName)) {
+                    Clear();
+                    string p = HtmlDecode(ConvertToString(row[Config.UserProfileFieldName]));
+                    LoadProfile(p);
+                    return true;
+                } else { // No database user
+                    LoadFromSession();
+                    return true;
+                }
+            } catch {
+                if (Config.Debug)
+                    throw;
+            }
             return false;
         }
         #pragma warning restore 1998
@@ -328,6 +346,14 @@ public partial class project1 {
             // Save to database
             if (Empty(GetUserName())) // Empty user name
                 return false;
+            int ret = 0;
+            if (!Empty(Config.UserProfileFieldName)) {
+                var row = new Dictionary<string, object> { { Config.UserProfileFieldName, ProfileToString() } };
+                var filter = new Dictionary<string, object> { { Config.LoginUsernameFieldName, GetUserName() } };
+                ret = await UserTable.UpdateAsync(row, filter);
+            }
+            if (ret <= 0) // No database user
+                SaveToSession();
             return true;
         }
         #pragma warning restore 1998
@@ -867,6 +893,19 @@ public partial class project1 {
                         if (!SameText(Config.TwoFactorAuthenticationType, "google"))
                             SetOtpVerifyDateTime(DbCurrentDateTime()); // Set OTP verify date time
                         await SaveToStorageAsync();
+
+                        // Update email address / mobile number if not verified
+                        string account = GetOtpAccount();
+                        if (!Empty(account) && !Empty(GetUserName()) && !IsSystemAdmin()) {
+                            string filter = GetUserFilter(Config.LoginUsernameFieldName, GetUserName());
+                            if (SameText(Config.TwoFactorAuthenticationType, "email")) {
+                                var row = new Dictionary<string, object> { { Config.UserEmailFieldName, account } };
+                                await UserTable.UpdateAsync(row, filter);
+                            } else if (SameText(Config.TwoFactorAuthenticationType, "sms")) {
+                                var row = new Dictionary<string, object> { { Config.UserPhoneFieldName, account } };
+                                await UserTable.UpdateAsync(row, filter);
+                            }
+                        }
                     }
                     return valid;
                 }

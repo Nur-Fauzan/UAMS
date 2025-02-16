@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// usersList
     /// </summary>
@@ -36,7 +36,7 @@ public partial class project1 {
         public string PageID = "list";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "usersList";
@@ -267,11 +267,12 @@ public partial class project1 {
         // Set field visibility
         public void SetVisibility()
         {
-            Id.SetVisibility();
+            Id.Visible = false;
             _Username.SetVisibility();
             PasswordHash.SetVisibility();
             _Name.SetVisibility();
-            PreferredTimezone.SetVisibility();
+            PreferredTimezoneID.SetVisibility();
+            UserLevelID.SetVisibility();
         }
 
         // Constructor
@@ -732,6 +733,10 @@ public partial class project1 {
             // Setup other options
             SetupOtherOptions();
 
+            // Set up lookup cache
+            await SetupLookupOptions(PreferredTimezoneID);
+            await SetupLookupOptions(UserLevelID);
+
             // Update form name to avoid conflict
             if (IsModal)
                 FormName = "fUsersgrid";
@@ -856,6 +861,8 @@ public partial class project1 {
             }
 
             // Build filter
+            if (!Security.CanList)
+                Filter = "(0=1)"; // Filter all records
             AddFilter(ref Filter, DbDetailFilter);
             AddFilter(ref Filter, SearchWhere);
 
@@ -916,6 +923,8 @@ public partial class project1 {
 
                 // Set no record found message
                 if ((Empty(CurrentAction) || IsSearch) && TotalRecords == 0) {
+                    if (!Security.CanList)
+                        WarningMessage = DeniedMessage();
                     if (SearchWhere == "0=101")
                         WarningMessage = Language.Phrase("EnterSearchCriteria");
                     else
@@ -962,6 +971,8 @@ public partial class project1 {
 
             // Set LoginStatus, Page Rendering and Page Render
             if (!IsApi() && !IsTerminated) {
+                SetupLoginStatus(); // Setup login status
+
                 // Pass login status to client side
                 SetClientVar("login", LoginStatus);
 
@@ -1038,11 +1049,11 @@ public partial class project1 {
 
             // Initialize
             var filters = new JObject(); // DN
-            filters.Merge(JObject.Parse(Id.AdvancedSearch.ToJson())); // Field Id
             filters.Merge(JObject.Parse(_Username.AdvancedSearch.ToJson())); // Field Username
             filters.Merge(JObject.Parse(PasswordHash.AdvancedSearch.ToJson())); // Field PasswordHash
             filters.Merge(JObject.Parse(_Name.AdvancedSearch.ToJson())); // Field Name
-            filters.Merge(JObject.Parse(PreferredTimezone.AdvancedSearch.ToJson())); // Field PreferredTimezone
+            filters.Merge(JObject.Parse(PreferredTimezoneID.AdvancedSearch.ToJson())); // Field PreferredTimezoneID
+            filters.Merge(JObject.Parse(UserLevelID.AdvancedSearch.ToJson())); // Field UserLevelID
             filters.Merge(JObject.Parse(BasicSearch.ToJson()));
 
             // Return filter list in JSON
@@ -1068,16 +1079,6 @@ public partial class project1 {
             var filter = JsonConvert.DeserializeObject<Dictionary<string, string>>(Post("filter"));
             Command = "search";
             string? sv;
-
-            // Field Id
-            if (filter?.TryGetValue("x_Id", out sv) ?? false) {
-                Id.AdvancedSearch.SearchValue = sv;
-                Id.AdvancedSearch.SearchOperator = filter["z_Id"];
-                Id.AdvancedSearch.SearchCondition = filter["v_Id"];
-                Id.AdvancedSearch.SearchValue2 = filter["y_Id"];
-                Id.AdvancedSearch.SearchOperator2 = filter["w_Id"];
-                Id.AdvancedSearch.Save();
-            }
 
             // Field Username
             if (filter?.TryGetValue("x__Username", out sv) ?? false) {
@@ -1109,14 +1110,24 @@ public partial class project1 {
                 _Name.AdvancedSearch.Save();
             }
 
-            // Field PreferredTimezone
-            if (filter?.TryGetValue("x_PreferredTimezone", out sv) ?? false) {
-                PreferredTimezone.AdvancedSearch.SearchValue = sv;
-                PreferredTimezone.AdvancedSearch.SearchOperator = filter["z_PreferredTimezone"];
-                PreferredTimezone.AdvancedSearch.SearchCondition = filter["v_PreferredTimezone"];
-                PreferredTimezone.AdvancedSearch.SearchValue2 = filter["y_PreferredTimezone"];
-                PreferredTimezone.AdvancedSearch.SearchOperator2 = filter["w_PreferredTimezone"];
-                PreferredTimezone.AdvancedSearch.Save();
+            // Field PreferredTimezoneID
+            if (filter?.TryGetValue("x_PreferredTimezoneID", out sv) ?? false) {
+                PreferredTimezoneID.AdvancedSearch.SearchValue = sv;
+                PreferredTimezoneID.AdvancedSearch.SearchOperator = filter["z_PreferredTimezoneID"];
+                PreferredTimezoneID.AdvancedSearch.SearchCondition = filter["v_PreferredTimezoneID"];
+                PreferredTimezoneID.AdvancedSearch.SearchValue2 = filter["y_PreferredTimezoneID"];
+                PreferredTimezoneID.AdvancedSearch.SearchOperator2 = filter["w_PreferredTimezoneID"];
+                PreferredTimezoneID.AdvancedSearch.Save();
+            }
+
+            // Field UserLevelID
+            if (filter?.TryGetValue("x_UserLevelID", out sv) ?? false) {
+                UserLevelID.AdvancedSearch.SearchValue = sv;
+                UserLevelID.AdvancedSearch.SearchOperator = filter["z_UserLevelID"];
+                UserLevelID.AdvancedSearch.SearchCondition = filter["v_UserLevelID"];
+                UserLevelID.AdvancedSearch.SearchValue2 = filter["y_UserLevelID"];
+                UserLevelID.AdvancedSearch.SearchOperator2 = filter["w_UserLevelID"];
+                UserLevelID.AdvancedSearch.Save();
             }
             if (filter?.TryGetValue(Config.TableBasicSearch, out string? keyword) ?? false)
                 BasicSearch.SessionKeyword = keyword;
@@ -1149,13 +1160,14 @@ public partial class project1 {
         // Return basic search WHERE clause based on search keyword and type
         public string BasicSearchWhere(bool def = false) {
             string searchStr = "";
+            if (!Security.CanSearch)
+                return "";
 
             // Fields to search
             List<DbField> searchFlds = [];
             searchFlds.Add(_Username);
             searchFlds.Add(PasswordHash);
             searchFlds.Add(_Name);
-            searchFlds.Add(PreferredTimezone);
             string searchKeyword = def ? BasicSearch.KeywordDefault : BasicSearch.Keyword;
             string searchType = def ? BasicSearch.TypeDefault : BasicSearch.Type;
 
@@ -1227,11 +1239,11 @@ public partial class project1 {
             if (Get("order", out StringValues sv)) {
                 CurrentOrder = sv.ToString();
                 CurrentOrderType = Get("ordertype");
-                UpdateSort(Id); // Id
                 UpdateSort(_Username); // Username
                 UpdateSort(PasswordHash); // PasswordHash
                 UpdateSort(_Name); // Name
-                UpdateSort(PreferredTimezone); // PreferredTimezone
+                UpdateSort(PreferredTimezoneID); // PreferredTimezoneID
+                UpdateSort(UserLevelID); // UserLevelID
                 StartRecordNumber = 1; // Reset start position
             }
 
@@ -1260,7 +1272,8 @@ public partial class project1 {
                     _Username.Sort = "";
                     PasswordHash.Sort = "";
                     _Name.Sort = "";
-                    PreferredTimezone.Sort = "";
+                    PreferredTimezoneID.Sort = "";
+                    UserLevelID.Sort = "";
                 }
 
                 // Reset start position
@@ -1283,25 +1296,25 @@ public partial class project1 {
             // "view"
             item = ListOptions.Add("view");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanView;
             item.OnLeft = false;
 
             // "edit"
             item = ListOptions.Add("edit");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanEdit;
             item.OnLeft = false;
 
             // "copy"
             item = ListOptions.Add("copy");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanAdd;
             item.OnLeft = false;
 
             // "delete"
             item = ListOptions.Add("delete");
             item.CssClass = "text-nowrap";
-            item.Visible = true;
+            item.Visible = Security.CanDelete;
             item.OnLeft = false;
 
             // List actions
@@ -1365,7 +1378,7 @@ public partial class project1 {
             // "view"
             listOption = ListOptions["view"];
             string viewcaption = Language.Phrase("ViewLink", true);
-            isVisible = true;
+            isVisible = Security.CanView && ShowOptionLink("view");
             if (isVisible) {
                 if (ModalView && !IsMobile())
                     listOption?.SetBody($@"<a class=""ew-row-link ew-view"" title=""{viewcaption}"" data-table=""Users"" data-caption=""{viewcaption}"" data-ew-action=""modal"" data-action=""view"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(ViewUrl)) + "\" data-btn=\"null\">" + Language.Phrase("ViewLink") + "</a>");
@@ -1378,7 +1391,7 @@ public partial class project1 {
             // "edit"
             listOption = ListOptions["edit"];
             string editcaption = Language.Phrase("EditLink", true);
-            isVisible = true;
+            isVisible = Security.CanEdit && ShowOptionLink("edit");
             if (isVisible) {
                 if (ModalEdit && !IsMobile())
                     listOption?.SetBody($@"<a class=""ew-row-link ew-edit"" title=""{editcaption}"" data-table=""Users"" data-caption=""{editcaption}"" data-ew-action=""modal"" data-action=""edit"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(EditUrl)) + "\" data-btn=\"SaveBtn\">" + Language.Phrase("EditLink") + "</a>");
@@ -1391,7 +1404,7 @@ public partial class project1 {
             // "copy"
             listOption = ListOptions["copy"];
             string copycaption = Language.Phrase("CopyLink", true);
-            isVisible = true;
+            isVisible = Security.CanAdd && ShowOptionLink("add");
             if (isVisible) {
                 if (ModalAdd && !IsMobile())
                     listOption?.SetBody($@"<a class=""ew-row-link ew-copy"" title=""{copycaption}"" data-table=""Users"" data-caption=""{copycaption}"" data-ew-action=""modal"" data-action=""add"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(CopyUrl)) + "\" data-btn=\"AddBtn\">" + Language.Phrase("CopyLink") + "</a>");
@@ -1403,7 +1416,7 @@ public partial class project1 {
 
             // "delete"
             listOption = ListOptions["delete"];
-            isVisible = true;
+            isVisible = Security.CanDelete && ShowOptionLink("delete");
             if (isVisible) {
                 string deleteCaption = Language.Phrase("DeleteLink");
                 string deleteTitle = Language.Phrase("DeleteLink", true);
@@ -1481,7 +1494,7 @@ public partial class project1 {
                 item.Body = $@"<a class=""ew-add-edit ew-add"" title=""{addTitle}"" data-table=""Users"" data-caption=""{addTitle}"" data-ew-action=""modal"" data-action=""add"" data-ajax=""" + (UseAjaxActions ? "true" : "false") + "\" data-url=\"" + HtmlEncode(AppPath(AddUrl)) + "\" data-btn=\"AddBtn\">" + Language.Phrase("AddLink") + "</a>";
             else
                 item.Body = $@"<a class=""ew-add-edit ew-add"" title=""{addTitle}"" data-caption=""{addTitle}"" href=""" + HtmlEncode(AppPath(AddUrl)) + "\">" + Language.Phrase("AddLink") + "</a>";
-            item.Visible = AddUrl != "";
+            item.Visible = AddUrl != "" && Security.CanAdd;
             option = options["action"];
 
             // Show column list for column visibility
@@ -1490,12 +1503,14 @@ public partial class project1 {
                 item = option.AddGroupOption();
                 item.Body = "";
                 item.Visible = UseColumnVisibility;
-                CreateColumnOption(option.Add("Id")); // DN
                 CreateColumnOption(option.Add("Username")); // DN
                 CreateColumnOption(option.Add("PasswordHash")); // DN
                 CreateColumnOption(option.Add("Name")); // DN
-                CreateColumnOption(option.Add("PreferredTimezone")); // DN
+                CreateColumnOption(option.Add("PreferredTimezoneID")); // DN
+                CreateColumnOption(option.Add("UserLevelID")); // DN
             }
+            if (UserProfile.IsForceLogoutUser)
+                ListActions.Add("forcelogoutuser", new ForceLogoutUserAction());
 
             // Set up custom action (compatible with old version)
             ListActions.Add(CustomActions);
@@ -1540,6 +1555,25 @@ public partial class project1 {
             item.Visible = false;
 
         // Show active user count from SQL
+            if (UserProfile.IsForceLogoutUser) {
+                if (IsAdmin()) {
+                    int activeUserCount = LoadRecordCount(ActiveUserFilter()); // DN
+                    string showActiveUser = Param("activeuser");
+                    if (!Empty(showActiveUser))
+                        Session[Config.SessionActiveUsers] = showActiveUser;
+                    else if (!Empty(Session[Config.SessionActiveUsers]))
+                        showActiveUser = ConvertToString(Session[Config.SessionActiveUsers]);
+                    if (showActiveUser == "1" && activeUserCount > 0)
+                        AddFilter(ref Filter, ActiveUserFilter());
+                    string message = Language.Phrase("ShowActiveUsers").Replace("%n", ConvertToString(activeUserCount));
+                    item = HeaderOptions.Add("activeuser");
+                    string isChecked = showActiveUser == "1" ? " checked" : "";
+                    item.Body = "<div class=\"form-check\"><input type=\"checkbox\" name=\"activeuser\" id=\"activeuser\" class=\"form-check-input\" data-ew-action=\"active-user\"" + isChecked + ">" + message + "</div>";
+                    item.Visible = activeUserCount > 0;
+                    item.ShowInDropDown = false;
+                    item.ShowInButtonGroup = false;
+                }
+            }
         }
 
         // Active user filter
@@ -1647,13 +1681,15 @@ public partial class project1 {
                     if (processed) {
                         if (UseTransaction)
                             Connection.CommitTrans(); // Commit the changes
-                            SuccessMessage = listAction?.SuccessMessage ?? "";
+                            string userlist = String.Join(", ", rows.Select(r => ConvertToString(r[Config.LoginUsernameFieldName])));
+                            SuccessMessage = listAction?.SuccessMessage.Replace("%u", userlist) ?? "";
                         if (Empty(SuccessMessage))
                             SuccessMessage = Language.Phrase("CustomActionCompleted").Replace("%s", actionCaption); // Set up success message
                     } else {
                         if (UseTransaction)
                             Connection.RollbackTrans(); // Rollback changes
-                            FailureMessage = listAction?.FailureMessage ?? "";
+                            string userlist = String.Join(", ", rows.Select(r => ConvertToString(r[Config.LoginUsernameFieldName])));
+                            FailureMessage = listAction?.FailureMessage.Replace("%u", userlist) ?? "";
 
                         // Set up error message
                         if (!Empty(SuccessMessage) || !Empty(FailureMessage)) {
@@ -1881,7 +1917,8 @@ public partial class project1 {
             _Username.SetDbValue(row["Username"]);
             PasswordHash.SetDbValue(row["PasswordHash"]);
             _Name.SetDbValue(row["Name"]);
-            PreferredTimezone.SetDbValue(row["PreferredTimezone"]);
+            PreferredTimezoneID.SetDbValue(row["PreferredTimezoneID"]);
+            UserLevelID.SetDbValue(row["UserLevelID"]);
         }
         #pragma warning restore 162, 168, 1998, 4014
 
@@ -1892,7 +1929,8 @@ public partial class project1 {
             row.Add("Username", _Username.DefaultValue ?? DbNullValue); // DN
             row.Add("PasswordHash", PasswordHash.DefaultValue ?? DbNullValue); // DN
             row.Add("Name", _Name.DefaultValue ?? DbNullValue); // DN
-            row.Add("PreferredTimezone", PreferredTimezone.DefaultValue ?? DbNullValue); // DN
+            row.Add("PreferredTimezoneID", PreferredTimezoneID.DefaultValue ?? DbNullValue); // DN
+            row.Add("UserLevelID", UserLevelID.DefaultValue ?? DbNullValue); // DN
             return row;
         }
 
@@ -1927,6 +1965,7 @@ public partial class project1 {
             // Common render codes for all row types
 
             // Id
+            Id.CellCssStyle = "white-space: nowrap;";
 
             // Username
 
@@ -1934,33 +1973,69 @@ public partial class project1 {
 
             // Name
 
-            // PreferredTimezone
+            // PreferredTimezoneID
+
+            // UserLevelID
 
             // View row
             if (RowType == RowType.View) {
-                // Id
-                Id.ViewValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // Username
                 _Username.ViewValue = ConvertToString(_Username.CurrentValue); // DN
                 _Username.ViewCustomAttributes = "";
 
                 // PasswordHash
-                PasswordHash.ViewValue = ConvertToString(PasswordHash.CurrentValue); // DN
+                PasswordHash.ViewValue = Language.Phrase("PasswordMask");
                 PasswordHash.ViewCustomAttributes = "";
 
                 // Name
                 _Name.ViewValue = ConvertToString(_Name.CurrentValue); // DN
                 _Name.ViewCustomAttributes = "";
 
-                // PreferredTimezone
-                PreferredTimezone.ViewValue = ConvertToString(PreferredTimezone.CurrentValue); // DN
-                PreferredTimezone.ViewCustomAttributes = "";
+                // PreferredTimezoneID
+                string curVal = ConvertToString(PreferredTimezoneID.CurrentValue);
+                if (!Empty(curVal)) {
+                    if (PreferredTimezoneID.Lookup != null && IsDictionary(PreferredTimezoneID.Lookup?.Options) && PreferredTimezoneID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                        PreferredTimezoneID.ViewValue = PreferredTimezoneID.LookupCacheOption(curVal);
+                    } else { // Lookup from database // DN
+                        string filterWrk = SearchFilter(PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchExpression, "=", PreferredTimezoneID.CurrentValue, PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchDataType, "");
+                        string? sqlWrk = PreferredTimezoneID.Lookup?.GetSql(false, filterWrk, null, this, true, true);
+                        var rswrk = sqlWrk != null ? Connection.GetRows(sqlWrk) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                        if (rswrk?.Count > 0 && PreferredTimezoneID.Lookup != null) { // Lookup values found
+                            var listwrk = PreferredTimezoneID.Lookup?.RenderViewRow(rswrk[0]);
+                            PreferredTimezoneID.ViewValue = PreferredTimezoneID.DisplayValue(listwrk);
+                        } else {
+                            PreferredTimezoneID.ViewValue = FormatNumber(PreferredTimezoneID.CurrentValue, PreferredTimezoneID.FormatPattern);
+                        }
+                    }
+                } else {
+                    PreferredTimezoneID.ViewValue = DbNullValue;
+                }
+                PreferredTimezoneID.ViewCustomAttributes = "";
 
-                // Id
-                Id.HrefValue = "";
-                Id.TooltipValue = "";
+                // UserLevelID
+                if (Security.CanAdmin) { // System admin
+                    string curVal2 = ConvertToString(UserLevelID.CurrentValue);
+                    if (!Empty(curVal2)) {
+                        if (UserLevelID.Lookup != null && IsDictionary(UserLevelID.Lookup?.Options) && UserLevelID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                            UserLevelID.ViewValue = UserLevelID.LookupCacheOption(curVal2);
+                        } else { // Lookup from database // DN
+                            string filterWrk2 = SearchFilter(UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchExpression, "=", UserLevelID.CurrentValue, UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchDataType, "");
+                            string? sqlWrk2 = UserLevelID.Lookup?.GetSql(false, filterWrk2, null, this, true, true);
+                            var rswrk2 = sqlWrk2 != null ? Connection.GetRows(sqlWrk2) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                            if (rswrk2?.Count > 0 && UserLevelID.Lookup != null) { // Lookup values found
+                                var listwrk = UserLevelID.Lookup?.RenderViewRow(rswrk2[0]);
+                                UserLevelID.ViewValue = UserLevelID.DisplayValue(listwrk);
+                            } else {
+                                UserLevelID.ViewValue = FormatNumber(UserLevelID.CurrentValue, UserLevelID.FormatPattern);
+                            }
+                        }
+                    } else {
+                        UserLevelID.ViewValue = DbNullValue;
+                    }
+                } else {
+                    UserLevelID.ViewValue = Language.Phrase("PasswordMask");
+                }
+                UserLevelID.ViewCustomAttributes = "";
 
                 // Username
                 _Username.HrefValue = "";
@@ -1974,9 +2049,13 @@ public partial class project1 {
                 _Name.HrefValue = "";
                 _Name.TooltipValue = "";
 
-                // PreferredTimezone
-                PreferredTimezone.HrefValue = "";
-                PreferredTimezone.TooltipValue = "";
+                // PreferredTimezoneID
+                PreferredTimezoneID.HrefValue = "";
+                PreferredTimezoneID.TooltipValue = "";
+
+                // UserLevelID
+                UserLevelID.HrefValue = "";
+                UserLevelID.TooltipValue = "";
             }
 
             // Call Row Rendered event
@@ -2016,6 +2095,10 @@ public partial class project1 {
             // Hide search options
             if (IsExport() || !Empty(CurrentAction) && CurrentAction != "search")
                 SearchOptions.HideAllOptions();
+            if (!Security.CanSearch) {
+                SearchOptions.HideAllOptions();
+                FilterOptions.HideAllOptions();
+            }
         }
 
         // Check if any search fields
@@ -2029,6 +2112,13 @@ public partial class project1 {
         {
             if (!HasSearchFields() && SearchOptions["searchtoggle"] is ListOption opt)
                 opt.Visible = false;
+        }
+
+        // Show link optionally based on User ID
+        protected bool ShowOptionLink(string pageId = "") { // DN
+            if (Security.IsLoggedIn && !Security.IsAdmin && !UserIDAllow(pageId))
+                return Security.IsValidUserID(Id.CurrentValue);
+            return true;
         }
 
         // Set up Breadcrumb

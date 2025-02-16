@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// Export Handler class
     /// </summary>
@@ -29,6 +29,9 @@ public partial class project1 {
             dynamic? tbl = Resolve(table);
             if (tbl == null) // Check if valid table
                 return Controller.Json(new { success = false, error = Language.Phrase("InvalidParameter") + ": table=" + table, version = Config.ProductVersion });
+            Security.LoadTablePermissions(table);
+            if (!Security.CanExport)
+                return Controller.Json(new { success = false, error = "401 " + Language.Phrase("401"), version = Config.ProductVersion });
 
             // Get record key from query string or form data
             recordKey = !Empty(recordKey) ? recordKey : Get(Config.ApiKeyName).Split(Config.CompositeKeySeparator);
@@ -351,6 +354,10 @@ public partial class project1 {
             dynamic? tbl = Resolve(exportLogTable);
             if (tbl == null)
                 return new EmptyResult();
+            Security.LoadTablePermissions(exportLogTable);
+            if (!Security.CanList) {
+                return new EmptyResult();
+            }
             string filter = tbl.ApplyUserIDFilters("");
             // Handle export type
             DbField fld = tbl.Fields[Config.ExportLogFieldNameExportType];
@@ -482,10 +489,17 @@ public partial class project1 {
             var row = await tbl.Connection.GetRowAsync(tbl.GetSql(filter));
             if (row != null) {
                 fileName ??= row[Config.ExportLogFieldNameFileName]; // Get file name
-                return new Dictionary<string, string> {
-                    { "fileName", fileName },
-                    { "filePath", ExportPath(true) + guid + Path.GetExtension(fileName) }
-                };
+                string table = row[Config.ExportLogFieldNameTable];
+                Security.LoadTablePermissions(table);
+                if (!Security.CanExport) {
+                    //SetStatus(401);
+                    return null;
+                } else {
+                    return new Dictionary<string, string> {
+                        { "fileName", fileName },
+                        { "filePath", ExportPath(true) + guid + Path.GetExtension(fileName) }
+                    };
+                }
             }
             return null;
         }

@@ -50,9 +50,6 @@ loadjs.ready("head", function() {
 <table class="@(usersDelete.TableClass)">
     <thead>
     <tr class="ew-table-header">
-@if (usersDelete.Id.Visible) { // usersDelete.Id.Visible (begin)
-        <th class="@Html.Raw(usersDelete.Id.HeaderCellClass)"><span id="elh_Users_Id" class="Users_Id">@Html.Raw(usersDelete.Id.Caption)</span></th>
-} @* usersDelete.Id.Visible (end) *@
 @if (usersDelete._Username.Visible) { // usersDelete._Username.Visible (begin)
         <th class="@Html.Raw(usersDelete._Username.HeaderCellClass)"><span id="elh_Users__Username" class="Users__Username">@Html.Raw(usersDelete._Username.Caption)</span></th>
 } @* usersDelete._Username.Visible (end) *@
@@ -62,9 +59,12 @@ loadjs.ready("head", function() {
 @if (usersDelete._Name.Visible) { // usersDelete._Name.Visible (begin)
         <th class="@Html.Raw(usersDelete._Name.HeaderCellClass)"><span id="elh_Users__Name" class="Users__Name">@Html.Raw(usersDelete._Name.Caption)</span></th>
 } @* usersDelete._Name.Visible (end) *@
-@if (usersDelete.PreferredTimezone.Visible) { // usersDelete.PreferredTimezone.Visible (begin)
-        <th class="@Html.Raw(usersDelete.PreferredTimezone.HeaderCellClass)"><span id="elh_Users_PreferredTimezone" class="Users_PreferredTimezone">@Html.Raw(usersDelete.PreferredTimezone.Caption)</span></th>
-} @* usersDelete.PreferredTimezone.Visible (end) *@
+@if (usersDelete.PreferredTimezoneID.Visible) { // usersDelete.PreferredTimezoneID.Visible (begin)
+        <th class="@Html.Raw(usersDelete.PreferredTimezoneID.HeaderCellClass)"><span id="elh_Users_PreferredTimezoneID" class="Users_PreferredTimezoneID">@Html.Raw(usersDelete.PreferredTimezoneID.Caption)</span></th>
+} @* usersDelete.PreferredTimezoneID.Visible (end) *@
+@if (usersDelete.UserLevelID.Visible) { // usersDelete.UserLevelID.Visible (begin)
+        <th class="@Html.Raw(usersDelete.UserLevelID.HeaderCellClass)"><span id="elh_Users_UserLevelID" class="Users_UserLevelID">@Html.Raw(usersDelete.UserLevelID.Caption)</span></th>
+} @* usersDelete.UserLevelID.Visible (end) *@
     </tr>
     </thead>
     <tbody>
@@ -83,13 +83,6 @@ loadjs.ready("head", function() {
     // Render row
     await usersDelete.RenderRow();
     <tr @Html.Raw(usersDelete.RowAttributes)>
-@if (usersDelete.Id.Visible) { // usersDelete.Id.Visible (begin)
-        <td @Html.Raw(usersDelete.Id.CellAttributes)>
-<span id="">
-<span @Html.Raw(usersDelete.Id.ViewAttributes)>
-@Html.Raw(usersDelete.Id.GetViewValue())</span>
-</span></td>
-} @* usersDelete.Id.Visible (end) *@
 @if (usersDelete._Username.Visible) { // usersDelete._Username.Visible (begin)
         <td @Html.Raw(usersDelete._Username.CellAttributes)>
 <span id="">
@@ -111,13 +104,20 @@ loadjs.ready("head", function() {
 @Html.Raw(usersDelete._Name.GetViewValue())</span>
 </span></td>
 } @* usersDelete._Name.Visible (end) *@
-@if (usersDelete.PreferredTimezone.Visible) { // usersDelete.PreferredTimezone.Visible (begin)
-        <td @Html.Raw(usersDelete.PreferredTimezone.CellAttributes)>
+@if (usersDelete.PreferredTimezoneID.Visible) { // usersDelete.PreferredTimezoneID.Visible (begin)
+        <td @Html.Raw(usersDelete.PreferredTimezoneID.CellAttributes)>
 <span id="">
-<span @Html.Raw(usersDelete.PreferredTimezone.ViewAttributes)>
-@Html.Raw(usersDelete.PreferredTimezone.GetViewValue())</span>
+<span @Html.Raw(usersDelete.PreferredTimezoneID.ViewAttributes)>
+@Html.Raw(usersDelete.PreferredTimezoneID.GetViewValue())</span>
 </span></td>
-} @* usersDelete.PreferredTimezone.Visible (end) *@
+} @* usersDelete.PreferredTimezoneID.Visible (end) *@
+@if (usersDelete.UserLevelID.Visible) { // usersDelete.UserLevelID.Visible (begin)
+        <td @Html.Raw(usersDelete.UserLevelID.CellAttributes)>
+<span id="">
+<span @Html.Raw(usersDelete.UserLevelID.ViewAttributes)>
+@Html.Raw(usersDelete.UserLevelID.GetViewValue())</span>
+</span></td>
+} @* usersDelete.UserLevelID.Visible (end) *@
     </tr>
 }
 @{ usersDelete.CloseRecordset(); }

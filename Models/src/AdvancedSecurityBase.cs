@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// Advanced Security class
     /// </summary>
@@ -33,6 +33,8 @@ public partial class project1 {
         public string CurrentUserID;
 
         public List<Claim> Claims = []; // DN
+
+        protected bool AnoymousUserLevelChecked = false; // Dynamic User Level security
 
         private bool _isLoggedIn;
 
@@ -471,9 +473,152 @@ public partial class project1 {
                     LoginUser(Profile.GetLoginArguments());
                 }
 
-                // User Validated event
-                if (customValid)
-                    customValid = UserValidated(null);
+                // Check system admin first
+                if (!valid) {
+                    bool checkUserNameOnly = customValid || // Custom validated
+                        Config.OtpOnly && Config.UseTwoFactorAuthentication && Config.ForceTwoFactorAuthentication && !Empty(Config.AdminOtpAccount); // OTP only + 2FA + OTP account enabled
+                    if ((new[] { "cookie", "token" }).Contains(loginType)) {
+                        Dictionary<string, string> values = DecodeJwt(pwd);
+                        string userName = values.ContainsKey("Username") ? values["Username"] : "";
+                        checkUserNameOnly = checkUserNameOnly || !Empty(userName) && userName == usr;
+                    }
+                    valid = ValidateSysAdmin(usr, pwd, checkUserNameOnly);
+
+                    // Set user name
+                    if (valid)
+                        await Profile.SetUserName(usr).LoadFromStorageAsync();
+
+                    // Check two factor authentication for system admin
+                    if (valid && Config.UseTwoFactorAuthentication && Config.ForceTwoFactorAuthentication &&
+                        (new[] { "email", "sms" }).Contains(Config.TwoFactorAuthenticationType.ToLowerInvariant()) &&
+                        !Empty(Config.AdminOtpAccount) &&
+                        !Profile.HasUserSecret(true)
+                    ) {
+                        _isSysAdmin = true;
+                        Session.SetInt(Config.SessionSysAdmin, 1); // System Administrator
+                        return valid;
+                    }
+                    if (valid) {
+                        _isLoggedIn = true;
+                        Session[Config.SessionStatus] = "login";
+                        _isSysAdmin = true;
+                        Session.SetInt(Config.SessionSysAdmin, 1); // System Administrator
+                        CurrentUserName = Language.Phrase("UserAdministrator"); // Load user name
+                        SessionUserID = -1; // System Administrator
+                        SessionUserLevelID = AdminUserLevelId.ToString(); // System Administrator
+                        SetupUserLevel();
+
+                        // Sign in // DN
+                        if (!IsAuthenticated() && HttpContext != null) {
+                            Claims.Add(new("UserName", usr));
+                            Claims.Add(new("UserLevelId", AdminUserLevelId.ToString()));
+                            Claims.Add(new(ClaimTypes.Role, GetUserLevelName(AdminUserLevelId.ToString()))); // "Administrator"
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                new ClaimsPrincipal(new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme)));
+                        }
+                        Profile.SetUserName(Language.Phrase("UserAdministrator"))
+                            .SetUserID(AdminUserId)
+                            .SetUserLevel(AdminUserLevelId.ToString());
+                        LoginUser(Profile.GetLoginArguments());
+                    }
+                }
+
+                // Check other users
+                if (!valid) {
+                    if (Empty(usr)) // DN
+                        return customValid;
+                    filter = GetUserFilter(Config.LoginUsernameFieldName, usr);
+                    if (Config.RegisterActivate && !Empty(Config.RegisterActivateFieldName) && !Empty(Config.UserActivateFilter))
+                        AddFilter(ref filter, Config.UserActivateFilter);
+
+                    // Set up filter (WHERE clause)
+                    sql = UserTable.GetSql(filter); // DN
+                    var userRow = await UserTableConn.GetRowAsync(sql);
+                    if (userRow != null) {
+                        valid = customValid;
+
+                        // Check password
+                        if (!valid)
+                            valid = Config.OtpOnly && Config.UseTwoFactorAuthentication && Config.ForceTwoFactorAuthentication; // OTP only + 2FA enabled
+                        if (!valid) {
+                            if ((new[] { "cookie", "token" }).Contains(loginType)) {
+                                Dictionary<string, string> values = DecodeJwt(pwd);
+                                string userName = values.ContainsKey("Username") ? values["Username"] : "";
+                                valid = !Empty(userName) && userName == usr;
+                            } else {
+                                valid = ComparePassword(GetUserInfo<string>(Config.LoginPasswordFieldName, userRow), pwd);
+                            }
+                        }
+                        if (valid) {
+                            // Check two factor authentication
+                            if (Config.UseTwoFactorAuthentication) {
+                                // Check API login
+                                if (IsApi()) {
+                                    if (SameText(Config.TwoFactorAuthenticationType, "google") && (Config.ForceTwoFactorAuthentication || Profile.HasUserSecret(true))) // Verify security code
+                                        if (!await Profile.Verify2FACode(securitycode))
+                                            return false;
+                                } else if (Config.ForceTwoFactorAuthentication && !Profile.HasUserSecret(true)) { // Non API, go to 2fa page
+                                    return valid;
+                                }
+                            }
+                            _isLoggedIn = true;
+                            _isSysAdmin = false;
+                            Session[Config.SessionStatus] = "login";
+                            Session.SetInt(Config.SessionSysAdmin, 0); // Non System Administrator
+                            Profile.SetUserName(GetUserInfo<string>(Config.LoginUsernameFieldName, userRow));
+                            Profile.SetUserPrimaryKey(GetUserInfo<object>(Config.UserPrimaryKeyFieldName, userRow));
+                            Profile.SetUserID(GetUserInfo<object>(Config.UserIdFieldName, userRow));
+                            Profile.SetUserLevel(GetUserInfo<string>(Config.UserLevelFieldName, userRow));
+                            LoginUser(Profile.GetLoginArguments());
+                            // Set up User Image field in User Profile
+                            if (!Empty(Config.UserImageFieldName)) {
+                                object data = GetUserInfo<string>(Config.UserImageFieldName, userRow);
+                                DbField imageField = UserTable.Fields[Config.UserImageFieldName];
+                                byte[]? image = await GetUserImage(imageField, data, Config.UserImageSize, Config.UserImageSize, Config.UserImageCrop);
+                                if (image != null)
+                                    Profile.SetValue(UserProfile.Image, Convert.ToBase64String(image)); // Save as base64 encoded
+                                await Profile.SaveToStorageAsync();
+                            }
+
+                            // User Validated event
+                            valid = UserValidated(userRow);
+                            if (valid) { // Sign in // DN
+                                if (!IsAuthenticated() && HttpContext != null) {
+                                    Claims.Add(new("UserName", usr));
+                                    Claims.Add(new("UserPrimaryKey", ConvertToString(SessionUserPrimaryKey)));
+                                    string[] names = GetUserLevelNames(SessionUserLevelID);
+                                    foreach (string name in names)
+                                        Claims.Add(new(ClaimTypes.Role, name));
+                                    Claims.Add(new("UserId", ConvertToString(SessionUserID))); // User ID
+                                    Claims.Add(new("UserLevelId", SessionUserLevelID));
+
+                                    // Set up User Email field
+                                    if (!Empty(Config.UserEmailFieldName))
+                                        Claims.Add(new(ClaimTypes.Email, GetUserInfo<string>(Config.UserEmailFieldName, userRow)));
+                                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                        new ClaimsPrincipal(new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme)));
+                                }
+                            }
+                        }
+                    } else { // User not found in user table
+                        if (customValid) { // Grant default permissions
+                            LoginUser(usr);
+
+                            // User Validated event
+                            customValid = UserValidated(null);
+                            if (customValid) { // Sign in // DN
+                                if (!IsAuthenticated() && HttpContext != null) {
+                                    Claims.Add(new("Name", usr));
+                                    Claims.Add(new("UserName", usr));
+                                    Claims.Add(new("UserLevelId", AnonymousUserLevelId.ToString()));
+                                    Claims.Add(new(ClaimTypes.Role, GetUserLevelName(AnonymousUserLevelId.ToString()))); // "Anonymous"
+                                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                        new ClaimsPrincipal(new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme)));
+                                }
+                            }
+                        }
+                    }
+                }
                 if (customValid)
                     return true;
                 if (!valid && !IsPasswordExpired()) {
@@ -505,9 +650,130 @@ public partial class project1 {
                     checkUserNameOnly && SameText(adminUserName, userName);
         }
 
-        // No user level security
+        // Dynamic User Level security
+
+        // Get User Level settings from database
         public void SetupUserLevel()
         {
+            SetupUserLevels().GetAwaiter().GetResult(); // Load all user levels
+
+            // User Level loaded event
+            UserLevelLoaded();
+
+            // Check permissions
+            CheckPermissions();
+
+            // Save the User Level to Session variable
+            SaveUserLevel();
+        }
+
+        // Check Anonymous user level
+        private bool _anoymousUserLevelChecked = false;
+
+        // Get all User Level settings from database
+        public async Task<bool> SetupUserLevels()
+        {
+            // Load user level from user level settings first
+            var userLevel = Config.UserLevels;
+            var userLevelPriv = Config.UserLevelPermissions;
+            var tables = Config.UserLevelTablePermissions;
+
+            // User level table connection
+            var tbl = (IQueryFactory)Resolve(Config.UserLevelTableName)!;
+
+            // User level permission table connection
+            var privTbl = (IQueryFactory)Resolve(Config.UserLevelPrivTableName)!;
+
+            // Add Anonymous user level
+            if (Config.CheckOldUserLevels && !_anoymousUserLevelChecked) {
+                if (!(await tbl.GetQueryBuilder().Where(Config.UserLevelIdFieldName, AnonymousUserLevelId).ExistsAsync()))
+                    await tbl.GetQueryBuilder().InsertAsync(new UserLevel { Id = AnonymousUserLevelId, Name = Language.Phrase("UserAnonymous") });
+            }
+
+            // Get the User Levels
+            UserLevel = (await tbl.GetQueryBuilder().Select($"{Config.UserLevelIdField} as Id", $"{Config.UserLevelNameField} as Name").GetAsync<UserLevel>()).ToList();
+
+            // Add Anonymous user privileges
+            if (Config.CheckOldUserLevels && !_anoymousUserLevelChecked) {
+                if (!(await privTbl.GetQueryBuilder().Where(Config.UserLevelPrivUserLevelIdFieldName, AnonymousUserLevelId).ExistsAsync())) {
+                    var wrkUserLevel = Config.UserLevels;
+                    var wrkUserLevelPriv = Config.UserLevelPermissions;
+                    string[] columns = [Config.UserLevelPrivUserLevelIdFieldName, Config.UserLevelPrivTableNameFieldName, Config.UserLevelPrivPrivFieldName];
+                    var valuesCollection = Config.UserLevelTablePermissions.Select(item => new object[] {
+                        AnonymousUserLevelId,
+                        item.ProjectId + item.TableName,
+                        ConvertToInt(wrkUserLevelPriv.FirstOrDefault(userpriv => SameString(userpriv.Table, item.ProjectId + item.TableName) && SameString(userpriv.Id, AnonymousUserLevelId))?.Permission)
+                    });
+                    await privTbl.GetQueryBuilder().InsertAsync(columns, valuesCollection);
+                }
+                _anoymousUserLevelChecked = true;
+            }
+
+            // Get the User Level privileges
+            QueryBuilder qb1 = privTbl.GetQueryBuilder()
+                .Select($"{Config.UserLevelPrivTableNameField} as Table", $"{Config.UserLevelPrivUserLevelIdField} as Id", $"{Config.UserLevelPrivPrivField} as Permission");
+            if (!IsApi() && !IsAdmin && UserLevelID.Count > 0) {
+                qb1.WhereIn(Config.UserLevelPrivUserLevelIdFieldName, UserLevelID);
+                Session[Config.SessionUserLevelListLoaded] = UserLevelList(); // Save last loaded list
+            } else {
+                Session[Config.SessionUserLevelListLoaded] = ""; // Save last loaded list
+            }
+            UserLevelPriv = (await qb1.GetAsync<UserLevelPermission>()).ToList();
+
+            // Update User Level privileges record if necessary
+            if (Config.CheckOldUserLevels) {
+                string projectID = CurrentProjectID,
+                    relatedProjectID = Config.RelatedProjectId;
+                int reloadUserPriv = 0;
+
+                // Update table with report prefix
+                if (!Empty(relatedProjectID)) {
+                    QueryBuilder qb2 = privTbl.GetQueryBuilder();
+                    qb2.WhereExists(q =>
+                        q.From(Config.UserLevelPrivTable).WhereStarts(Config.UserLevelPrivTableNameFieldName, relatedProjectID, true)
+                    );
+                    if (await qb2.ExistsAsync()) {
+                        QueryBuilder qb3 = privTbl.GetQueryBuilder();
+                        var ar = tables.Select(t => relatedProjectID + t.TableName);
+                        var c = await GetConnectionAsync(Config.UserLevelPrivDbId);
+                        reloadUserPriv += await qb3.WhereIn(Config.UserLevelPrivTableNameField, ar).UpdateAsync(new Dictionary<string, object> {
+                            {
+                                Config.UserLevelPrivTableNameFieldName,
+                                new SqlKata.UnsafeLiteral(c.Concat("'" + AdjustSql(projectID, Config.UserLevelPrivDbId) + "'", QuotedName(Config.UserLevelPrivTableNameField, Config.UserLevelPrivDbId)))
+                            }
+                        });
+                    }
+                }
+
+                // Reload the User Level privileges
+                if (reloadUserPriv > 0)
+                    UserLevelPriv = (await privTbl.GetQueryBuilder().GetAsync<UserLevelPermission>()).ToList();
+            }
+
+            // Warn user if user level not setup
+            if (UserLevelPriv.Count == 0 && IsAdmin && Empty(Session[Config.SessionUserLevelMessage])) {
+                CurrentPage?.SetFailureMessage(Language.Phrase("NoUserLevel"));
+                Session[Config.SessionUserLevelMessage] = "1"; // Show only once
+                return false; // To be redirected in userpriv // DN
+            }
+            return true;
+        }
+
+        // Update user level permissions (using main connection)
+        public async Task<bool> UpdatePermissions(int userLevel, Dictionary<string, int> privileges)
+        {
+            var tbl = (IQueryFactory)Resolve(Config.UserLevelPrivTableName)!;
+            foreach (var (key, value) in privileges) {
+                var where = new Dictionary<string, object> {
+                        { Config.UserLevelPrivTableNameFieldName, key },
+                        { Config.UserLevelPrivUserLevelIdFieldName, userLevel }
+                    };
+                if (await tbl.GetQueryBuilder(true).Where(where).ExistsAsync())
+                    await tbl.GetQueryBuilder(true).Where(where).UpdateAsync(new Dictionary<string, object> { { Config.UserLevelPrivPrivFieldName, value } });
+                else
+                    await tbl.GetQueryBuilder(true).InsertAsync(new UserLevelPermission { Table = key, Id = userLevel, Permission = value });
+            }
+            return true;
         }
 
         // Check import/lookup permissions
@@ -647,7 +913,7 @@ public partial class project1 {
         protected int CurrentUserLevelPriv(string tableName)
         {
             if (IsLoggedIn) {
-                return (int)Allow.All;
+                return UserLevelID.Aggregate(0, (result, id) => result | GetUserLevelPriv(tableName, id));
             } else { // Anonymous
                 return GetUserLevelPriv(tableName, AnonymousUserLevelId);
             }
@@ -725,7 +991,7 @@ public partial class project1 {
         public bool UserLevelIDExists(int id) => IsList(UserLevel) && UserLevel.Exists(row => row.Id == id);
 
         // User level name list
-        public string UserLevelNameList() => "";
+        public string UserLevelNameList() => GetUserLevelName(UserLevelID);
 
         // Get user privilege based on table name and user level
         public int GetUserLevelPriv(string tableName, int userLevelId)
@@ -848,6 +1114,10 @@ public partial class project1 {
         {
             get {
                 bool res = IsSysAdmin;
+                if (!res)
+                    res = SameString(CurrentUserLevelID, AdminUserLevelId) || UserLevelID.Contains(AdminUserLevelId) || CanAdmin;
+                if (!res)
+                    res = SameString(CurrentUserID, AdminUserId) || UserID.Contains(AdminUserId.ToString());
                 return res;
             }
         }
@@ -875,7 +1145,113 @@ public partial class project1 {
             }
         }
 
-        public bool IsValidUserID(object? id) => true;
+        // Get user email
+        public string CurrentUserEmail
+        {
+            get {
+                var email = User?.FindFirst(ClaimTypes.Email)?.Value;
+                if (Empty(email) && !Empty(Config.UserEmailFieldName))
+                    email = ConvertToString(CurrentUserInfo(Config.UserEmailFieldName));
+                return email ?? "";
+            }
+        }
+
+        // Get user ID value by user login name
+        public object GetUserIDByUserName(string userName)
+        {
+            object userId = "";
+            if (!Empty(userName)) {
+                string filter = GetUserFilter(Config.LoginUsernameFieldName, userName);
+                string sql = UserTable.GetSql(filter); // DN
+                var conn = GetConnection(Config.UserTableDbId);
+                var row = conn.GetRow(sql);
+                row?.TryGetValue(Config.UserIdFieldName, out userId);
+                return userId;
+            }
+            return userId;
+        }
+
+        // Load user ID
+        public void LoadUserID()
+        {
+            if (Empty(CurrentUserID)) {
+                // Handle empty User ID here
+            } else if (!SameString(CurrentUserID, AdminUserId)) { // Get first level
+                AddUserID(CurrentUserID);
+                string filter = ConvertToString(UserTable.Invoke("GetUserIDFilter", [CurrentUserID]));
+                string sql = UserTable.GetSql(filter);
+                var conn = GetConnection(Config.UserTableDbId);
+                var rows = conn.GetRows(sql); // Always use Sync
+                foreach (var row in rows)
+                    AddUserID(GetUserInfo<object>(Config.UserIdFieldName, row));
+            }
+        }
+
+        // Add user name
+        public void AddUserName(string userName) => AddUserID(GetUserIDByUserName(userName));
+
+        // Add user name
+        public void AddUserIDByUserName(string userName) => AddUserName(userName);
+
+        // Add user ID
+        public void AddUserID(object id)
+        {
+            if (Empty(id))
+                return;
+            if (!IsNumeric(id))
+                return;
+            string userId = ConvertToString(id);
+            if (!UserID.Contains(userId))
+                UserID.Add(userId);
+        }
+
+        // Delete user name
+        public void DeleteUserName(string userName) => DeleteUserID(GetUserIDByUserName(userName));
+
+        // Delete user name
+        public void DeleteUserIDByUserName(string userName) => DeleteUserName(userName);
+
+        // Delete user ID
+        public void DeleteUserID(object id)
+        {
+            if (Empty(id))
+                return;
+            if (!IsNumeric(id))
+                return;
+            UserID.Remove(ConvertToString(id));
+        }
+
+        // User ID list
+        public string UserIDList() =>
+            String.Join(", ", UserID.Select(id => QuotedValue(id, DataType.Number, Config.UserTableDbId)));
+
+        // Is valid user ID
+        public bool IsValidUserID(object? id) => IsLoggedIn && (UserID.Contains(ConvertToString(id)) || SameString(id, CurrentUserID));
+
+        // Get user info
+        public async Task<object?> CurrentUserInfoAsync(string fldname)
+        {
+            object? info = null;
+            if (!Empty(Config.UserTable) && !IsSysAdmin) {
+                try {
+                    string filter = GetUserFilter(Config.UserIdFieldName, CurrentUserID);
+                    if (!Empty(filter)) {
+                        string sql = UserTable.GetSql(filter);
+                        var row = await ExecuteRowAsync(sql, Config.UserTableDbId);
+                        info = GetUserInfo<object>(fldname, row);
+                    }
+                    if (info == null && IsAuthenticated())
+                        info = User?.FindFirst(fldname)?.Value;
+                } catch {
+                    if (Config.Debug)
+                        throw;
+                }
+            }
+            return info;
+        }
+
+        // Get user info
+        public object? CurrentUserInfo(string fldname) => CurrentUserInfoAsync(fldname).GetAwaiter().GetResult();
 
         // UserID Loading event
         public virtual void UserIdLoading() {

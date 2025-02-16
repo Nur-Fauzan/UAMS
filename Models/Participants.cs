@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// participants
     /// </summary>
@@ -176,12 +176,16 @@ public partial class project1 {
                 SelectMultiple = false,
                 VirtualSearch = false,
                 ViewTag = "FORMATTED TEXT",
-                HtmlTag = "TEXT",
+                HtmlTag = "SELECT",
                 InputTextType = "text",
-                SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"],
+                UsePleaseSelect = true, // Use PleaseSelect by default
+                PleaseSelectText = Language.Phrase("PleaseSelect"), // PleaseSelect text
+                OptionCount = 3,
+                SearchOperators = ["=", "<>", "IS NULL", "IS NOT NULL"],
                 CustomMessage = Language.FieldPhrase("Participants", "Status", "CustomMsg"),
                 IsUpload = false
             };
+            Status.Lookup = new Lookup<DbField>(Status, "Participants", false, "", new List<string> {"", "", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "");
             Fields.Add("Status", Status);
 
             // Call Table Load event
@@ -1073,7 +1077,7 @@ public partial class project1 {
             if (!Empty(sortUrl)) {
                 html += "<div class=\"ew-table-header-sort\">" + fld.SortIcon + "</div>";
             }
-            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter) {
+            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter && Security.CanSearch) {
                 html += "<div class=\"ew-filter-dropdown-btn\" data-ew-action=\"filter\" data-table=\"" + fld.TableVar + "\" data-field=\"" + fld.FieldVar +
                     "\"><div class=\"ew-table-header-filter\" role=\"button\" aria-haspopup=\"true\">" + Language.Phrase("Filter") +
                     (IsList(fld.EditValue) ? Language.Phrase("FilterCount").Replace("%c", ((IList)fld.EditValue).Count.ToString()) : "") +
@@ -1271,7 +1275,11 @@ public partial class project1 {
             AppointmentId.ViewCustomAttributes = "";
 
             // Status
-            Status.ViewValue = ConvertToString(Status.CurrentValue); // DN
+            if (!Empty(Status.CurrentValue)) {
+                Status.ViewValue = Status.OptionCaption(ConvertToString(Status.CurrentValue));
+            } else {
+                Status.ViewValue = DbNullValue;
+            }
             Status.ViewCustomAttributes = "";
 
             // Id
@@ -1326,9 +1334,7 @@ public partial class project1 {
 
             // Status
             Status.SetupEditAttributes();
-            if (!Status.Raw)
-                Status.CurrentValue = HtmlDecode(Status.CurrentValue);
-            Status.EditValue = Status.CurrentValue;
+            Status.EditValue = Status.Options(true);
             Status.PlaceHolder = RemoveHtml(Status.Caption);
 
             // Call Row Rendered event

@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
 
     public class GeometryTypeMapper<TGeometry> : SqlMapper.TypeHandler<TGeometry>
         where TGeometry : NetTopologySuite.Geometries.Geometry

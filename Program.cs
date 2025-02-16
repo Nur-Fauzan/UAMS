@@ -34,6 +34,10 @@ builder.Services.AddControllersWithViews()
 
 // Authorization
 builder.Services.AddAuthorization(options => {
+    options.AddPolicy("UserLevel", policy => {
+        policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme); // Cookie
+        policy.Requirements.Add(new PermissionRequirement()); // User Level security
+    });
     options.AddPolicy("ApiUserLevel", policy => { // API
         policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme); // JWT
         policy.RequireAuthenticatedUser();
@@ -57,6 +61,13 @@ builder.Services.AddMemoryCache();
 // Http client
 builder.Services.AddHttpClient();
 
+// Add identity types
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>();
+
+// Identity Services
+builder.Services.AddTransient<IUserStore<ApplicationUser>, CustomUserStore>();
+builder.Services.AddTransient<IRoleStore<ApplicationRole>, CustomRoleStore>();
+
 // Add framework services
 builder.Services.AddMvc()
     .AddNewtonsoftJson(options => {
@@ -72,7 +83,7 @@ builder.Services.AddDistributedMemoryCache();
 
 // Session
 builder.Services.AddSession(options => {
-    options.Cookie.Name = ".project1.Session";
+    options.Cookie.Name = ".UAMS_20250216_1835.Session";
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = Enum.Parse<Microsoft.AspNetCore.Http.SameSiteMode>(Config.CookieSameSite);
     options.Cookie.SecurePolicy = Config.CookieSecure ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;

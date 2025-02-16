@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// users
     /// </summary>
@@ -63,7 +63,9 @@ public partial class project1 {
 
         public readonly DbField<SqlDbType> _Name;
 
-        public readonly DbField<SqlDbType> PreferredTimezone;
+        public readonly DbField<SqlDbType> PreferredTimezoneID;
+
+        public readonly DbField<SqlDbType> UserLevelID;
 
         // Constructor
         public Users()
@@ -90,7 +92,6 @@ public partial class project1 {
             GridAddRowCount = 5;
             AllowAddDeleteRow = true; // Allow add/delete row
             UseAjaxActions = UseAjaxActions || Config.UseAjaxActions;
-            UserIdAllowSecurity = Config.DefaultUserIdAllowSecurity; // User ID Allow
 
             // Id
             Id = new(this, "x_Id", 3, SqlDbType.Int) {
@@ -109,6 +110,7 @@ public partial class project1 {
                 IsAutoIncrement = true, // Autoincrement field
                 IsPrimaryKey = true, // Primary key field
                 Nullable = false, // NOT NULL field
+                Sortable = false, // Allow sort
                 DefaultErrorMessage = Language.Phrase("IncorrectInteger"),
                 SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"],
                 CustomMessage = Language.FieldPhrase("Users", "Id", "CustomMsg"),
@@ -138,6 +140,7 @@ public partial class project1 {
                 CustomMessage = Language.FieldPhrase("Users", "_Username", "CustomMsg"),
                 IsUpload = false
             };
+            _Username.Raw = true;
             Fields.Add("Username", _Username);
 
             // PasswordHash
@@ -153,14 +156,15 @@ public partial class project1 {
                 SelectMultiple = false,
                 VirtualSearch = false,
                 ViewTag = "FORMATTED TEXT",
-                HtmlTag = "TEXT",
+                HtmlTag = "PASSWORD",
                 InputTextType = "text",
                 Nullable = false, // NOT NULL field
                 Required = true, // Required field
-                SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"],
+                SearchOperators = ["=", "<>"],
                 CustomMessage = Language.FieldPhrase("Users", "PasswordHash", "CustomMsg"),
                 IsUpload = false
             };
+            PasswordHash.Raw = true;
             Fields.Add("PasswordHash", PasswordHash);
 
             // Name
@@ -186,28 +190,56 @@ public partial class project1 {
             };
             Fields.Add("Name", _Name);
 
-            // PreferredTimezone
-            PreferredTimezone = new(this, "x_PreferredTimezone", 202, SqlDbType.NVarChar) {
-                Name = "PreferredTimezone",
-                Expression = "[PreferredTimezone]",
-                UseBasicSearch = true,
-                BasicSearchExpression = "[PreferredTimezone]",
+            // PreferredTimezoneID
+            PreferredTimezoneID = new(this, "x_PreferredTimezoneID", 3, SqlDbType.Int) {
+                Name = "PreferredTimezoneID",
+                Expression = "[PreferredTimezoneID]",
+                BasicSearchExpression = "CAST([PreferredTimezoneID] AS NVARCHAR)",
                 DateTimeFormat = -1,
-                VirtualExpression = "[PreferredTimezone]",
+                VirtualExpression = "[PreferredTimezoneID]",
                 IsVirtual = false,
                 ForceSelection = false,
                 SelectMultiple = false,
                 VirtualSearch = false,
                 ViewTag = "FORMATTED TEXT",
-                HtmlTag = "TEXT",
+                HtmlTag = "SELECT",
                 InputTextType = "text",
-                Nullable = false, // NOT NULL field
                 Required = true, // Required field
-                SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"],
-                CustomMessage = Language.FieldPhrase("Users", "PreferredTimezone", "CustomMsg"),
+                UsePleaseSelect = true, // Use PleaseSelect by default
+                PleaseSelectText = Language.Phrase("PleaseSelect"), // PleaseSelect text
+                DefaultErrorMessage = Language.Phrase("IncorrectInteger"),
+                SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"],
+                CustomMessage = Language.FieldPhrase("Users", "PreferredTimezoneID", "CustomMsg"),
                 IsUpload = false
             };
-            Fields.Add("PreferredTimezone", PreferredTimezone);
+            PreferredTimezoneID.Raw = true;
+            PreferredTimezoneID.Lookup = new Lookup<DbField>(PreferredTimezoneID, "Timezones", false, "TimezoneID", new List<string> {"TimezoneName", "UtcOffset", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "CONCAT([TimezoneName],'" + ValueSeparator(1, PreferredTimezoneID) + "',[UtcOffset])");
+            Fields.Add("PreferredTimezoneID", PreferredTimezoneID);
+
+            // UserLevelID
+            UserLevelID = new(this, "x_UserLevelID", 3, SqlDbType.Int) {
+                Name = "UserLevelID",
+                Expression = "[UserLevelID]",
+                BasicSearchExpression = "CAST([UserLevelID] AS NVARCHAR)",
+                DateTimeFormat = -1,
+                VirtualExpression = "[UserLevelID]",
+                IsVirtual = false,
+                ForceSelection = false,
+                SelectMultiple = false,
+                VirtualSearch = false,
+                ViewTag = "FORMATTED TEXT",
+                HtmlTag = "SELECT",
+                InputTextType = "text",
+                UsePleaseSelect = true, // Use PleaseSelect by default
+                PleaseSelectText = Language.Phrase("PleaseSelect"), // PleaseSelect text
+                DefaultErrorMessage = Language.Phrase("IncorrectInteger"),
+                SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"],
+                CustomMessage = Language.FieldPhrase("Users", "UserLevelID", "CustomMsg"),
+                IsUpload = false
+            };
+            UserLevelID.Raw = true;
+            UserLevelID.Lookup = new Lookup<DbField>(UserLevelID, "UserLevels", false, "UserLevelID", new List<string> {"UserLevelName", "", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "[UserLevelName]");
+            Fields.Add("UserLevelID", UserLevelID);
 
             // Call Table Load event
             TableLoad();
@@ -372,6 +404,9 @@ public partial class project1 {
         // Apply User ID filters
         public string ApplyUserIDFilters(string filter, string id = "")
         {
+            if (!Empty(Security.CurrentUserID) && !Security.IsAdmin) { // Non system admin
+                filter = AddUserIDFilter(filter, id);
+            }
             return filter;
         }
 
@@ -722,6 +757,8 @@ public partial class project1 {
                             value = AesEncrypt(s);
                         else if (!fld.Raw)
                             value = RemoveXss(s);
+                        else if (fld.Name == "PasswordHash" && !IsMaskedPassword(s))
+                            value = EncryptPassword(Config.CaseSensitivePassword ? s : s.ToLowerInvariant());
                         if (fld.UserValues != null) {
                             if (fld.IsEnum) {
                                 if (!fld.UserValues.Contains(s))
@@ -761,7 +798,9 @@ public partial class project1 {
                     continue;
                 var value = property.GetValue(entity);
                 if ((fld.DataType == DataType.String || fld.DataType == DataType.Memo) && value is string s && !Empty(s)) {
-                    if (fld.IsEncrypted)
+                    if (fld.Name == Config.LoginPasswordFieldName && !Config.EncryptedPassword && !IsMaskedPassword(s)) // Password is saved HTML-encoded
+                        property.SetValue(entity, Language.Phrase("PasswordMask"));
+                    else if (fld.IsEncrypted)
                         property.SetValue(entity, AesDecrypt(s));
                     else if (!fld.Raw)
                         property.SetValue(entity, HtmlDecode(s));
@@ -847,7 +886,8 @@ public partial class project1 {
                 _Username.DbValue = row["Username"]; // Set DB value only
                 PasswordHash.DbValue = row["PasswordHash"]; // Set DB value only
                 _Name.DbValue = row["Name"]; // Set DB value only
-                PreferredTimezone.DbValue = row["PreferredTimezone"]; // Set DB value only
+                PreferredTimezoneID.DbValue = row["PreferredTimezoneID"]; // Set DB value only
+                UserLevelID.DbValue = row["UserLevelID"]; // Set DB value only
             } catch {}
         }
 
@@ -1099,7 +1139,7 @@ public partial class project1 {
             if (!Empty(sortUrl)) {
                 html += "<div class=\"ew-table-header-sort\">" + fld.SortIcon + "</div>";
             }
-            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter) {
+            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter && Security.CanSearch) {
                 html += "<div class=\"ew-filter-dropdown-btn\" data-ew-action=\"filter\" data-table=\"" + fld.TableVar + "\" data-field=\"" + fld.FieldVar +
                     "\"><div class=\"ew-table-header-filter\" role=\"button\" aria-haspopup=\"true\">" + Language.Phrase("Filter") +
                     (IsList(fld.EditValue) ? Language.Phrase("FilterCount").Replace("%c", ((IList)fld.EditValue).Count.ToString()) : "") +
@@ -1245,7 +1285,8 @@ public partial class project1 {
             _Username.SetDbValue(row["Username"]);
             PasswordHash.SetDbValue(row["PasswordHash"]);
             _Name.SetDbValue(row["Name"]);
-            PreferredTimezone.SetDbValue(row["PreferredTimezone"]);
+            PreferredTimezoneID.SetDbValue(row["PreferredTimezoneID"]);
+            UserLevelID.SetDbValue(row["UserLevelID"]);
         }
 
         // Load row values from recordset
@@ -1276,6 +1317,7 @@ public partial class project1 {
             // Common render codes
 
             // Id
+            Id.CellCssStyle = "white-space: nowrap;";
 
             // Username
 
@@ -1283,7 +1325,9 @@ public partial class project1 {
 
             // Name
 
-            // PreferredTimezone
+            // PreferredTimezoneID
+
+            // UserLevelID
 
             // Id
             Id.ViewValue = Id.CurrentValue;
@@ -1294,16 +1338,58 @@ public partial class project1 {
             _Username.ViewCustomAttributes = "";
 
             // PasswordHash
-            PasswordHash.ViewValue = ConvertToString(PasswordHash.CurrentValue); // DN
+            PasswordHash.ViewValue = Language.Phrase("PasswordMask");
             PasswordHash.ViewCustomAttributes = "";
 
             // Name
             _Name.ViewValue = ConvertToString(_Name.CurrentValue); // DN
             _Name.ViewCustomAttributes = "";
 
-            // PreferredTimezone
-            PreferredTimezone.ViewValue = ConvertToString(PreferredTimezone.CurrentValue); // DN
-            PreferredTimezone.ViewCustomAttributes = "";
+            // PreferredTimezoneID
+            string curVal = ConvertToString(PreferredTimezoneID.CurrentValue);
+            if (!Empty(curVal)) {
+                if (PreferredTimezoneID.Lookup != null && IsDictionary(PreferredTimezoneID.Lookup?.Options) && PreferredTimezoneID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                    PreferredTimezoneID.ViewValue = PreferredTimezoneID.LookupCacheOption(curVal);
+                } else { // Lookup from database // DN
+                    string filterWrk = SearchFilter(PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchExpression, "=", PreferredTimezoneID.CurrentValue, PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchDataType, "");
+                    string? sqlWrk = PreferredTimezoneID.Lookup?.GetSql(false, filterWrk, null, this, true, true);
+                    var rswrk = sqlWrk != null ? Connection.GetRows(sqlWrk) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                    if (rswrk?.Count > 0 && PreferredTimezoneID.Lookup != null) { // Lookup values found
+                        var listwrk = PreferredTimezoneID.Lookup?.RenderViewRow(rswrk[0]);
+                        PreferredTimezoneID.ViewValue = PreferredTimezoneID.DisplayValue(listwrk);
+                    } else {
+                        PreferredTimezoneID.ViewValue = FormatNumber(PreferredTimezoneID.CurrentValue, PreferredTimezoneID.FormatPattern);
+                    }
+                }
+            } else {
+                PreferredTimezoneID.ViewValue = DbNullValue;
+            }
+            PreferredTimezoneID.ViewCustomAttributes = "";
+
+            // UserLevelID
+            if (Security.CanAdmin) { // System admin
+                string curVal2 = ConvertToString(UserLevelID.CurrentValue);
+                if (!Empty(curVal2)) {
+                    if (UserLevelID.Lookup != null && IsDictionary(UserLevelID.Lookup?.Options) && UserLevelID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                        UserLevelID.ViewValue = UserLevelID.LookupCacheOption(curVal2);
+                    } else { // Lookup from database // DN
+                        string filterWrk2 = SearchFilter(UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchExpression, "=", UserLevelID.CurrentValue, UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchDataType, "");
+                        string? sqlWrk2 = UserLevelID.Lookup?.GetSql(false, filterWrk2, null, this, true, true);
+                        var rswrk2 = sqlWrk2 != null ? Connection.GetRows(sqlWrk2) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                        if (rswrk2?.Count > 0 && UserLevelID.Lookup != null) { // Lookup values found
+                            var listwrk = UserLevelID.Lookup?.RenderViewRow(rswrk2[0]);
+                            UserLevelID.ViewValue = UserLevelID.DisplayValue(listwrk);
+                        } else {
+                            UserLevelID.ViewValue = FormatNumber(UserLevelID.CurrentValue, UserLevelID.FormatPattern);
+                        }
+                    }
+                } else {
+                    UserLevelID.ViewValue = DbNullValue;
+                }
+            } else {
+                UserLevelID.ViewValue = Language.Phrase("PasswordMask");
+            }
+            UserLevelID.ViewCustomAttributes = "";
 
             // Id
             Id.HrefValue = "";
@@ -1321,9 +1407,13 @@ public partial class project1 {
             _Name.HrefValue = "";
             _Name.TooltipValue = "";
 
-            // PreferredTimezone
-            PreferredTimezone.HrefValue = "";
-            PreferredTimezone.TooltipValue = "";
+            // PreferredTimezoneID
+            PreferredTimezoneID.HrefValue = "";
+            PreferredTimezoneID.TooltipValue = "";
+
+            // UserLevelID
+            UserLevelID.HrefValue = "";
+            UserLevelID.TooltipValue = "";
 
             // Call Row Rendered event
             RowRendered();
@@ -1354,9 +1444,7 @@ public partial class project1 {
 
             // PasswordHash
             PasswordHash.SetupEditAttributes();
-            if (!PasswordHash.Raw)
-                PasswordHash.CurrentValue = HtmlDecode(PasswordHash.CurrentValue);
-            PasswordHash.EditValue = PasswordHash.CurrentValue;
+            PasswordHash.EditValue = Language.Phrase("PasswordMask"); // Show as masked password
             PasswordHash.PlaceHolder = RemoveHtml(PasswordHash.Caption);
 
             // Name
@@ -1366,12 +1454,21 @@ public partial class project1 {
             _Name.EditValue = _Name.CurrentValue;
             _Name.PlaceHolder = RemoveHtml(_Name.Caption);
 
-            // PreferredTimezone
-            PreferredTimezone.SetupEditAttributes();
-            if (!PreferredTimezone.Raw)
-                PreferredTimezone.CurrentValue = HtmlDecode(PreferredTimezone.CurrentValue);
-            PreferredTimezone.EditValue = PreferredTimezone.CurrentValue;
-            PreferredTimezone.PlaceHolder = RemoveHtml(PreferredTimezone.Caption);
+            // PreferredTimezoneID
+            PreferredTimezoneID.SetupEditAttributes();
+            PreferredTimezoneID.PlaceHolder = RemoveHtml(PreferredTimezoneID.Caption);
+            if (!Empty(PreferredTimezoneID.EditValue) && IsNumeric(PreferredTimezoneID.EditValue))
+                PreferredTimezoneID.EditValue = FormatNumber(PreferredTimezoneID.EditValue, null);
+
+            // UserLevelID
+            UserLevelID.SetupEditAttributes();
+            if (!Security.CanAdmin) { // System admin
+                UserLevelID.EditValue = Language.Phrase("PasswordMask");
+            } else {
+                UserLevelID.PlaceHolder = RemoveHtml(UserLevelID.Caption);
+                if (!Empty(UserLevelID.EditValue) && IsNumeric(UserLevelID.EditValue))
+                    UserLevelID.EditValue = FormatNumber(UserLevelID.EditValue, null);
+            }
 
             // Call Row Rendered event
             RowRendered();
@@ -1405,17 +1502,17 @@ public partial class project1 {
                 if (doc.Horizontal) { // Horizontal format, write header
                     doc.BeginExportRow();
                     if (exportType == "view") {
-                        doc.ExportCaption(Id);
                         doc.ExportCaption(_Username);
                         doc.ExportCaption(PasswordHash);
                         doc.ExportCaption(_Name);
-                        doc.ExportCaption(PreferredTimezone);
+                        doc.ExportCaption(PreferredTimezoneID);
+                        doc.ExportCaption(UserLevelID);
                     } else {
-                        doc.ExportCaption(Id);
                         doc.ExportCaption(_Username);
                         doc.ExportCaption(PasswordHash);
                         doc.ExportCaption(_Name);
-                        doc.ExportCaption(PreferredTimezone);
+                        doc.ExportCaption(PreferredTimezoneID);
+                        doc.ExportCaption(UserLevelID);
                     }
                     doc.EndExportRow();
                 }
@@ -1453,17 +1550,17 @@ public partial class project1 {
                     if (!doc.ExportCustom) {
                         doc.BeginExportRow(rowcnt); // Allow CSS styles if enabled
                         if (exportType == "view") {
-                            await doc.ExportField(Id);
                             await doc.ExportField(_Username);
                             await doc.ExportField(PasswordHash);
                             await doc.ExportField(_Name);
-                            await doc.ExportField(PreferredTimezone);
+                            await doc.ExportField(PreferredTimezoneID);
+                            await doc.ExportField(UserLevelID);
                         } else {
-                            await doc.ExportField(Id);
                             await doc.ExportField(_Username);
                             await doc.ExportField(PasswordHash);
                             await doc.ExportField(_Name);
-                            await doc.ExportField(PreferredTimezone);
+                            await doc.ExportField(PreferredTimezoneID);
+                            await doc.ExportField(UserLevelID);
                         }
                         doc.EndExportRow(rowcnt);
                     }
@@ -1475,6 +1572,48 @@ public partial class project1 {
             } while (recCnt < stopRec && await dataReader.ReadAsync()); // DN
             if (!doc.ExportCustom)
                 doc.ExportTableFooter();
+        }
+
+        // User ID filter
+        public string GetUserIDFilter(object userid)
+        {
+            string userIdFilter = "[Id] = " + QuotedValue(userid, DataType.Number, Config.UserTableDbId);
+            return userIdFilter;
+        }
+
+        // Add User ID filter
+        public string AddUserIDFilter(string filter = "", string id = "")
+        {
+            string filterWrk = "";
+            if (id == "")
+                id = (CurrentPageID() == "list") ? CurrentAction : CurrentPageID();
+            if (!UserIDAllow(id) && !Security.IsAdmin) {
+                filterWrk = Security.UserIDList();
+                if (!Empty(filterWrk))
+                    filterWrk = "[Id] IN (" + filterWrk + ")";
+            }
+
+            // Call User ID Filtering event
+            UserIdFiltering(ref filterWrk);
+            AddFilter(ref filter, filterWrk);
+            return filter;
+        }
+
+        // User ID subquery
+        public string GetUserIDSubquery(DbField fld, DbField masterfld)
+        {
+            string wrk = "";
+            string sql = "SELECT " + masterfld.Expression + " FROM dbo.Users";
+            string filter = AddUserIDFilter();
+            if (!Empty(filter))
+                sql += " WHERE " + filter;
+            var list = Connection.GetRows(sql);
+            wrk = String.Join(",", list.Select(d => QuotedValue(d.Values.First(), masterfld.DataType, Config.UserTableDbId))); // List all values
+            if (!Empty(wrk))
+                wrk = fld.Expression + " IN (" + wrk + ")";
+            else
+                wrk = "0=1"; // No User ID value found
+            return wrk;
         }
 
         // Table filter
@@ -1605,6 +1744,13 @@ public partial class project1 {
         // Lookup Selecting event
         public void LookupSelecting(DbField fld, ref string filter) {
             // Enter your code here
+            if (fld.Name == "PreferredTimezone") {
+                var options = new Dictionary<string, Dictionary<string, object>>();
+                foreach (var tz in TimeZoneInfo.GetSystemTimeZones()) {
+                    options[tz.Id] = new Dictionary<string, object> { { "df", tz.Id } };
+                }
+                fld.Lookup.Options = options;
+            }
         }
 
         // Row Rendering event

@@ -45,6 +45,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "Status": @Html.Raw(participantsAdd.Status.ToClientList(participantsAdd)),
         })
         .build();
     window[form.id] = form;
@@ -100,9 +101,38 @@ loadjs.ready("head", function() {
         <label id="elh_Participants_Status" for="x_Status" class="@(participantsAdd.LeftColumnClass)">@Html.Raw(participantsAdd.Status.Caption)@Html.Raw(participantsAdd.Status.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
         <div class="@(participantsAdd.RightColumnClass)"><div @Html.Raw(participantsAdd.Status.CellAttributes)>
 <span id="el_Participants_Status">
-<input type="@(participantsAdd.Status.InputTextType)" name="x_Status" id="x_Status" data-table="Participants" data-field="x_Status" value="@Html.Raw(participantsAdd.Status.EditValue)" size="30" maxlength="20" placeholder="@Html.Raw(HtmlEncode(participantsAdd.Status.PlaceHolder))" data-format-pattern="@(participantsAdd.Status.FormatPattern)"@Html.Raw(participantsAdd.Status.EditAttributes) aria-describedby="x_Status_help">
-@Html.Raw(participantsAdd.Status.GetCustomMessage)
-<div class="invalid-feedback">@Html.Raw(participantsAdd.Status.GetErrorMessage())</div>
+    <select
+        id="x_Status"
+        name="x_Status"
+        class="form-select ew-select@(participantsAdd.Status.IsInvalidClass)"
+        data-select2-id="fParticipantsadd_x_Status"
+        data-table="Participants"
+        data-field="x_Status"
+        data-value-separator="@(participantsAdd.Status.DisplayValueSeparatorAttribute)"
+        data-placeholder="@(HtmlEncode(participantsAdd.Status.PlaceHolder))"
+        @Html.Raw(participantsAdd.Status.EditAttributes)>
+        @(participantsAdd.Status.SelectOptionListHtml("x_Status"))
+    </select>
+    @Html.Raw(participantsAdd.Status.GetCustomMessage)
+    <div class="invalid-feedback">@Html.Raw(participantsAdd.Status.GetErrorMessage())</div>
+<script>
+loadjs.ready("fParticipantsadd", function() {
+    var options = { name: "x_Status", selectId: "fParticipantsadd_x_Status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fParticipantsadd.lists.Status?.lookupOptions.length) {
+        options.data = { id: "x_Status", form: "fParticipantsadd" };
+    } else {
+        options.ajax = { id: "x_Status", form: "fParticipantsadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.Participants.fields.Status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

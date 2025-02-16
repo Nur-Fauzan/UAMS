@@ -96,7 +96,7 @@
 .tabulator {
   position: relative;
   border: 1px solid var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   font-size: 16px;
   text-align: left;
   overflow: hidden;
@@ -123,7 +123,7 @@
   box-sizing: border-box;
   width: 100%;
   border-bottom: 1px solid var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
   font-weight: bold;
   white-space: nowrap;
@@ -151,7 +151,7 @@
   flex-direction: column;
   justify-content: flex-start;
   border-right: 1px solid #aaa;
-  background: #ffffff;
+  background: #FFFFFF;
   text-align: left;
   vertical-align: bottom;
   overflow: hidden;
@@ -383,7 +383,7 @@
 .tabulator .tabulator-tableholder .tabulator-table {
   position: relative;
   display: inline-block;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   white-space: nowrap;
   overflow: visible;
   color: #333;
@@ -499,7 +499,7 @@
   background: rgba(255, 255, 255, 0.2);
 }
 .tabulator .tabulator-footer .tabulator-page.active {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 .tabulator .tabulator-footer .tabulator-page:disabled {
   opacity: 0.5;
@@ -563,7 +563,7 @@
   position: relative;
   box-sizing: border-box;
   min-height: 24px;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
 }
 .tabulator-row.tabulator-row-even {
   background-color: rgba(var(--bs-emphasis-color-rgb), 0.05);
@@ -782,7 +782,7 @@
   width: 15px;
   border-radius: 20px;
   background: #666;
-  color: #ffffff;
+  color: #FFFFFF;
   font-weight: bold;
   font-size: 1.1em;
 }
@@ -799,7 +799,7 @@
   display: none;
 }
 .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle svg {
-  stroke: #ffffff;
+  stroke: #FFFFFF;
 }
 .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle .tabulator-responsive-collapse-toggle-close {
   display: none;
@@ -872,7 +872,7 @@
   position: absolute;
   display: inline-block;
   box-sizing: border-box;
-  background: #ffffff;
+  background: #FFFFFF;
   border: 1px solid var(--bs-border-color);
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
   font-size: 16px;
@@ -943,7 +943,7 @@
   outline: none;
 }
 .tabulator-edit-list .tabulator-edit-list-item.active {
-  color: #ffffff;
+  color: #FFFFFF;
   background: #1D68CD;
 }
 .tabulator-edit-list .tabulator-edit-list-item.active.focused {
@@ -955,7 +955,7 @@
 @media (hover: hover) and (pointer: fine) {
   .tabulator-edit-list .tabulator-edit-list-item:hover {
     cursor: pointer;
-    color: #ffffff;
+    color: #FFFFFF;
     background: #1D68CD;
   }
 }
@@ -1177,7 +1177,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   border: none;
 }
 .tabulator .tabulator-header {
@@ -1187,7 +1187,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 .tabulator .tabulator-header .tabulator-col {
   border-right: none;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
 }
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
   padding: 12px;
@@ -1249,9 +1249,9 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   border-bottom-right-radius: 4px;
 }
 .tabulator .tabulator-footer .tabulator-page.active {
-  border-color: #0d6efd;
-  background-color: #0d6efd;
-  color: #ffffff;
+  border-color: #0D6EFD;
+  background-color: #0D6EFD;
+  color: #FFFFFF;
 }
 .tabulator .tabulator-footer .tabulator-page:disabled {
   border-color: var(--bs-border-color);
@@ -1267,25 +1267,25 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 .tabulator.thead-dark .tabulator-header {
   border-color: var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 .tabulator.thead-dark .tabulator-header .tabulator-col {
   border-color: var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 .tabulator.table {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
 }
 .tabulator.table:not(.thead-light) .tabulator-header {
   border-color: var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 .tabulator.table:not(.thead-light) .tabulator-header .tabulator-col {
   border-color: var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 .tabulator.table .tabulator-tableholder {
@@ -1293,7 +1293,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 .tabulator.table .tabulator-row {
   border-color: var(--bs-border-color);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 @media (hover: hover) and (pointer: fine) {
@@ -1312,11 +1312,11 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 .tabulator.table .tabulator-footer .tabulator-calcs-holder {
   border-color: var(--bs-border-color) !important;
-  background: #ffffff !important;
+  background: #FFFFFF !important;
 }
 .tabulator.table .tabulator-footer .tabulator-calcs-holder .tabulator-row {
   border-color: var(--bs-border-color) !important;
-  background-color: #ffffff !important;
+  background-color: #FFFFFF !important;
   color: var(--bs-emphasis-color) !important;
 }
 .tabulator.table-striped:not(.table) .tabulator-row.tabulator-row-even {
@@ -1388,7 +1388,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   background: rgb(248, 214.6, 217.8) !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.table-light {
-  background: #f8f9fa !important;
+  background: #F8F9FA !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.table {
   background: #212529 !important;
@@ -1415,7 +1415,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   background: rgb(248, 214.6, 217.8) !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.bg-light {
-  background: #f8f9fa !important;
+  background: #F8F9FA !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.bg-dark {
   background: #212529 !important;
@@ -1442,7 +1442,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   background: rgb(248, 214.6, 217.8) !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell.table-light {
-  background: #f8f9fa !important;
+  background: #F8F9FA !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell.table {
   background: #212529 !important;
@@ -1469,7 +1469,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   background: rgb(248, 214.6, 217.8) !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell.bg-light {
-  background: #f8f9fa !important;
+  background: #F8F9FA !important;
 }
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell.bg-dark {
   background: #212529 !important;
@@ -1509,17 +1509,17 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator-edit-select-list {
-  background: #ffffff;
+  background: #FFFFFF;
 }
 .tabulator-edit-select-list .tabulator-edit-select-list-item.active {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 .tabulator-edit-select-list .tabulator-edit-select-list-item.active.focused {
   outline: 1px solid rgba(255, 255, 255, 0.5);
 }
 @media (hover: hover) and (pointer: fine) {
   .tabulator-edit-select-list .tabulator-edit-select-list-item:hover {
-    color: #ffffff;
+    color: #FFFFFF;
   }
 }
 .tabulator-edit-select-list .tabulator-edit-select-list-notice {
@@ -1571,12 +1571,12 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 
 [data-bs-theme=dark] .tabulator .tabulator-header {
   border-color: rgb(77.4, 80.6, 83.8);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 [data-bs-theme=dark] .tabulator .tabulator-header .tabulator-col {
   border-color: rgb(77.4, 80.6, 83.8);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: var(--bs-emphasis-color);
 }
 @media (hover: hover) and (pointer: fine) {

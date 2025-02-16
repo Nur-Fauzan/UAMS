@@ -1,0 +1,139 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (timezonesEdit.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = timezonesEdit.UseLayout ? "_Layout" : "";
+}
+@timezonesEdit.ShowPageHeader()
+@timezonesEdit.ShowMessages()
+<main class="edit">
+<form name="fTimezonesedit" id="fTimezonesedit" class="@(timezonesEdit.FormClassName)" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+<script>
+var currentTable = @Html.Raw(ConvertToJson(timezonesEdit.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Timezones: currentTable } });
+var currentPageID = ew.PAGE_ID = "edit";
+var currentForm;
+var fTimezonesedit;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fTimezonesedit")
+        .setPageId("edit")
+
+        // Add fields
+        .setFields([
+
+            ["TimezoneID", [fields.TimezoneID.visible && fields.TimezoneID.required ? ew.Validators.required(fields.TimezoneID.caption) : null], fields.TimezoneID.isInvalid],
+            ["TimezoneName", [fields.TimezoneName.visible && fields.TimezoneName.required ? ew.Validators.required(fields.TimezoneName.caption) : null], fields.TimezoneName.isInvalid],
+            ["UtcOffset", [fields.UtcOffset.visible && fields.UtcOffset.required ? ew.Validators.required(fields.UtcOffset.caption) : null], fields.UtcOffset.isInvalid]
+        ])
+
+        // Form_CustomValidate
+        .setCustomValidate(
+            function(fobj) { // DO NOT CHANGE THIS LINE!
+                    // Your custom validation code here, return false if invalid.
+                    return true;
+                }
+        )
+
+        // Use JavaScript validation or not
+        .setValidateRequired(ew.CLIENT_VALIDATE)
+
+        // Dynamic selection lists
+        .setLists({
+        })
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="update">
+<input type="hidden" name="modal" value="@ConvertToInt(timezonesEdit.IsModal)">
+@if (IsJsonResponse()) {
+<input type="hidden" name="json" value="1">
+}
+<input type="hidden" name="@(timezonesEdit.OldKeyName)" value="@Html.Raw(timezonesEdit.OldKey)">
+<div class="ew-edit-div"><!-- page* -->
+@if (timezonesEdit.TimezoneID.Visible) { // timezonesEdit.TimezoneID.Visible (begin)
+    <div id="r_TimezoneID" @Html.Raw(timezonesEdit.TimezoneID.RowAttributes)>
+        <label id="elh_Timezones_TimezoneID" class="@(timezonesEdit.LeftColumnClass)">@Html.Raw(timezonesEdit.TimezoneID.Caption)@Html.Raw(timezonesEdit.TimezoneID.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(timezonesEdit.RightColumnClass)"><div @Html.Raw(timezonesEdit.TimezoneID.CellAttributes)>
+<span id="el_Timezones_TimezoneID">
+<span @Html.Raw(timezonesEdit.TimezoneID.ViewAttributes)>
+<input type="text" readonly class="form-control-plaintext" value="@Html.Raw(RemoveHtml(ConvertToString(timezonesEdit.TimezoneID.EditValue)))"></span>
+<input type="hidden" data-table="Timezones" data-field="x_TimezoneID" data-hidden="1" name="x_TimezoneID" id="x_TimezoneID" value="@Html.Raw(HtmlEncode(timezonesEdit.TimezoneID.CurrentValue))">
+</span>
+</div></div>
+    </div>
+} @* timezonesEdit.TimezoneID.Visible (end) *@
+@if (timezonesEdit.TimezoneName.Visible) { // timezonesEdit.TimezoneName.Visible (begin)
+    <div id="r_TimezoneName" @Html.Raw(timezonesEdit.TimezoneName.RowAttributes)>
+        <label id="elh_Timezones_TimezoneName" for="x_TimezoneName" class="@(timezonesEdit.LeftColumnClass)">@Html.Raw(timezonesEdit.TimezoneName.Caption)@Html.Raw(timezonesEdit.TimezoneName.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(timezonesEdit.RightColumnClass)"><div @Html.Raw(timezonesEdit.TimezoneName.CellAttributes)>
+<span id="el_Timezones_TimezoneName">
+<input type="@(timezonesEdit.TimezoneName.InputTextType)" name="x_TimezoneName" id="x_TimezoneName" data-table="Timezones" data-field="x_TimezoneName" value="@Html.Raw(timezonesEdit.TimezoneName.EditValue)" size="30" maxlength="255" placeholder="@Html.Raw(HtmlEncode(timezonesEdit.TimezoneName.PlaceHolder))" data-format-pattern="@(timezonesEdit.TimezoneName.FormatPattern)"@Html.Raw(timezonesEdit.TimezoneName.EditAttributes) aria-describedby="x_TimezoneName_help">
+@Html.Raw(timezonesEdit.TimezoneName.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(timezonesEdit.TimezoneName.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* timezonesEdit.TimezoneName.Visible (end) *@
+@if (timezonesEdit.UtcOffset.Visible) { // timezonesEdit.UtcOffset.Visible (begin)
+    <div id="r_UtcOffset" @Html.Raw(timezonesEdit.UtcOffset.RowAttributes)>
+        <label id="elh_Timezones_UtcOffset" for="x_UtcOffset" class="@(timezonesEdit.LeftColumnClass)">@Html.Raw(timezonesEdit.UtcOffset.Caption)@Html.Raw(timezonesEdit.UtcOffset.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(timezonesEdit.RightColumnClass)"><div @Html.Raw(timezonesEdit.UtcOffset.CellAttributes)>
+<span id="el_Timezones_UtcOffset">
+<input type="@(timezonesEdit.UtcOffset.InputTextType)" name="x_UtcOffset" id="x_UtcOffset" data-table="Timezones" data-field="x_UtcOffset" value="@Html.Raw(timezonesEdit.UtcOffset.EditValue)" size="30" maxlength="10" placeholder="@Html.Raw(HtmlEncode(timezonesEdit.UtcOffset.PlaceHolder))" data-format-pattern="@(timezonesEdit.UtcOffset.FormatPattern)"@Html.Raw(timezonesEdit.UtcOffset.EditAttributes) aria-describedby="x_UtcOffset_help">
+@Html.Raw(timezonesEdit.UtcOffset.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(timezonesEdit.UtcOffset.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* timezonesEdit.UtcOffset.Visible (end) *@
+</div><!-- /page* -->
+@{ timezonesEdit.CloseRecordset(); }
+@Html.Raw(timezonesEdit.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
+    <div class="@(timezonesEdit.OffsetColumnClass)"><!-- buttons offset -->
+    <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fTimezonesedit">@Html.Raw(Language.Phrase("SaveBtn"))</button>
+@if (IsJsonResponse()) {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-bs-dismiss="modal">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+} else {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" form="fTimezonesedit" data-href="@AppPath(timezonesEdit.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+}
+    </div><!-- /buttons offset -->
+@Html.Raw(timezonesEdit.IsModal ? "</template>" : "</div>")<!-- /buttons .row -->
+</form>
+</main>
+@timezonesEdit.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Timezones");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>

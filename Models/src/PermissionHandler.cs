@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// User level permisson handler
     /// </summary>
@@ -26,7 +26,17 @@ public partial class project1 {
                 if (routeValues?.TryGetValue("controller", out object? name) ?? false) { // Note: Check "controller", not "action"
                     string pageAction = ConvertToString(name).ToLower();
                     if (Config.ApiPageActions.Contains(pageAction, StringComparer.OrdinalIgnoreCase)) {
-                        context.Succeed(requirement);
+                        string tblVar = ConvertToString(routeValues["table"] ?? Post(Config.ApiObjectName));
+                        if (!Empty(tblVar))
+                            security.LoadTablePermissions(tblVar);
+                        if (pageAction == Config.ApiListAction && security.CanList ||
+                            pageAction == Config.ApiExportAction && (security.CanExport || Empty(tblVar)) ||
+                            pageAction == Config.ApiViewAction && security.CanView ||
+                            pageAction == Config.ApiAddAction && security.CanAdd ||
+                            pageAction == Config.ApiEditAction && security.CanEdit ||
+                            pageAction == Config.ApiDeleteAction && security.CanDelete ||
+                            pageAction == Config.ApiFileAction && (security.CanList || security.CanView))
+                            context.Succeed(requirement);
                     } else if (pageAction == Config.ApiLookupAction) { // Lookup
                         if (SameText(Request?.ContentType, "application/json")) { // Batch lookup, to be checked in controller
                             context.Succeed(requirement);
@@ -39,7 +49,9 @@ public partial class project1 {
                                     string fieldName = Post(Config.ApiFieldName); // Get field name
                                     var tbl = page.FieldByName(fieldName)?.Lookup?.GetTable();
                                     if (tbl != null) {
-                                        context.Succeed(requirement);
+                                        security.LoadTablePermissions(tbl.TableVar);
+                                        if (security.CanLookup)
+                                            context.Succeed(requirement);
                                     }
                                 }
                             }
@@ -72,7 +84,8 @@ public partial class project1 {
                                 context.Succeed(requirement);
                         }
                     } else if (pageAction == Config.ApiUploadAction) { // Upload
-                        context.Succeed(requirement);
+                        if (security.IsLoggedIn) // ValidApiRequest() should have logged in the user
+                            context.Succeed(requirement);
                     } else if (pageAction == Config.ApiPermissionsAction) { // Permission
                         if (IsGet() || IsPost() && security.IsAdmin)
                             context.Succeed(requirement);
@@ -81,6 +94,8 @@ public partial class project1 {
                         pageAction == Config.ApiExportChartAction) {
                         context.Succeed(requirement); // To be validated by [AutoValidateAntiforgeryToken]
                     } else if (pageAction == Config.ApiChatAction) { // Chat
+                        if (security.IsLoggedIn) // ValidApiRequest() should have logged in the user
+                            context.Succeed(requirement);
                     } else { // Other actions
                         context.Succeed(requirement);
                     }
@@ -94,6 +109,86 @@ public partial class project1 {
                 string table = (ar.Length > 2) ? ar[1] : "";
                 string pageAction = (ar.Length > 2) ? ar[2] : currentPageName;
                 string redirectUrl = "";
+
+                // Auto login
+                if (!security.IsLoggedIn && !IsPasswordReset() && !IsPasswordExpired() && !IsLoggingIn2FA() && !IsRegistering() && !IsRegistering2FA())
+                    security.AutoLogin();
+
+                // Validate security
+                if (table != "") { // Table level
+                    security.LoadTablePermissions(table);
+                    if (pageAction == Config.ViewAction && !security.CanView ||
+                        (pageAction == Config.EditAction || pageAction == Config.UpdateAction) && !security.CanEdit ||
+                        pageAction == Config.AddAction && !security.CanAdd ||
+                        pageAction == Config.DeleteAction && !security.CanDelete ||
+                        pageAction == Config.SearchAction && !security.CanSearch) {
+                        security.SaveLastUrl();
+                        SetFailureMessage(DeniedMessage()); // Set no permission
+                        if (security.CanList) { // Back to list
+                            pageAction = Config.ListAction;
+                            var tbl = Resolve(table);
+                            if (tbl != null) {
+                                string routeName = tbl.ListUrl;
+                                if (GetPathByName(routeName, table, pageAction) is string url)
+                                    redirectUrl = url;
+                            }
+                        } else {
+                            redirectUrl = LoginUrl;
+                        }
+                    } else if (pageAction == Config.ListAction && !security.CanList || // List Permission
+                        (new[] {
+                            Config.CustomReportAction,
+                            Config.SummaryReportAction,
+                            Config.CrosstabReportAction,
+                            Config.DashboardReportAction,
+                            Config.CalendarReportAction
+                        }).Contains(pageAction) && !security.CanList) { // No permission
+                        security.SaveLastUrl();
+                        SetFailureMessage(DeniedMessage()); // Set no permission
+                        redirectUrl = LoginUrl;
+                    }
+                } else { // Others
+                    if (pageAction == "changepassword") { // Change password
+                        if (!IsPasswordReset() && !IsPasswordExpired()) {
+                            if (!security.IsLoggedIn || security.IsSysAdmin)
+                                redirectUrl = LoginUrl;
+                        }
+                    } else if (pageAction == "personaldata") { // Personal data
+                        if (!security.IsLoggedIn || security.IsSysAdmin) {
+                            SetFailureMessage(DeniedMessage()); // Set no permission
+                            redirectUrl = LoginUrl;
+                        }
+                    } else if (pageAction == "userpriv") { // User priv
+                        table = "UserLevels";
+                        pageAction = Config.ListAction;
+                        var tbl = Resolve(table);
+                        if (tbl != null) {
+                            string routeName = tbl.ListUrl;
+                            security.LoadTablePermissions(table);
+                            if (!security.IsLoggedIn || !security.IsAdmin) {
+                                SetFailureMessage(DeniedMessage()); // Set no permission
+                                if (GetPathByName(routeName, table, pageAction) is string url)
+                                    redirectUrl = url; // Redirect to List page of User Level table
+                            }
+                        }
+                    } else if (pageAction == "filemanager") { // File manager
+                        if (!security.IsLoggedIn) {
+                            Response?.OnStarting(async () => {
+                                Response.StatusCode = 403;
+                                await Response.WriteAsync(DeniedMessage());
+                            });
+                            return Task.CompletedTask;
+                        }
+                    } else if (pageAction == Config.ChatUrl) { // Chat
+                        if (!security.IsLoggedIn || security.IsSysAdmin) { // Must be a user from users table
+                            Response?.OnStarting(async () => {
+                                Response.StatusCode = 403;
+                                await Response.WriteAsync(DeniedMessage());
+                            });
+                            return Task.CompletedTask;
+                        }
+                    }
+                }
 
                 // Succeed
                 if (Empty(redirectUrl)) {

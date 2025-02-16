@@ -87,5 +87,5 @@ global using SqlKata.Execution;
 global using ASPNETMaker2024.Models;
 global using ASPNETMaker2024.Controllers;
 global using ASPNETMaker2024.Entities;
-global using static ASPNETMaker2024.Models.project1;
-global using GLOBALS = ASPNETMaker2024.Models.project1;
+global using static ASPNETMaker2024.Models.UAMS_20250216_1835;
+global using GLOBALS = ASPNETMaker2024.Models.UAMS_20250216_1835;

@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     // Chart data comparer // DN
     public class ChartDataComparer : Comparer<Dictionary<string, object>>
     {

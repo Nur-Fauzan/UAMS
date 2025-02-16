@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// error
     /// </summary>
@@ -38,7 +38,7 @@ public partial class project1 {
         public string PageID = "error";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "error";
@@ -140,7 +140,7 @@ public partial class project1 {
         }
 
         // Page name
-        public string PageName => "RefreshTokensDelete";
+        public string PageName => "logout";
 
         // Page URL
         public string PageUrl

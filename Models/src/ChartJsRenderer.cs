@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// Chart.js Renderer class
     /// </summary>
@@ -58,7 +58,7 @@ public partial class project1 {
                 { "yAxisFormat", yAxisFormat },
                 { "useDrilldownPanel", null }
             };
-            if (!Empty(Chart.DrillDownUrl))
+            if (!Empty(Chart.DrillDownUrl) && AllowList(Config.ProjectId + Chart.DrillDownTable))
                 args["useDrilldownPanel"] = Chart.UseDrillDownPanel;
             if (Chart.IsPieChart || Chart.IsDoughnutChart)
                 args["showPercentage"] = Chart.ShowPercentage;

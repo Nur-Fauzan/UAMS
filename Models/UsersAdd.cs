@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// usersAdd
     /// </summary>
@@ -36,7 +36,7 @@ public partial class project1 {
         public string PageID = "add";
 
         // Project ID
-        public string ProjectID = "{B73364AA-7E30-4718-8997-141A815ECA58}";
+        public string ProjectID = "{EE5ECABA-974C-4BD5-866A-C63F74CCEED2}";
 
         // Page object name
         public string PageObjName = "usersAdd";
@@ -201,7 +201,8 @@ public partial class project1 {
             _Username.SetVisibility();
             PasswordHash.SetVisibility();
             _Name.SetVisibility();
-            PreferredTimezone.SetVisibility();
+            PreferredTimezoneID.SetVisibility();
+            UserLevelID.SetVisibility();
         }
 
         // Constructor
@@ -528,6 +529,10 @@ public partial class project1 {
             if (UseAjaxActions)
                 InlineDelete = true;
 
+            // Set up lookup cache
+            await SetupLookupOptions(PreferredTimezoneID);
+            await SetupLookupOptions(UserLevelID);
+
             // Load default values for add
             LoadDefaultValues();
 
@@ -645,6 +650,8 @@ public partial class project1 {
 
             // Set LoginStatus, Page Rendering and Page Render
             if (!IsApi() && !IsTerminated) {
+                SetupLoginStatus(); // Setup login status
+
                 // Pass login status to client side
                 SetClientVar("login", LoginStatus);
 
@@ -708,13 +715,22 @@ public partial class project1 {
                     _Name.SetFormValue(val);
             }
 
-            // Check field name 'PreferredTimezone' before field var 'x_PreferredTimezone'
-            val = CurrentForm.HasValue("PreferredTimezone") ? CurrentForm.GetValue("PreferredTimezone") : CurrentForm.GetValue("x_PreferredTimezone");
-            if (!PreferredTimezone.IsDetailKey) {
-                if (IsApi() && !CurrentForm.HasValue("PreferredTimezone") && !CurrentForm.HasValue("x_PreferredTimezone")) // DN
-                    PreferredTimezone.Visible = false; // Disable update for API request
+            // Check field name 'PreferredTimezoneID' before field var 'x_PreferredTimezoneID'
+            val = CurrentForm.HasValue("PreferredTimezoneID") ? CurrentForm.GetValue("PreferredTimezoneID") : CurrentForm.GetValue("x_PreferredTimezoneID");
+            if (!PreferredTimezoneID.IsDetailKey) {
+                if (IsApi() && !CurrentForm.HasValue("PreferredTimezoneID") && !CurrentForm.HasValue("x_PreferredTimezoneID")) // DN
+                    PreferredTimezoneID.Visible = false; // Disable update for API request
                 else
-                    PreferredTimezone.SetFormValue(val);
+                    PreferredTimezoneID.SetFormValue(val);
+            }
+
+            // Check field name 'UserLevelID' before field var 'x_UserLevelID'
+            val = CurrentForm.HasValue("UserLevelID") ? CurrentForm.GetValue("UserLevelID") : CurrentForm.GetValue("x_UserLevelID");
+            if (!UserLevelID.IsDetailKey) {
+                if (IsApi() && !CurrentForm.HasValue("UserLevelID") && !CurrentForm.HasValue("x_UserLevelID")) // DN
+                    UserLevelID.Visible = false; // Disable update for API request
+                else
+                    UserLevelID.SetFormValue(val);
             }
 
             // Check field name 'Id' before field var 'x_Id'
@@ -728,7 +744,8 @@ public partial class project1 {
             _Username.CurrentValue = _Username.FormValue;
             PasswordHash.CurrentValue = PasswordHash.FormValue;
             _Name.CurrentValue = _Name.FormValue;
-            PreferredTimezone.CurrentValue = PreferredTimezone.FormValue;
+            PreferredTimezoneID.CurrentValue = PreferredTimezoneID.FormValue;
+            UserLevelID.CurrentValue = UserLevelID.FormValue;
         }
 
         // Load row based on key values
@@ -755,6 +772,13 @@ public partial class project1 {
                 if (Config.Debug)
                     throw;
             }
+
+            // Check if valid User ID
+            if (res) {
+                res = ShowOptionLink("add");
+                if (!res)
+                    FailureMessage = DeniedMessage();
+            }
             return res;
         }
 
@@ -773,7 +797,8 @@ public partial class project1 {
             _Username.SetDbValue(row["Username"]);
             PasswordHash.SetDbValue(row["PasswordHash"]);
             _Name.SetDbValue(row["Name"]);
-            PreferredTimezone.SetDbValue(row["PreferredTimezone"]);
+            PreferredTimezoneID.SetDbValue(row["PreferredTimezoneID"]);
+            UserLevelID.SetDbValue(row["UserLevelID"]);
         }
         #pragma warning restore 162, 168, 1998, 4014
 
@@ -784,7 +809,8 @@ public partial class project1 {
             row.Add("Username", _Username.DefaultValue ?? DbNullValue); // DN
             row.Add("PasswordHash", PasswordHash.DefaultValue ?? DbNullValue); // DN
             row.Add("Name", _Name.DefaultValue ?? DbNullValue); // DN
-            row.Add("PreferredTimezone", PreferredTimezone.DefaultValue ?? DbNullValue); // DN
+            row.Add("PreferredTimezoneID", PreferredTimezoneID.DefaultValue ?? DbNullValue); // DN
+            row.Add("UserLevelID", UserLevelID.DefaultValue ?? DbNullValue); // DN
             return row;
         }
 
@@ -830,30 +856,71 @@ public partial class project1 {
             // Name
             _Name.RowCssClass = "row";
 
-            // PreferredTimezone
-            PreferredTimezone.RowCssClass = "row";
+            // PreferredTimezoneID
+            PreferredTimezoneID.RowCssClass = "row";
+
+            // UserLevelID
+            UserLevelID.RowCssClass = "row";
 
             // View row
             if (RowType == RowType.View) {
-                // Id
-                Id.ViewValue = Id.CurrentValue;
-                Id.ViewCustomAttributes = "";
-
                 // Username
                 _Username.ViewValue = ConvertToString(_Username.CurrentValue); // DN
                 _Username.ViewCustomAttributes = "";
 
                 // PasswordHash
-                PasswordHash.ViewValue = ConvertToString(PasswordHash.CurrentValue); // DN
+                PasswordHash.ViewValue = Language.Phrase("PasswordMask");
                 PasswordHash.ViewCustomAttributes = "";
 
                 // Name
                 _Name.ViewValue = ConvertToString(_Name.CurrentValue); // DN
                 _Name.ViewCustomAttributes = "";
 
-                // PreferredTimezone
-                PreferredTimezone.ViewValue = ConvertToString(PreferredTimezone.CurrentValue); // DN
-                PreferredTimezone.ViewCustomAttributes = "";
+                // PreferredTimezoneID
+                string curVal = ConvertToString(PreferredTimezoneID.CurrentValue);
+                if (!Empty(curVal)) {
+                    if (PreferredTimezoneID.Lookup != null && IsDictionary(PreferredTimezoneID.Lookup?.Options) && PreferredTimezoneID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                        PreferredTimezoneID.ViewValue = PreferredTimezoneID.LookupCacheOption(curVal);
+                    } else { // Lookup from database // DN
+                        string filterWrk = SearchFilter(PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchExpression, "=", PreferredTimezoneID.CurrentValue, PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchDataType, "");
+                        string? sqlWrk = PreferredTimezoneID.Lookup?.GetSql(false, filterWrk, null, this, true, true);
+                        var rswrk = sqlWrk != null ? Connection.GetRows(sqlWrk) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                        if (rswrk?.Count > 0 && PreferredTimezoneID.Lookup != null) { // Lookup values found
+                            var listwrk = PreferredTimezoneID.Lookup?.RenderViewRow(rswrk[0]);
+                            PreferredTimezoneID.ViewValue = PreferredTimezoneID.DisplayValue(listwrk);
+                        } else {
+                            PreferredTimezoneID.ViewValue = FormatNumber(PreferredTimezoneID.CurrentValue, PreferredTimezoneID.FormatPattern);
+                        }
+                    }
+                } else {
+                    PreferredTimezoneID.ViewValue = DbNullValue;
+                }
+                PreferredTimezoneID.ViewCustomAttributes = "";
+
+                // UserLevelID
+                if (Security.CanAdmin) { // System admin
+                    string curVal2 = ConvertToString(UserLevelID.CurrentValue);
+                    if (!Empty(curVal2)) {
+                        if (UserLevelID.Lookup != null && IsDictionary(UserLevelID.Lookup?.Options) && UserLevelID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                            UserLevelID.ViewValue = UserLevelID.LookupCacheOption(curVal2);
+                        } else { // Lookup from database // DN
+                            string filterWrk2 = SearchFilter(UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchExpression, "=", UserLevelID.CurrentValue, UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchDataType, "");
+                            string? sqlWrk2 = UserLevelID.Lookup?.GetSql(false, filterWrk2, null, this, true, true);
+                            var rswrk2 = sqlWrk2 != null ? Connection.GetRows(sqlWrk2) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                            if (rswrk2?.Count > 0 && UserLevelID.Lookup != null) { // Lookup values found
+                                var listwrk = UserLevelID.Lookup?.RenderViewRow(rswrk2[0]);
+                                UserLevelID.ViewValue = UserLevelID.DisplayValue(listwrk);
+                            } else {
+                                UserLevelID.ViewValue = FormatNumber(UserLevelID.CurrentValue, UserLevelID.FormatPattern);
+                            }
+                        }
+                    } else {
+                        UserLevelID.ViewValue = DbNullValue;
+                    }
+                } else {
+                    UserLevelID.ViewValue = Language.Phrase("PasswordMask");
+                }
+                UserLevelID.ViewCustomAttributes = "";
 
                 // Username
                 _Username.HrefValue = "";
@@ -864,8 +931,11 @@ public partial class project1 {
                 // Name
                 _Name.HrefValue = "";
 
-                // PreferredTimezone
-                PreferredTimezone.HrefValue = "";
+                // PreferredTimezoneID
+                PreferredTimezoneID.HrefValue = "";
+
+                // UserLevelID
+                UserLevelID.HrefValue = "";
             } else if (RowType == RowType.Add) {
                 // Username
                 _Username.SetupEditAttributes();
@@ -876,9 +946,7 @@ public partial class project1 {
 
                 // PasswordHash
                 PasswordHash.SetupEditAttributes();
-                if (!PasswordHash.Raw)
-                    PasswordHash.CurrentValue = HtmlDecode(PasswordHash.CurrentValue);
-                PasswordHash.EditValue = HtmlEncode(PasswordHash.CurrentValue);
+                PasswordHash.EditValue = Language.Phrase("PasswordMask"); // Show as masked password
                 PasswordHash.PlaceHolder = RemoveHtml(PasswordHash.Caption);
 
                 // Name
@@ -888,12 +956,49 @@ public partial class project1 {
                 _Name.EditValue = HtmlEncode(_Name.CurrentValue);
                 _Name.PlaceHolder = RemoveHtml(_Name.Caption);
 
-                // PreferredTimezone
-                PreferredTimezone.SetupEditAttributes();
-                if (!PreferredTimezone.Raw)
-                    PreferredTimezone.CurrentValue = HtmlDecode(PreferredTimezone.CurrentValue);
-                PreferredTimezone.EditValue = HtmlEncode(PreferredTimezone.CurrentValue);
-                PreferredTimezone.PlaceHolder = RemoveHtml(PreferredTimezone.Caption);
+                // PreferredTimezoneID
+                PreferredTimezoneID.SetupEditAttributes();
+                string curVal = ConvertToString(PreferredTimezoneID.CurrentValue);
+                if (PreferredTimezoneID.Lookup != null && IsDictionary(PreferredTimezoneID.Lookup?.Options) && PreferredTimezoneID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                    PreferredTimezoneID.EditValue = PreferredTimezoneID.Lookup?.Options.Values.ToList();
+                } else { // Lookup from database
+                    string filterWrk = "";
+                    if (curVal == "") {
+                        filterWrk = "0=1";
+                    } else {
+                        filterWrk = SearchFilter(PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchExpression, "=", PreferredTimezoneID.CurrentValue, PreferredTimezoneID.Lookup?.GetTable()?.Fields["TimezoneID"].SearchDataType, "");
+                    }
+                    string? sqlWrk = PreferredTimezoneID.Lookup?.GetSql(true, filterWrk, null, this, false, true);
+                    var rswrk = sqlWrk != null ? Connection.GetRows(sqlWrk) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                    PreferredTimezoneID.EditValue = rswrk;
+                }
+                PreferredTimezoneID.PlaceHolder = RemoveHtml(PreferredTimezoneID.Caption);
+                if (!Empty(PreferredTimezoneID.EditValue) && IsNumeric(PreferredTimezoneID.EditValue))
+                    PreferredTimezoneID.EditValue = FormatNumber(PreferredTimezoneID.EditValue, null);
+
+                // UserLevelID
+                UserLevelID.SetupEditAttributes();
+                if (!Security.CanAdmin) { // System admin
+                    UserLevelID.EditValue = Language.Phrase("PasswordMask");
+                } else {
+                    string curVal2 = ConvertToString(UserLevelID.CurrentValue);
+                    if (UserLevelID.Lookup != null && IsDictionary(UserLevelID.Lookup?.Options) && UserLevelID.Lookup?.Options.Values.Count > 0) { // Load from cache // DN
+                        UserLevelID.EditValue = UserLevelID.Lookup?.Options.Values.ToList();
+                    } else { // Lookup from database
+                        string filterWrk2 = "";
+                        if (curVal2 == "") {
+                            filterWrk2 = "0=1";
+                        } else {
+                            filterWrk2 = SearchFilter(UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchExpression, "=", UserLevelID.CurrentValue, UserLevelID.Lookup?.GetTable()?.Fields["UserLevelID"].SearchDataType, "");
+                        }
+                        string? sqlWrk2 = UserLevelID.Lookup?.GetSql(true, filterWrk2, null, this, false, true);
+                        var rswrk2 = sqlWrk2 != null ? Connection.GetRows(sqlWrk2) : null; // Must use Sync to avoid overwriting ViewValue in RenderViewRow
+                        UserLevelID.EditValue = rswrk2;
+                    }
+                    UserLevelID.PlaceHolder = RemoveHtml(UserLevelID.Caption);
+                    if (!Empty(UserLevelID.EditValue) && IsNumeric(UserLevelID.EditValue))
+                        UserLevelID.EditValue = FormatNumber(UserLevelID.EditValue, null);
+                }
 
                 // Add refer script
 
@@ -906,8 +1011,11 @@ public partial class project1 {
                 // Name
                 _Name.HrefValue = "";
 
-                // PreferredTimezone
-                PreferredTimezone.HrefValue = "";
+                // PreferredTimezoneID
+                PreferredTimezoneID.HrefValue = "";
+
+                // UserLevelID
+                UserLevelID.HrefValue = "";
             }
             if (RowType == RowType.Add || RowType == RowType.Edit || RowType == RowType.Search) // Add/Edit/Search row
                 SetupFieldTitles();
@@ -930,19 +1038,30 @@ public partial class project1 {
                         _Username.AddErrorMessage(ConvertToString(_Username.RequiredErrorMessage).Replace("%s", _Username.Caption));
                     }
                 }
+                if (!_Username.Raw && Config.RemoveXss && CheckUsername(_Username.FormValue)) {
+                    _Username.AddErrorMessage(Language.Phrase("InvalidUsernameChars"));
+                }
                 if (PasswordHash.Visible && PasswordHash.Required) {
                     if (!PasswordHash.IsDetailKey && Empty(PasswordHash.FormValue)) {
                         PasswordHash.AddErrorMessage(ConvertToString(PasswordHash.RequiredErrorMessage).Replace("%s", PasswordHash.Caption));
                     }
+                }
+                if (!PasswordHash.Raw && Config.RemoveXss && CheckPassword(PasswordHash.FormValue)) {
+                    PasswordHash.AddErrorMessage(Language.Phrase("InvalidPasswordChars"));
                 }
                 if (_Name.Visible && _Name.Required) {
                     if (!_Name.IsDetailKey && Empty(_Name.FormValue)) {
                         _Name.AddErrorMessage(ConvertToString(_Name.RequiredErrorMessage).Replace("%s", _Name.Caption));
                     }
                 }
-                if (PreferredTimezone.Visible && PreferredTimezone.Required) {
-                    if (!PreferredTimezone.IsDetailKey && Empty(PreferredTimezone.FormValue)) {
-                        PreferredTimezone.AddErrorMessage(ConvertToString(PreferredTimezone.RequiredErrorMessage).Replace("%s", PreferredTimezone.Caption));
+                if (PreferredTimezoneID.Visible && PreferredTimezoneID.Required) {
+                    if (!PreferredTimezoneID.IsDetailKey && Empty(PreferredTimezoneID.FormValue)) {
+                        PreferredTimezoneID.AddErrorMessage(ConvertToString(PreferredTimezoneID.RequiredErrorMessage).Replace("%s", PreferredTimezoneID.Caption));
+                    }
+                }
+                if (UserLevelID.Visible && UserLevelID.Required) {
+                    if (Security.CanAdmin && !UserLevelID.IsDetailKey && Empty(UserLevelID.FormValue)) {
+                        UserLevelID.AddErrorMessage(ConvertToString(UserLevelID.RequiredErrorMessage).Replace("%s", UserLevelID.Caption));
                     }
                 }
 
@@ -971,6 +1090,19 @@ public partial class project1 {
 
             // Update current values
             SetCurrentValues(rsnew);
+
+            // Check if valid User ID
+            bool validUser = false;
+            string userIdMsg;
+            if (!Empty(Security.CurrentUserID) && !Security.IsAdmin) { // Non system admin
+                validUser = Security.IsValidUserID(Id.CurrentValue);
+                if (!validUser) {
+                    userIdMsg = Language.Phrase("UnAuthorizedUserID").Replace("%c", ConvertToString(Security.CurrentUserID));
+                    userIdMsg = userIdMsg.Replace("%u", ConvertToString(Id.CurrentValue));
+                    FailureMessage = userIdMsg;
+                    return JsonBoolResult.FalseResult;
+                }
+            }
             if (!Empty(_Username.CurrentValue)) { // Check field with unique index
                 var filter = "(Username = '" + AdjustSql(_Username.CurrentValue, DbId) + "')";
                 if (await GetQueryBuilder().WhereRaw(filter).ExistsAsync()) { // DN
@@ -1038,13 +1170,23 @@ public partial class project1 {
                 _Username.SetDbValue(rsnew, _Username.CurrentValue);
 
                 // PasswordHash
+                if (Config.EncryptedPassword && !IsMaskedPassword(PasswordHash.CurrentValue)) {
+                    PasswordHash.CurrentValue = EncryptPassword(Config.CaseSensitivePassword ? ConvertToString(PasswordHash.CurrentValue) : ConvertToString(PasswordHash.CurrentValue).ToLowerInvariant());
+                }
                 PasswordHash.SetDbValue(rsnew, PasswordHash.CurrentValue);
 
                 // Name
                 _Name.SetDbValue(rsnew, _Name.CurrentValue);
 
-                // PreferredTimezone
-                PreferredTimezone.SetDbValue(rsnew, PreferredTimezone.CurrentValue);
+                // PreferredTimezoneID
+                PreferredTimezoneID.SetDbValue(rsnew, PreferredTimezoneID.CurrentValue);
+
+                // UserLevelID
+                if (Security.CanAdmin) { // System admin
+                UserLevelID.SetDbValue(rsnew, UserLevelID.CurrentValue);
+                }
+
+                // Id
                 return rsnew;
             } catch (Exception e) {
                 if (Config.Debug)
@@ -1067,8 +1209,19 @@ public partial class project1 {
                 PasswordHash.SetFormValue(ConvertToString(value));
             if (row.TryGetValue("Name", out value)) // Name
                 _Name.SetFormValue(ConvertToString(value));
-            if (row.TryGetValue("PreferredTimezone", out value)) // PreferredTimezone
-                PreferredTimezone.SetFormValue(ConvertToString(value));
+            if (row.TryGetValue("PreferredTimezoneID", out value)) // PreferredTimezoneID
+                PreferredTimezoneID.SetFormValue(ConvertToString(value));
+            if (row.TryGetValue("UserLevelID", out value)) // UserLevelID
+                UserLevelID.SetFormValue(ConvertToString(value));
+            if (row.TryGetValue("Id", out value)) // Id
+                Id.SetFormValue(ConvertToString(value));
+        }
+
+        // Show link optionally based on User ID
+        protected bool ShowOptionLink(string pageId = "") { // DN
+            if (Security.IsLoggedIn && !Security.IsAdmin && !UserIDAllow(pageId))
+                return Security.IsValidUserID(Id.CurrentValue);
+            return true;
         }
 
         // Set up Breadcrumb

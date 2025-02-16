@@ -1,7 +1,7 @@
 namespace ASPNETMaker2024.Models;
 
 // Partial class
-public partial class project1 {
+public partial class UAMS_20250216_1835 {
     /// <summary>
     /// refreshTokens
     /// </summary>
@@ -178,12 +178,14 @@ public partial class project1 {
                 InputTextType = "text",
                 Nullable = false, // NOT NULL field
                 Required = true, // Required field
+                OptionCount = 1,
                 DefaultErrorMessage = ConvertToString(Language.Phrase("IncorrectDate")).Replace("%s", CurrentDateTimeFormat.ShortDatePattern),
                 SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"],
                 CustomMessage = Language.FieldPhrase("RefreshTokens", "ExpiryDate", "CustomMsg"),
                 IsUpload = false
             };
             ExpiryDate.Raw = true;
+            ExpiryDate.Lookup = new Lookup<DbField>(ExpiryDate, "RefreshTokens", false, "", new List<string> {"", "", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "");
             Fields.Add("ExpiryDate", ExpiryDate);
 
             // Call Table Load event
@@ -1075,7 +1077,7 @@ public partial class project1 {
             if (!Empty(sortUrl)) {
                 html += "<div class=\"ew-table-header-sort\">" + fld.SortIcon + "</div>";
             }
-            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter) {
+            if (CurrentPageID() != "grid" && !IsExport() && fld.UseFilter && Security.CanSearch) {
                 html += "<div class=\"ew-filter-dropdown-btn\" data-ew-action=\"filter\" data-table=\"" + fld.TableVar + "\" data-field=\"" + fld.FieldVar +
                     "\"><div class=\"ew-table-header-filter\" role=\"button\" aria-haspopup=\"true\">" + Language.Phrase("Filter") +
                     (IsList(fld.EditValue) ? Language.Phrase("FilterCount").Replace("%c", ((IList)fld.EditValue).Count.ToString()) : "") +
@@ -1273,7 +1275,6 @@ public partial class project1 {
 
             // ExpiryDate
             ExpiryDate.ViewValue = ExpiryDate.CurrentValue;
-            ExpiryDate.ViewValue = FormatDateTime(ExpiryDate.ViewValue, ExpiryDate.FormatPattern);
             ExpiryDate.ViewCustomAttributes = "";
 
             // Id

@@ -1,0 +1,121 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (timezonesDelete.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = timezonesDelete.UseLayout ? "_Layout" : "";
+}
+<script>
+var currentTable = @Html.Raw(ConvertToJson(timezonesDelete.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Timezones: currentTable } });
+var currentPageID = ew.PAGE_ID = "delete";
+var currentForm;
+var fTimezonesdelete;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fTimezonesdelete")
+        .setPageId("delete")
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@timezonesDelete.ShowPageHeader()
+@timezonesDelete.ShowMessages()
+<form name="fTimezonesdelete" id="fTimezonesdelete" class="ew-form ew-delete-form" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="delete">
+@foreach (string key in timezonesDelete.RecordKeys) {
+<input type="hidden" name="key_m[]" value="@key">
+}
+<div class="card ew-card ew-grid @(timezonesDelete.TableGridClass)">
+<div class="card-body ew-grid-middle-panel @(timezonesDelete.TableContainerClass)" style="@(timezonesDelete.TableContainerStyle)">
+<table class="@(timezonesDelete.TableClass)">
+    <thead>
+    <tr class="ew-table-header">
+@if (timezonesDelete.TimezoneID.Visible) { // timezonesDelete.TimezoneID.Visible (begin)
+        <th class="@Html.Raw(timezonesDelete.TimezoneID.HeaderCellClass)"><span id="elh_Timezones_TimezoneID" class="Timezones_TimezoneID">@Html.Raw(timezonesDelete.TimezoneID.Caption)</span></th>
+} @* timezonesDelete.TimezoneID.Visible (end) *@
+@if (timezonesDelete.TimezoneName.Visible) { // timezonesDelete.TimezoneName.Visible (begin)
+        <th class="@Html.Raw(timezonesDelete.TimezoneName.HeaderCellClass)"><span id="elh_Timezones_TimezoneName" class="Timezones_TimezoneName">@Html.Raw(timezonesDelete.TimezoneName.Caption)</span></th>
+} @* timezonesDelete.TimezoneName.Visible (end) *@
+@if (timezonesDelete.UtcOffset.Visible) { // timezonesDelete.UtcOffset.Visible (begin)
+        <th class="@Html.Raw(timezonesDelete.UtcOffset.HeaderCellClass)"><span id="elh_Timezones_UtcOffset" class="Timezones_UtcOffset">@Html.Raw(timezonesDelete.UtcOffset.Caption)</span></th>
+} @* timezonesDelete.UtcOffset.Visible (end) *@
+    </tr>
+    </thead>
+    <tbody>
+@{ timezonesDelete.RecordCount = 0; }
+@while (timezonesDelete.Recordset != null && await timezonesDelete.Recordset.ReadAsync()) { // DN
+    timezonesDelete.RecordCount++;
+    timezonesDelete.RowCount++;
+
+    // Set row properties
+    timezonesDelete.ResetAttributes();
+    timezonesDelete.RowType = RowType.View; // View
+
+    // Get the field contents
+    await timezonesDelete.LoadRowValues(timezonesDelete.Recordset);
+
+    // Render row
+    await timezonesDelete.RenderRow();
+    <tr @Html.Raw(timezonesDelete.RowAttributes)>
+@if (timezonesDelete.TimezoneID.Visible) { // timezonesDelete.TimezoneID.Visible (begin)
+        <td @Html.Raw(timezonesDelete.TimezoneID.CellAttributes)>
+<span id="">
+<span @Html.Raw(timezonesDelete.TimezoneID.ViewAttributes)>
+@Html.Raw(timezonesDelete.TimezoneID.GetViewValue())</span>
+</span></td>
+} @* timezonesDelete.TimezoneID.Visible (end) *@
+@if (timezonesDelete.TimezoneName.Visible) { // timezonesDelete.TimezoneName.Visible (begin)
+        <td @Html.Raw(timezonesDelete.TimezoneName.CellAttributes)>
+<span id="">
+<span @Html.Raw(timezonesDelete.TimezoneName.ViewAttributes)>
+@Html.Raw(timezonesDelete.TimezoneName.GetViewValue())</span>
+</span></td>
+} @* timezonesDelete.TimezoneName.Visible (end) *@
+@if (timezonesDelete.UtcOffset.Visible) { // timezonesDelete.UtcOffset.Visible (begin)
+        <td @Html.Raw(timezonesDelete.UtcOffset.CellAttributes)>
+<span id="">
+<span @Html.Raw(timezonesDelete.UtcOffset.ViewAttributes)>
+@Html.Raw(timezonesDelete.UtcOffset.GetViewValue())</span>
+</span></td>
+} @* timezonesDelete.UtcOffset.Visible (end) *@
+    </tr>
+}
+@{ timezonesDelete.CloseRecordset(); }
+</tbody>
+</table>
+</div>
+</div>
+<div class="ew-buttons ew-desktop-buttons">
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit">@Html.Raw(Language.Phrase("DeleteBtn"))</button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="@AppPath(timezonesDelete.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+</div>
+</form>
+@timezonesDelete.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>
