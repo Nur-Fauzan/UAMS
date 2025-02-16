@@ -163,7 +163,7 @@ public partial class UAMS_20250216_1835 {
                 IsUpload = false
             };
             AppointmentId.Raw = true;
-            AppointmentId.Lookup = new Lookup<DbField>(AppointmentId, "Appointments", false, "Id", new List<string> {"Title", "", "", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "[Title]");
+            AppointmentId.Lookup = new Lookup<DbField>(AppointmentId, "Appointments", false, "Id", new List<string> {"Title", "StartTime", "Timezone", ""}, "", "", new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, new List<string> {}, false, "", "", "CONCAT([Title],'" + ValueSeparator(1, AppointmentId) + "'," + CastDateFieldForLike("[StartTime]", 0, "DB") + ",'" + ValueSeparator(2, AppointmentId) + "',[Timezone])");
             Fields.Add("AppointmentId", AppointmentId);
 
             // Status
