@@ -1,0 +1,282 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (usersList.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = usersList.UseLayout ? "_Layout" : "";
+}
+@if (!usersList.IsExport()) {
+<script>
+var currentTable = @Html.Raw(ConvertToJson(usersList.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Users: currentTable } });
+var currentPageID = ew.PAGE_ID = "list";
+var currentForm;
+var @(usersList.FormName);
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("@(usersList.FormName)")
+        .setPageId("list")
+        .setSubmitWithFetch(@(usersList.UseAjaxActions ? "true" : "false"))
+        .setFormKeyCountName("@(usersList.FormKeyCountName)")
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+}
+@if (!usersList.IsExport()) {
+<div class="btn-toolbar ew-toolbar">
+@if (usersList.TotalRecords > 0 && usersList.ExportOptions.Visible) {
+    usersList.ExportOptions.Render("body");
+}
+@if (usersList.ImportOptions.Visible) {
+    usersList.ImportOptions.Render("body");
+}
+@if (usersList.SearchOptions.Visible) {
+    usersList.SearchOptions.Render("body");
+}
+@if (usersList.FilterOptions.Visible) {
+    usersList.FilterOptions.Render("body");
+}
+</div>
+}
+@if (!usersList.IsModal) {
+<form name="fUserssrch" id="fUserssrch" class="ew-form ew-ext-search-form" action="@AppPath(CurrentPageName())" novalidate autocomplete="off">
+<div id="fUserssrch_search_panel" class="mb-2 mb-sm-0 @(usersList.SearchPanelClass)"><!-- .ew-search-panel -->
+<script>
+var currentTable = @Html.Raw(ConvertToJson(usersList.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Users: currentTable } });
+var currentForm;
+var fUserssrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery,
+        fields = currentTable.fields;
+
+    // Form object for search
+    let form = new ew.FormBuilder()
+        .setId("fUserssrch")
+        .setPageId("list")
+@if (usersList.UseAjaxActions) {
+        <text>.setSubmitWithFetch(true)</text>
+}
+
+        // Dynamic selection lists
+        .setLists({
+        })
+
+        // Filters
+        .setFilterList(@Html.Raw(usersList.GetFilterList()))
+        .build();
+    window[form.id] = form;
+    currentSearchForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<input type="hidden" name="cmd" value="search">
+@if (!usersList.IsExport() && Empty(usersList.CurrentAction) && usersList.HasSearchFields()) { @* Show search form (begin) *@
+<div class="ew-extended-search container-fluid ps-2">
+<div class="row mb-0">
+    <div class="col-sm-auto px-0 pe-sm-2">
+        <div class="ew-basic-search input-group">
+            <input type="search" name="@(Config.TableBasicSearch)" id="@(Config.TableBasicSearch)" class="form-control ew-basic-search-keyword" value="@Html.Raw(HtmlEncode(usersList.BasicSearch.SessionKeyword))" placeholder="@(HtmlEncode(Language.Phrase("Search")))" aria-label="@(HtmlEncode(Language.Phrase("Search")))">
+            <input type="hidden" name="@(Config.TableBasicSearchType)" id="@(Config.TableBasicSearchType)" class="ew-basic-search-type" value="@(HtmlEncode(usersList.BasicSearch.SessionType))">
+            <button type="button" data-bs-toggle="dropdown" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false">
+                <span id="searchtype">@Html.Raw(usersList.BasicSearch.TypeNameShort)</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <button type="button" class="dropdown-item@(usersList.BasicSearch.SessionType == "" ? " active" : "")" form="fUserssrch" data-ew-action="search-type">@Html.Raw(Language.Phrase("QuickSearchAuto"))</button>
+                <button type="button" class="dropdown-item@(usersList.BasicSearch.SessionType == "=" ? " active" : "")" form="fUserssrch" data-ew-action="search-type" data-search-type="=">@Html.Raw(Language.Phrase("QuickSearchExact"))</button>
+                <button type="button" class="dropdown-item@(usersList.BasicSearch.SessionType == "AND" ? " active" : "")" form="fUserssrch" data-ew-action="search-type" data-search-type="AND">@Html.Raw(Language.Phrase("QuickSearchAll"))</button>
+                <button type="button" class="dropdown-item@(usersList.BasicSearch.SessionType == "OR" ? " active" : "")" form="fUserssrch" data-ew-action="search-type" data-search-type="OR">@Html.Raw(Language.Phrase("QuickSearchAny"))</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-auto mb-3">
+        <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit">@Html.Raw(Language.Phrase("SearchBtn"))</button>
+    </div>
+</div>
+</div><!-- /.ew-extended-search -->
+} @* Show search form (end) *@
+</div><!-- /.ew-search-panel -->
+</form>
+}
+@usersList.ShowPageHeader()
+@usersList.ShowMessages()
+<main class="list @(usersList.TotalRecords == 0 && !usersList.IsAdd ? " ew-no-record" : "")">
+<div id="ew-header-options">
+    @usersList.HeaderOptions.RenderBody()
+</div>
+<div id="ew-list">
+@if (usersList.TotalRecords > 0 || !Empty(usersList.CurrentAction)) {
+<div class="card ew-card ew-grid@(usersList.IsAddOrEdit ? " ew-grid-add-edit" : "") @(usersList.TableGridClass)">
+<form name="@(usersList.FormName)" id="@(usersList.FormName)" class="ew-form ew-list-form" action="@AppPath(usersList.PageName)" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+@if (usersList.IsModal) {
+<input type="hidden" name="modal" value="1">
+}
+<div id="gmp_Users" class="card-body ew-grid-middle-panel @(usersList.TableContainerClass)" style="@(usersList.TableContainerStyle)">
+@if (usersList.TotalRecords > 0 || usersList.IsGridEdit || usersList.IsMultiEdit) {
+<table id="tbl_Userslist" class="@(usersList.TableClass)"><!-- .ew-table -->
+<thead>
+    <tr class="ew-table-header">
+@{
+    // Header row
+    usersList.RowType = RowType.Header;
+
+    // Render list options
+    await usersList.RenderListOptions();
+}
+@* Render list options (header, left) *@
+@usersList.ListOptions.RenderHeader("left")
+@if (usersList.Id.Visible) { // usersList.Id.Visible (begin)
+        <th data-name="Id" class="@(usersList.Id.HeaderCellClass)"><div id="elh_Users_Id" class="Users_Id">@Html.Raw(usersList.RenderFieldHeader(usersList.Id))</div></th>
+} @* usersList.Id.Visible (end) *@
+@if (usersList._Username.Visible) { // usersList._Username.Visible (begin)
+        <th data-name="_Username" class="@(usersList._Username.HeaderCellClass)"><div id="elh_Users__Username" class="Users__Username">@Html.Raw(usersList.RenderFieldHeader(usersList._Username))</div></th>
+} @* usersList._Username.Visible (end) *@
+@if (usersList.PasswordHash.Visible) { // usersList.PasswordHash.Visible (begin)
+        <th data-name="PasswordHash" class="@(usersList.PasswordHash.HeaderCellClass)"><div id="elh_Users_PasswordHash" class="Users_PasswordHash">@Html.Raw(usersList.RenderFieldHeader(usersList.PasswordHash))</div></th>
+} @* usersList.PasswordHash.Visible (end) *@
+@if (usersList._Name.Visible) { // usersList._Name.Visible (begin)
+        <th data-name="_Name" class="@(usersList._Name.HeaderCellClass)"><div id="elh_Users__Name" class="Users__Name">@Html.Raw(usersList.RenderFieldHeader(usersList._Name))</div></th>
+} @* usersList._Name.Visible (end) *@
+@if (usersList.PreferredTimezone.Visible) { // usersList.PreferredTimezone.Visible (begin)
+        <th data-name="PreferredTimezone" class="@(usersList.PreferredTimezone.HeaderCellClass)"><div id="elh_Users_PreferredTimezone" class="Users_PreferredTimezone">@Html.Raw(usersList.RenderFieldHeader(usersList.PreferredTimezone))</div></th>
+} @* usersList.PreferredTimezone.Visible (end) *@
+@* Render list options (header, right) *@
+@usersList.ListOptions.RenderHeader("right")
+    </tr>
+</thead>
+<tbody data-page="@(usersList.PageNumber)">
+@{
+    await usersList.SetupGrid();
+    bool eof = usersList.Recordset == null; // DN
+}
+@while (usersList.RecordCount < usersList.StopRecord || SameString(usersList.RowIndex, "$rowindex$")) { // Begin While
+    if (!eof && !SameString(usersList.RowIndex, "$rowindex$") &&
+        (!usersList.IsGridAdd || usersList.CurrentMode == "copy") &&
+        (!((usersList.IsCopy || usersList.IsAdd) && usersList.RowIndex is int rowIndex && rowIndex == 0))) // DN
+        eof = !await usersList.Recordset.ReadAsync();
+    usersList.RecordCount++;
+    if (usersList.RecordCount >= usersList.StartRecord) {
+        await usersList.SetupRow();
+    <tr @Html.Raw(usersList.RowAttributes)>
+    @* Render list options (body, left) *@
+    @usersList.ListOptions.RenderBody("left", usersList.RowCount)
+    @if (usersList.Id.Visible) { // usersList.Id.Visible (begin)
+        <td data-name="Id" @Html.Raw(usersList.Id.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_Id" class="el_Users_Id">
+<span @Html.Raw(usersList.Id.ViewAttributes)>
+@Html.Raw(usersList.Id.GetViewValue())</span>
+</span>
+</td>
+    } @* usersList.Id.Visible (end) *@
+    @if (usersList._Username.Visible) { // usersList._Username.Visible (begin)
+        <td data-name="_Username" @Html.Raw(usersList._Username.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users__Username" class="el_Users__Username">
+<span @Html.Raw(usersList._Username.ViewAttributes)>
+@Html.Raw(usersList._Username.GetViewValue())</span>
+</span>
+</td>
+    } @* usersList._Username.Visible (end) *@
+    @if (usersList.PasswordHash.Visible) { // usersList.PasswordHash.Visible (begin)
+        <td data-name="PasswordHash" @Html.Raw(usersList.PasswordHash.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_PasswordHash" class="el_Users_PasswordHash">
+<span @Html.Raw(usersList.PasswordHash.ViewAttributes)>
+@Html.Raw(usersList.PasswordHash.GetViewValue())</span>
+</span>
+</td>
+    } @* usersList.PasswordHash.Visible (end) *@
+    @if (usersList._Name.Visible) { // usersList._Name.Visible (begin)
+        <td data-name="_Name" @Html.Raw(usersList._Name.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users__Name" class="el_Users__Name">
+<span @Html.Raw(usersList._Name.ViewAttributes)>
+@Html.Raw(usersList._Name.GetViewValue())</span>
+</span>
+</td>
+    } @* usersList._Name.Visible (end) *@
+    @if (usersList.PreferredTimezone.Visible) { // usersList.PreferredTimezone.Visible (begin)
+        <td data-name="PreferredTimezone" @Html.Raw(usersList.PreferredTimezone.CellAttributes)>
+<span id="el@(usersList.RowIndex == "$rowindex$" ? "$rowindex$" : usersList.RowCount)_Users_PreferredTimezone" class="el_Users_PreferredTimezone">
+<span @Html.Raw(usersList.PreferredTimezone.ViewAttributes)>
+@Html.Raw(usersList.PreferredTimezone.GetViewValue())</span>
+</span>
+</td>
+    } @* usersList.PreferredTimezone.Visible (end) *@
+    @* Render list options (body, right) *@
+    @usersList.ListOptions.RenderBody("right", usersList.RowCount)
+    </tr>
+    } @* End if *@
+
+    // Reset for template row
+    if (SameString(usersList.RowIndex, "$rowindex$"))
+        usersList.RowIndex = 0;
+
+    // Reset inline add/copy row
+    if ((usersList.IsCopy || usersList.IsAdd) && usersList.RowIndex is int rowIndex2 && rowIndex2 == 0)
+        usersList.RowIndex = 1;
+} @* End While *@
+</tbody>
+</table><!-- /.ew-table -->
+} @* End If TotalRecords > 0 *@
+</div><!-- /.ew-grid-middle-panel -->
+@if (Empty(usersList.CurrentAction) && !usersList.UseAjaxActions) {
+<input type="hidden" name="action" id="action" value="">
+}
+</form><!-- /.ew-list-form -->
+@{ usersList.CloseRecordset(); }
+@if (!usersList.IsExport()) {
+<div class="card-footer ew-grid-lower-panel">
+@if (!usersList.IsGridAdd && !(usersList.IsGridEdit && usersList.ModalGridEdit) && !usersList.IsMultiEdit) {
+@Html.Raw(usersList.Pager.Render())
+}
+<div class="ew-list-other-options">
+@usersList.OtherOptions.RenderBody("bottom")
+</div>
+</div>
+}
+</div><!-- /.ew-grid -->
+} else { // Show other options
+<div class="ew-list-other-options">
+@usersList.OtherOptions.ForEach(opt => opt.ButtonClass = "").RenderBody()
+</div>
+}
+</div>
+<div id="ew-footer-options">
+    @usersList.FooterOptions.RenderBody()
+</div>
+</main>
+@usersList.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+@if (!usersList.IsExport()) {
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Users");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>
+}

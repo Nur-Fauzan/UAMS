@@ -1,0 +1,89 @@
+<ew-language date="2025/2/16" id="en-US" author="e.World Technology Limited">
+  <project>
+    <phrase id="footertext" value="&amp;copy;2024 e.World Technology Limited. All rights reserved." />
+    <menu id="1">
+      <phrase id="menutext" value="Users" />
+    </menu>
+    <menu id="2">
+      <phrase id="menutext" value="Appointments" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="Participants" />
+    </menu>
+    <menu id="4">
+      <phrase id="menutext" value="Refresh Tokens" />
+    </menu>
+    <table id="users">
+      <phrase id="tblcaption" value="Users" />
+      <field id="id">
+        <phrase id="fldcaption" value="Id" />
+      </field>
+      <field id="_username">
+        <phrase id="fldcaption" value="Username" />
+      </field>
+      <field id="passwordhash">
+        <phrase id="fldcaption" value="Password Hash" />
+      </field>
+      <field id="_name">
+        <phrase id="fldcaption" value="Name" />
+      </field>
+      <field id="preferredtimezone">
+        <phrase id="fldcaption" value="Preferred Timezone" />
+      </field>
+    </table>
+    <table id="appointments">
+      <phrase id="tblcaption" value="Appointments" />
+      <field id="id">
+        <phrase id="fldcaption" value="Id" />
+      </field>
+      <field id="_title">
+        <phrase id="fldcaption" value="Title" />
+      </field>
+      <field id="description">
+        <phrase id="fldcaption" value="Description" />
+      </field>
+      <field id="_starttime">
+        <phrase id="fldcaption" value="Start Time" />
+      </field>
+      <field id="endtime">
+        <phrase id="fldcaption" value="End Time" />
+      </field>
+      <field id="createdby">
+        <phrase id="fldcaption" value="Created By" />
+      </field>
+      <field id="timezone">
+        <phrase id="fldcaption" value="Timezone" />
+      </field>
+    </table>
+    <table id="participants">
+      <phrase id="tblcaption" value="Participants" />
+      <field id="id">
+        <phrase id="fldcaption" value="Id" />
+      </field>
+      <field id="userid">
+        <phrase id="fldcaption" value="User Id" />
+      </field>
+      <field id="appointmentid">
+        <phrase id="fldcaption" value="Appointment Id" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+    </table>
+    <table id="refreshtokens">
+      <phrase id="tblcaption" value="Refresh Tokens" />
+      <field id="id">
+        <phrase id="fldcaption" value="Id" />
+      </field>
+      <field id="userid">
+        <phrase id="fldcaption" value="User Id" />
+      </field>
+      <field id="_token">
+        <phrase id="fldcaption" value="Token" />
+      </field>
+      <field id="expirydate">
+        <phrase id="fldcaption" value="Expiry Date" />
+      </field>
+    </table>
+  </project>
+</ew-language>

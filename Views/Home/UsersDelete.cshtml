@@ -1,0 +1,141 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (usersDelete.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = usersDelete.UseLayout ? "_Layout" : "";
+}
+<script>
+var currentTable = @Html.Raw(ConvertToJson(usersDelete.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Users: currentTable } });
+var currentPageID = ew.PAGE_ID = "delete";
+var currentForm;
+var fUsersdelete;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fUsersdelete")
+        .setPageId("delete")
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@usersDelete.ShowPageHeader()
+@usersDelete.ShowMessages()
+<form name="fUsersdelete" id="fUsersdelete" class="ew-form ew-delete-form" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="delete">
+@foreach (string key in usersDelete.RecordKeys) {
+<input type="hidden" name="key_m[]" value="@key">
+}
+<div class="card ew-card ew-grid @(usersDelete.TableGridClass)">
+<div class="card-body ew-grid-middle-panel @(usersDelete.TableContainerClass)" style="@(usersDelete.TableContainerStyle)">
+<table class="@(usersDelete.TableClass)">
+    <thead>
+    <tr class="ew-table-header">
+@if (usersDelete.Id.Visible) { // usersDelete.Id.Visible (begin)
+        <th class="@Html.Raw(usersDelete.Id.HeaderCellClass)"><span id="elh_Users_Id" class="Users_Id">@Html.Raw(usersDelete.Id.Caption)</span></th>
+} @* usersDelete.Id.Visible (end) *@
+@if (usersDelete._Username.Visible) { // usersDelete._Username.Visible (begin)
+        <th class="@Html.Raw(usersDelete._Username.HeaderCellClass)"><span id="elh_Users__Username" class="Users__Username">@Html.Raw(usersDelete._Username.Caption)</span></th>
+} @* usersDelete._Username.Visible (end) *@
+@if (usersDelete.PasswordHash.Visible) { // usersDelete.PasswordHash.Visible (begin)
+        <th class="@Html.Raw(usersDelete.PasswordHash.HeaderCellClass)"><span id="elh_Users_PasswordHash" class="Users_PasswordHash">@Html.Raw(usersDelete.PasswordHash.Caption)</span></th>
+} @* usersDelete.PasswordHash.Visible (end) *@
+@if (usersDelete._Name.Visible) { // usersDelete._Name.Visible (begin)
+        <th class="@Html.Raw(usersDelete._Name.HeaderCellClass)"><span id="elh_Users__Name" class="Users__Name">@Html.Raw(usersDelete._Name.Caption)</span></th>
+} @* usersDelete._Name.Visible (end) *@
+@if (usersDelete.PreferredTimezone.Visible) { // usersDelete.PreferredTimezone.Visible (begin)
+        <th class="@Html.Raw(usersDelete.PreferredTimezone.HeaderCellClass)"><span id="elh_Users_PreferredTimezone" class="Users_PreferredTimezone">@Html.Raw(usersDelete.PreferredTimezone.Caption)</span></th>
+} @* usersDelete.PreferredTimezone.Visible (end) *@
+    </tr>
+    </thead>
+    <tbody>
+@{ usersDelete.RecordCount = 0; }
+@while (usersDelete.Recordset != null && await usersDelete.Recordset.ReadAsync()) { // DN
+    usersDelete.RecordCount++;
+    usersDelete.RowCount++;
+
+    // Set row properties
+    usersDelete.ResetAttributes();
+    usersDelete.RowType = RowType.View; // View
+
+    // Get the field contents
+    await usersDelete.LoadRowValues(usersDelete.Recordset);
+
+    // Render row
+    await usersDelete.RenderRow();
+    <tr @Html.Raw(usersDelete.RowAttributes)>
+@if (usersDelete.Id.Visible) { // usersDelete.Id.Visible (begin)
+        <td @Html.Raw(usersDelete.Id.CellAttributes)>
+<span id="">
+<span @Html.Raw(usersDelete.Id.ViewAttributes)>
+@Html.Raw(usersDelete.Id.GetViewValue())</span>
+</span></td>
+} @* usersDelete.Id.Visible (end) *@
+@if (usersDelete._Username.Visible) { // usersDelete._Username.Visible (begin)
+        <td @Html.Raw(usersDelete._Username.CellAttributes)>
+<span id="">
+<span @Html.Raw(usersDelete._Username.ViewAttributes)>
+@Html.Raw(usersDelete._Username.GetViewValue())</span>
+</span></td>
+} @* usersDelete._Username.Visible (end) *@
+@if (usersDelete.PasswordHash.Visible) { // usersDelete.PasswordHash.Visible (begin)
+        <td @Html.Raw(usersDelete.PasswordHash.CellAttributes)>
+<span id="">
+<span @Html.Raw(usersDelete.PasswordHash.ViewAttributes)>
+@Html.Raw(usersDelete.PasswordHash.GetViewValue())</span>
+</span></td>
+} @* usersDelete.PasswordHash.Visible (end) *@
+@if (usersDelete._Name.Visible) { // usersDelete._Name.Visible (begin)
+        <td @Html.Raw(usersDelete._Name.CellAttributes)>
+<span id="">
+<span @Html.Raw(usersDelete._Name.ViewAttributes)>
+@Html.Raw(usersDelete._Name.GetViewValue())</span>
+</span></td>
+} @* usersDelete._Name.Visible (end) *@
+@if (usersDelete.PreferredTimezone.Visible) { // usersDelete.PreferredTimezone.Visible (begin)
+        <td @Html.Raw(usersDelete.PreferredTimezone.CellAttributes)>
+<span id="">
+<span @Html.Raw(usersDelete.PreferredTimezone.ViewAttributes)>
+@Html.Raw(usersDelete.PreferredTimezone.GetViewValue())</span>
+</span></td>
+} @* usersDelete.PreferredTimezone.Visible (end) *@
+    </tr>
+}
+@{ usersDelete.CloseRecordset(); }
+</tbody>
+</table>
+</div>
+</div>
+<div class="ew-buttons ew-desktop-buttons">
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit">@Html.Raw(Language.Phrase("DeleteBtn"))</button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="@AppPath(usersDelete.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+</div>
+</form>
+@usersDelete.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>

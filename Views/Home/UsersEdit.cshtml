@@ -1,0 +1,165 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (usersEdit.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = usersEdit.UseLayout ? "_Layout" : "";
+}
+@usersEdit.ShowPageHeader()
+@usersEdit.ShowMessages()
+<main class="edit">
+<form name="fUsersedit" id="fUsersedit" class="@(usersEdit.FormClassName)" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+<script>
+var currentTable = @Html.Raw(ConvertToJson(usersEdit.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Users: currentTable } });
+var currentPageID = ew.PAGE_ID = "edit";
+var currentForm;
+var fUsersedit;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fUsersedit")
+        .setPageId("edit")
+
+        // Add fields
+        .setFields([
+
+            ["Id", [fields.Id.visible && fields.Id.required ? ew.Validators.required(fields.Id.caption) : null], fields.Id.isInvalid],
+            ["_Username", [fields._Username.visible && fields._Username.required ? ew.Validators.required(fields._Username.caption) : null], fields._Username.isInvalid],
+            ["PasswordHash", [fields.PasswordHash.visible && fields.PasswordHash.required ? ew.Validators.required(fields.PasswordHash.caption) : null], fields.PasswordHash.isInvalid],
+            ["_Name", [fields._Name.visible && fields._Name.required ? ew.Validators.required(fields._Name.caption) : null], fields._Name.isInvalid],
+            ["PreferredTimezone", [fields.PreferredTimezone.visible && fields.PreferredTimezone.required ? ew.Validators.required(fields.PreferredTimezone.caption) : null], fields.PreferredTimezone.isInvalid]
+        ])
+
+        // Form_CustomValidate
+        .setCustomValidate(
+            function(fobj) { // DO NOT CHANGE THIS LINE!
+                    // Your custom validation code here, return false if invalid.
+                    return true;
+                }
+        )
+
+        // Use JavaScript validation or not
+        .setValidateRequired(ew.CLIENT_VALIDATE)
+
+        // Dynamic selection lists
+        .setLists({
+        })
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="update">
+<input type="hidden" name="modal" value="@ConvertToInt(usersEdit.IsModal)">
+@if (IsJsonResponse()) {
+<input type="hidden" name="json" value="1">
+}
+<input type="hidden" name="@(usersEdit.OldKeyName)" value="@Html.Raw(usersEdit.OldKey)">
+<div class="ew-edit-div"><!-- page* -->
+@if (usersEdit.Id.Visible) { // usersEdit.Id.Visible (begin)
+    <div id="r_Id" @Html.Raw(usersEdit.Id.RowAttributes)>
+        <label id="elh_Users_Id" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.Id.Caption)@Html.Raw(usersEdit.Id.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.Id.CellAttributes)>
+<span id="el_Users_Id">
+<span @Html.Raw(usersEdit.Id.ViewAttributes)>
+<input type="text" readonly class="form-control-plaintext" value="@Html.Raw(RemoveHtml(ConvertToString(usersEdit.Id.EditValue)))"></span>
+<input type="hidden" data-table="Users" data-field="x_Id" data-hidden="1" name="x_Id" id="x_Id" value="@Html.Raw(HtmlEncode(usersEdit.Id.CurrentValue))">
+</span>
+</div></div>
+    </div>
+} @* usersEdit.Id.Visible (end) *@
+@if (usersEdit._Username.Visible) { // usersEdit._Username.Visible (begin)
+    <div id="r__Username" @Html.Raw(usersEdit._Username.RowAttributes)>
+        <label id="elh_Users__Username" for="x__Username" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit._Username.Caption)@Html.Raw(usersEdit._Username.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit._Username.CellAttributes)>
+<span id="el_Users__Username">
+<input type="@(usersEdit._Username.InputTextType)" name="x__Username" id="x__Username" data-table="Users" data-field="x__Username" value="@Html.Raw(usersEdit._Username.EditValue)" size="30" maxlength="50" placeholder="@Html.Raw(HtmlEncode(usersEdit._Username.PlaceHolder))" data-format-pattern="@(usersEdit._Username.FormatPattern)"@Html.Raw(usersEdit._Username.EditAttributes) aria-describedby="x__Username_help">
+@Html.Raw(usersEdit._Username.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(usersEdit._Username.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* usersEdit._Username.Visible (end) *@
+@if (usersEdit.PasswordHash.Visible) { // usersEdit.PasswordHash.Visible (begin)
+    <div id="r_PasswordHash" @Html.Raw(usersEdit.PasswordHash.RowAttributes)>
+        <label id="elh_Users_PasswordHash" for="x_PasswordHash" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.PasswordHash.Caption)@Html.Raw(usersEdit.PasswordHash.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.PasswordHash.CellAttributes)>
+<span id="el_Users_PasswordHash">
+<input type="@(usersEdit.PasswordHash.InputTextType)" name="x_PasswordHash" id="x_PasswordHash" data-table="Users" data-field="x_PasswordHash" value="@Html.Raw(usersEdit.PasswordHash.EditValue)" size="30" maxlength="255" placeholder="@Html.Raw(HtmlEncode(usersEdit.PasswordHash.PlaceHolder))" data-format-pattern="@(usersEdit.PasswordHash.FormatPattern)"@Html.Raw(usersEdit.PasswordHash.EditAttributes) aria-describedby="x_PasswordHash_help">
+@Html.Raw(usersEdit.PasswordHash.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(usersEdit.PasswordHash.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* usersEdit.PasswordHash.Visible (end) *@
+@if (usersEdit._Name.Visible) { // usersEdit._Name.Visible (begin)
+    <div id="r__Name" @Html.Raw(usersEdit._Name.RowAttributes)>
+        <label id="elh_Users__Name" for="x__Name" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit._Name.Caption)@Html.Raw(usersEdit._Name.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit._Name.CellAttributes)>
+<span id="el_Users__Name">
+<input type="@(usersEdit._Name.InputTextType)" name="x__Name" id="x__Name" data-table="Users" data-field="x__Name" value="@Html.Raw(usersEdit._Name.EditValue)" size="30" maxlength="100" placeholder="@Html.Raw(HtmlEncode(usersEdit._Name.PlaceHolder))" data-format-pattern="@(usersEdit._Name.FormatPattern)"@Html.Raw(usersEdit._Name.EditAttributes) aria-describedby="x__Name_help">
+@Html.Raw(usersEdit._Name.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(usersEdit._Name.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* usersEdit._Name.Visible (end) *@
+@if (usersEdit.PreferredTimezone.Visible) { // usersEdit.PreferredTimezone.Visible (begin)
+    <div id="r_PreferredTimezone" @Html.Raw(usersEdit.PreferredTimezone.RowAttributes)>
+        <label id="elh_Users_PreferredTimezone" for="x_PreferredTimezone" class="@(usersEdit.LeftColumnClass)">@Html.Raw(usersEdit.PreferredTimezone.Caption)@Html.Raw(usersEdit.PreferredTimezone.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(usersEdit.RightColumnClass)"><div @Html.Raw(usersEdit.PreferredTimezone.CellAttributes)>
+<span id="el_Users_PreferredTimezone">
+<input type="@(usersEdit.PreferredTimezone.InputTextType)" name="x_PreferredTimezone" id="x_PreferredTimezone" data-table="Users" data-field="x_PreferredTimezone" value="@Html.Raw(usersEdit.PreferredTimezone.EditValue)" size="30" maxlength="50" placeholder="@Html.Raw(HtmlEncode(usersEdit.PreferredTimezone.PlaceHolder))" data-format-pattern="@(usersEdit.PreferredTimezone.FormatPattern)"@Html.Raw(usersEdit.PreferredTimezone.EditAttributes) aria-describedby="x_PreferredTimezone_help">
+@Html.Raw(usersEdit.PreferredTimezone.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(usersEdit.PreferredTimezone.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* usersEdit.PreferredTimezone.Visible (end) *@
+</div><!-- /page* -->
+@{ usersEdit.CloseRecordset(); }
+@Html.Raw(usersEdit.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
+    <div class="@(usersEdit.OffsetColumnClass)"><!-- buttons offset -->
+    <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fUsersedit">@Html.Raw(Language.Phrase("SaveBtn"))</button>
+@if (IsJsonResponse()) {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-bs-dismiss="modal">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+} else {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" form="fUsersedit" data-href="@AppPath(usersEdit.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+}
+    </div><!-- /buttons offset -->
+@Html.Raw(usersEdit.IsModal ? "</template>" : "</div>")<!-- /buttons .row -->
+</form>
+</main>
+@usersEdit.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Users");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>

@@ -1,0 +1,152 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (participantsEdit.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = participantsEdit.UseLayout ? "_Layout" : "";
+}
+@participantsEdit.ShowPageHeader()
+@participantsEdit.ShowMessages()
+<main class="edit">
+<form name="fParticipantsedit" id="fParticipantsedit" class="@(participantsEdit.FormClassName)" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+<script>
+var currentTable = @Html.Raw(ConvertToJson(participantsEdit.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Participants: currentTable } });
+var currentPageID = ew.PAGE_ID = "edit";
+var currentForm;
+var fParticipantsedit;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fParticipantsedit")
+        .setPageId("edit")
+
+        // Add fields
+        .setFields([
+
+            ["Id", [fields.Id.visible && fields.Id.required ? ew.Validators.required(fields.Id.caption) : null], fields.Id.isInvalid],
+            ["UserId", [fields.UserId.visible && fields.UserId.required ? ew.Validators.required(fields.UserId.caption) : null, ew.Validators.integer], fields.UserId.isInvalid],
+            ["AppointmentId", [fields.AppointmentId.visible && fields.AppointmentId.required ? ew.Validators.required(fields.AppointmentId.caption) : null, ew.Validators.integer], fields.AppointmentId.isInvalid],
+            ["Status", [fields.Status.visible && fields.Status.required ? ew.Validators.required(fields.Status.caption) : null], fields.Status.isInvalid]
+        ])
+
+        // Form_CustomValidate
+        .setCustomValidate(
+            function(fobj) { // DO NOT CHANGE THIS LINE!
+                    // Your custom validation code here, return false if invalid.
+                    return true;
+                }
+        )
+
+        // Use JavaScript validation or not
+        .setValidateRequired(ew.CLIENT_VALIDATE)
+
+        // Dynamic selection lists
+        .setLists({
+        })
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="update">
+<input type="hidden" name="modal" value="@ConvertToInt(participantsEdit.IsModal)">
+@if (IsJsonResponse()) {
+<input type="hidden" name="json" value="1">
+}
+<input type="hidden" name="@(participantsEdit.OldKeyName)" value="@Html.Raw(participantsEdit.OldKey)">
+<div class="ew-edit-div"><!-- page* -->
+@if (participantsEdit.Id.Visible) { // participantsEdit.Id.Visible (begin)
+    <div id="r_Id" @Html.Raw(participantsEdit.Id.RowAttributes)>
+        <label id="elh_Participants_Id" class="@(participantsEdit.LeftColumnClass)">@Html.Raw(participantsEdit.Id.Caption)@Html.Raw(participantsEdit.Id.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(participantsEdit.RightColumnClass)"><div @Html.Raw(participantsEdit.Id.CellAttributes)>
+<span id="el_Participants_Id">
+<span @Html.Raw(participantsEdit.Id.ViewAttributes)>
+<input type="text" readonly class="form-control-plaintext" value="@Html.Raw(RemoveHtml(ConvertToString(participantsEdit.Id.EditValue)))"></span>
+<input type="hidden" data-table="Participants" data-field="x_Id" data-hidden="1" name="x_Id" id="x_Id" value="@Html.Raw(HtmlEncode(participantsEdit.Id.CurrentValue))">
+</span>
+</div></div>
+    </div>
+} @* participantsEdit.Id.Visible (end) *@
+@if (participantsEdit.UserId.Visible) { // participantsEdit.UserId.Visible (begin)
+    <div id="r_UserId" @Html.Raw(participantsEdit.UserId.RowAttributes)>
+        <label id="elh_Participants_UserId" for="x_UserId" class="@(participantsEdit.LeftColumnClass)">@Html.Raw(participantsEdit.UserId.Caption)@Html.Raw(participantsEdit.UserId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(participantsEdit.RightColumnClass)"><div @Html.Raw(participantsEdit.UserId.CellAttributes)>
+<span id="el_Participants_UserId">
+<input type="@(participantsEdit.UserId.InputTextType)" name="x_UserId" id="x_UserId" data-table="Participants" data-field="x_UserId" value="@Html.Raw(participantsEdit.UserId.EditValue)" size="30" placeholder="@Html.Raw(HtmlEncode(participantsEdit.UserId.PlaceHolder))" data-format-pattern="@(participantsEdit.UserId.FormatPattern)"@Html.Raw(participantsEdit.UserId.EditAttributes) aria-describedby="x_UserId_help">
+@Html.Raw(participantsEdit.UserId.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(participantsEdit.UserId.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* participantsEdit.UserId.Visible (end) *@
+@if (participantsEdit.AppointmentId.Visible) { // participantsEdit.AppointmentId.Visible (begin)
+    <div id="r_AppointmentId" @Html.Raw(participantsEdit.AppointmentId.RowAttributes)>
+        <label id="elh_Participants_AppointmentId" for="x_AppointmentId" class="@(participantsEdit.LeftColumnClass)">@Html.Raw(participantsEdit.AppointmentId.Caption)@Html.Raw(participantsEdit.AppointmentId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(participantsEdit.RightColumnClass)"><div @Html.Raw(participantsEdit.AppointmentId.CellAttributes)>
+<span id="el_Participants_AppointmentId">
+<input type="@(participantsEdit.AppointmentId.InputTextType)" name="x_AppointmentId" id="x_AppointmentId" data-table="Participants" data-field="x_AppointmentId" value="@Html.Raw(participantsEdit.AppointmentId.EditValue)" size="30" placeholder="@Html.Raw(HtmlEncode(participantsEdit.AppointmentId.PlaceHolder))" data-format-pattern="@(participantsEdit.AppointmentId.FormatPattern)"@Html.Raw(participantsEdit.AppointmentId.EditAttributes) aria-describedby="x_AppointmentId_help">
+@Html.Raw(participantsEdit.AppointmentId.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(participantsEdit.AppointmentId.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* participantsEdit.AppointmentId.Visible (end) *@
+@if (participantsEdit.Status.Visible) { // participantsEdit.Status.Visible (begin)
+    <div id="r_Status" @Html.Raw(participantsEdit.Status.RowAttributes)>
+        <label id="elh_Participants_Status" for="x_Status" class="@(participantsEdit.LeftColumnClass)">@Html.Raw(participantsEdit.Status.Caption)@Html.Raw(participantsEdit.Status.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(participantsEdit.RightColumnClass)"><div @Html.Raw(participantsEdit.Status.CellAttributes)>
+<span id="el_Participants_Status">
+<input type="@(participantsEdit.Status.InputTextType)" name="x_Status" id="x_Status" data-table="Participants" data-field="x_Status" value="@Html.Raw(participantsEdit.Status.EditValue)" size="30" maxlength="20" placeholder="@Html.Raw(HtmlEncode(participantsEdit.Status.PlaceHolder))" data-format-pattern="@(participantsEdit.Status.FormatPattern)"@Html.Raw(participantsEdit.Status.EditAttributes) aria-describedby="x_Status_help">
+@Html.Raw(participantsEdit.Status.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(participantsEdit.Status.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* participantsEdit.Status.Visible (end) *@
+</div><!-- /page* -->
+@{ participantsEdit.CloseRecordset(); }
+@Html.Raw(participantsEdit.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
+    <div class="@(participantsEdit.OffsetColumnClass)"><!-- buttons offset -->
+    <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fParticipantsedit">@Html.Raw(Language.Phrase("SaveBtn"))</button>
+@if (IsJsonResponse()) {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-bs-dismiss="modal">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+} else {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" form="fParticipantsedit" data-href="@AppPath(participantsEdit.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+}
+    </div><!-- /buttons offset -->
+@Html.Raw(participantsEdit.IsModal ? "</template>" : "</div>")<!-- /buttons .row -->
+</form>
+</main>
+@participantsEdit.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Participants");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>

@@ -1,0 +1,166 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (refreshTokensAdd.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = refreshTokensAdd.UseLayout ? "_Layout" : "";
+}
+<script>
+var currentTable = @Html.Raw(ConvertToJson(refreshTokensAdd.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { RefreshTokens: currentTable } });
+var currentPageID = ew.PAGE_ID = "add";
+var currentForm;
+var fRefreshTokensadd;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fRefreshTokensadd")
+        .setPageId("add")
+
+        // Add fields
+        .setFields([
+
+            ["UserId", [fields.UserId.visible && fields.UserId.required ? ew.Validators.required(fields.UserId.caption) : null, ew.Validators.integer], fields.UserId.isInvalid],
+            ["_Token", [fields._Token.visible && fields._Token.required ? ew.Validators.required(fields._Token.caption) : null], fields._Token.isInvalid],
+            ["ExpiryDate", [fields.ExpiryDate.visible && fields.ExpiryDate.required ? ew.Validators.required(fields.ExpiryDate.caption) : null, ew.Validators.datetime(fields.ExpiryDate.clientFormatPattern)], fields.ExpiryDate.isInvalid]
+        ])
+
+        // Form_CustomValidate
+        .setCustomValidate(
+            function(fobj) { // DO NOT CHANGE THIS LINE!
+                    // Your custom validation code here, return false if invalid.
+                    return true;
+                }
+        )
+
+        // Use JavaScript validation or not
+        .setValidateRequired(ew.CLIENT_VALIDATE)
+
+        // Dynamic selection lists
+        .setLists({
+        })
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@refreshTokensAdd.ShowPageHeader()
+@refreshTokensAdd.ShowMessages()
+<form name="fRefreshTokensadd" id="fRefreshTokensadd" class="@(refreshTokensAdd.FormClassName)" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="modal" value="@ConvertToInt(refreshTokensAdd.IsModal)">
+@if (IsJsonResponse()) {
+<input type="hidden" name="json" value="1">
+}
+<input type="hidden" name="@(refreshTokensAdd.OldKeyName)" value="@Html.Raw(refreshTokensAdd.OldKey)">
+<div class="ew-add-div"><!-- page* -->
+@if (refreshTokensAdd.UserId.Visible) { // refreshTokensAdd.UserId.Visible (begin)
+    <div id="r_UserId" @Html.Raw(refreshTokensAdd.UserId.RowAttributes)>
+        <label id="elh_RefreshTokens_UserId" for="x_UserId" class="@(refreshTokensAdd.LeftColumnClass)">@Html.Raw(refreshTokensAdd.UserId.Caption)@Html.Raw(refreshTokensAdd.UserId.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(refreshTokensAdd.RightColumnClass)"><div @Html.Raw(refreshTokensAdd.UserId.CellAttributes)>
+<span id="el_RefreshTokens_UserId">
+<input type="@(refreshTokensAdd.UserId.InputTextType)" name="x_UserId" id="x_UserId" data-table="RefreshTokens" data-field="x_UserId" value="@Html.Raw(refreshTokensAdd.UserId.EditValue)" size="30" placeholder="@Html.Raw(HtmlEncode(refreshTokensAdd.UserId.PlaceHolder))" data-format-pattern="@(refreshTokensAdd.UserId.FormatPattern)"@Html.Raw(refreshTokensAdd.UserId.EditAttributes) aria-describedby="x_UserId_help">
+@Html.Raw(refreshTokensAdd.UserId.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(refreshTokensAdd.UserId.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* refreshTokensAdd.UserId.Visible (end) *@
+@if (refreshTokensAdd._Token.Visible) { // refreshTokensAdd._Token.Visible (begin)
+    <div id="r__Token" @Html.Raw(refreshTokensAdd._Token.RowAttributes)>
+        <label id="elh_RefreshTokens__Token" for="x__Token" class="@(refreshTokensAdd.LeftColumnClass)">@Html.Raw(refreshTokensAdd._Token.Caption)@Html.Raw(refreshTokensAdd._Token.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(refreshTokensAdd.RightColumnClass)"><div @Html.Raw(refreshTokensAdd._Token.CellAttributes)>
+<span id="el_RefreshTokens__Token">
+<input type="@(refreshTokensAdd._Token.InputTextType)" name="x__Token" id="x__Token" data-table="RefreshTokens" data-field="x__Token" value="@Html.Raw(refreshTokensAdd._Token.EditValue)" size="30" maxlength="255" placeholder="@Html.Raw(HtmlEncode(refreshTokensAdd._Token.PlaceHolder))" data-format-pattern="@(refreshTokensAdd._Token.FormatPattern)"@Html.Raw(refreshTokensAdd._Token.EditAttributes) aria-describedby="x__Token_help">
+@Html.Raw(refreshTokensAdd._Token.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(refreshTokensAdd._Token.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* refreshTokensAdd._Token.Visible (end) *@
+@if (refreshTokensAdd.ExpiryDate.Visible) { // refreshTokensAdd.ExpiryDate.Visible (begin)
+    <div id="r_ExpiryDate" @Html.Raw(refreshTokensAdd.ExpiryDate.RowAttributes)>
+        <label id="elh_RefreshTokens_ExpiryDate" for="x_ExpiryDate" class="@(refreshTokensAdd.LeftColumnClass)">@Html.Raw(refreshTokensAdd.ExpiryDate.Caption)@Html.Raw(refreshTokensAdd.ExpiryDate.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(refreshTokensAdd.RightColumnClass)"><div @Html.Raw(refreshTokensAdd.ExpiryDate.CellAttributes)>
+<span id="el_RefreshTokens_ExpiryDate">
+<input type="@(refreshTokensAdd.ExpiryDate.InputTextType)" name="x_ExpiryDate" id="x_ExpiryDate" data-table="RefreshTokens" data-field="x_ExpiryDate" value="@Html.Raw(refreshTokensAdd.ExpiryDate.EditValue)" placeholder="@Html.Raw(HtmlEncode(refreshTokensAdd.ExpiryDate.PlaceHolder))" data-format-pattern="@(refreshTokensAdd.ExpiryDate.FormatPattern)"@Html.Raw(refreshTokensAdd.ExpiryDate.EditAttributes) aria-describedby="x_ExpiryDate_help">
+@Html.Raw(refreshTokensAdd.ExpiryDate.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(refreshTokensAdd.ExpiryDate.GetErrorMessage())</div>
+@if (!refreshTokensAdd.ExpiryDate.ReadOnly && !refreshTokensAdd.ExpiryDate.Disabled && !refreshTokensAdd.ExpiryDate.EditAttrs.Is("readonly") && !refreshTokensAdd.ExpiryDate.EditAttrs.Is("disabled")) {
+<script>
+loadjs.ready(["fRefreshTokensadd", "datetimepicker"], function () {
+    let format = "@Html.Raw(DateFormat(0))", // DN
+        options = {
+                localization: {
+                    locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),
+                    hourCycle: format.match(/H/) ? "h24" : "h12",
+                    format,
+                    ...ew.language.phrase("datetimepicker")
+                },
+                display: {
+                    icons: {
+                        previous: ew.IS_RTL ? "fa-solid fa-chevron-right" : "fa-solid fa-chevron-left",
+                        next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
+                    },
+                    components: {
+                        clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
+                        hours: !!format.match(/h/i),
+                        minutes: !!format.match(/m/),
+                        seconds: !!format.match(/s/i)
+                    },
+                theme: ew.getPreferredTheme()
+                }
+            };
+    ew.createDateTimePicker("fRefreshTokensadd", "x_ExpiryDate", ew.deepAssign({"useCurrent":false,"display":{"sideBySide":false}}, options));
+});
+</script>
+}
+</span>
+</div></div>
+    </div>
+} @* refreshTokensAdd.ExpiryDate.Visible (end) *@
+</div><!-- /page* -->
+@{ refreshTokensAdd.CloseRecordset(); }
+@Html.Raw(refreshTokensAdd.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
+    <div class="@(refreshTokensAdd.OffsetColumnClass)"><!-- buttons offset -->
+    <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fRefreshTokensadd">@Html.Raw(Language.Phrase("AddBtn"))</button>
+@if (IsJsonResponse()) {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-bs-dismiss="modal">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+} else {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" form="fRefreshTokensadd" data-href="@AppPath(refreshTokensAdd.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+}
+    </div><!-- /buttons offset -->
+@Html.Raw(refreshTokensAdd.IsModal ? "</template>" : "</div>")<!-- /buttons .row -->
+</form>
+@refreshTokensAdd.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("RefreshTokens");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>

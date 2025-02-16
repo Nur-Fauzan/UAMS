@@ -1,0 +1,756 @@
+<?xml version="1.0" standalone="yes"?>
+<ew-language version="24.7.0" id="id-ID" name="Indonesian" desc="Indonesian" author="">
+<!--
+    IMPORTANT NOTES:
+    1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
+    2. Use .NET globalization and ICU, see https://docs.microsoft.com/en-us/dotnet/core/extensions/globalization-icu,
+    3. Locale files are NOT used unless you save customized settings of a locale in the project.
+-->
+<global>
+    <phrase id="2FADisabled" value="Otentikasi Dua Faktor telah dinonaktifkan"/><!-- v2022 -->
+    <phrase id="2FAEnabled" value="Otentikasi Dua Faktor telah diaktifkan"/><!-- v2022 -->
+    <phrase id="2FAResetFailed" value="Gagal menonaktifkan Otentikasi Dua Faktor"/><!-- v2022 -->
+    <phrase id="2FAVerificationFailed" value="Verifikasi Otentikasi Dua Faktor gagal"/><!-- v2022 -->
+    <phrase id="Accept" value="Terima"/><!-- v2018 -->
+    <phrase id="ActionDeleted" value="Telah dihapus"/>
+    <phrase id="ActionInserted" value="Telah ditambahkan"/>
+    <phrase id="ActionInsertedGridAdd" value="Telah ditambahkan (Grid-Tambah)"/>
+    <phrase id="ActionUpdated" value="Telah diubah"/>
+    <phrase id="ActionUpdatedGridEdit" value="Telah diubah (Grid-Ubah)"/>
+    <phrase id="ActionUpdatedMultiUpdate" value="Telah diubah (Multi-Update)"/>
+    <phrase id="ActivateAccount" value="Akun Anda telah diaktifkan"/>
+    <phrase id="ActivateFailed" value="Aktivasi gagal"/>
+    <phrase id="Add" value="Tambah"/>
+    <phrase id="AddBlankRow" value="Tambah baris baru" class="fa-solid fa-plus ew-icon"/><!-- v2023 -->
+    <phrase id="AddBtn" value="Tambah"/><!-- v2018 -->
+    <phrase id="AddEvent" value="Tambah event"/><!-- v2023 -->
+    <phrase id="AddLink" value="Tambah" class="fa-solid fa-plus ew-icon"/><!-- v2023 -->
+    <phrase id="AddMasterDetailLink" value="Master/Detail Tambah" class="icon-md-add ew-icon"/><!-- v12 -->
+    <phrase id="AddSuccess" value="Berhasil ditambahkan"/>
+    <phrase id="AdvancedSearch" value="Pencarian Lanjutan" class="icon-advanced-search ew-icon"/><!-- v2023 -->
+    <phrase id="AggregateColon" value=": "/><!-- v2020 -->
+    <phrase id="AggregateEqual" value="="/><!-- v2020 -->
+    <phrase id="AllRecords" value="Semua"/>
+    <phrase id="AllWord" value="Semua kata"/>
+    <phrase id="AnyWord" value="Kata apapun"/>
+    <phrase id="ApiTitle" value="REST API"/><!-- v2021 -->
+    <phrase id="AuditTrailAutoLogin" value="autologin"/>
+    <phrase id="AuditTrailFailedAttempt" value="usaha gagal: %n"/>
+    <phrase id="AuditTrailUserLoggedIn" value="pengguna sudah masuk"/>
+    <phrase id="AuditTrailPasswordExpired" value="kata sandi sudah kadaluarsa"/>
+    <phrase id="AuditTrailLogin" value="login"/>
+    <phrase id="AuditTrailLogout" value="logout"/>
+    <phrase id="AutoLoginFailed" value="Login otomatis gagal"/><!-- v2018 -->
+    <phrase id="Average" value="Rata-rata"/>
+    <phrase id="BackToList" value="Kembali ke Daftar"/>
+    <phrase id="BackToLogin" value="Kembali ke halaman login"/>
+    <phrase id="BackToMasterRecordPage" value="Kembali ke tabel master"/>
+    <phrase id="BackupCodes" value="Kode Backup (2FA)"/><!-- v2022 -->
+    <phrase id="BackupCodesMsg" value="Simpan kode backup Anda di tempat yang aman dan dapat diakses. Anda hanya dapat menggunakan kode backup sekali saja."/><!-- v2022 -->
+    <phrase id="BasicSearchKeyword" value="Kata kunci pencarian"/><!-- v2023 -->
+    <phrase id="BatchDeleteBegin" value="*** Mulai hapus banyak ***"/>
+    <phrase id="BatchDeleteRollback" value="*** Batalkan hapus banyak ***"/>
+    <phrase id="BatchDeleteSuccess" value="*** Berhasil hapus banyak ***"/>
+    <phrase id="BatchInsertBegin" value="*** Mulai tambah banyak ***"/>
+    <phrase id="BatchInsertRollback" value="*** Batalkan tambah banyak ***"/>
+    <phrase id="BatchInsertSuccess" value="*** Berhasil tambah banyak ***"/>
+    <phrase id="BatchUpdateBegin" value="*** Mulai ubah banyak ***"/>
+    <phrase id="BatchUpdateRollback" value="*** Batalkan ubah banyak ***"/>
+    <phrase id="BatchUpdateSuccess" value="*** Berhasil ubah banyak ***"/>
+    <phrase id="BlankOptionText" value="&amp;nbsp;"/><!-- v2022 -->
+    <phrase id="BooleanNo" value="Tidak"/><!-- v2020 -->
+    <phrase id="BooleanYes" value="Ya"/><!-- v2020 -->
+    <phrase id="ButtonActions" value="Aksi" class="fa-solid fa-bars ew-icon"/><!-- v2023 -->
+    <phrase id="ButtonAddEdit" value="Tambah/Ubah" class="icon-addedit ew-icon"/><!-- v12 -->
+    <phrase id="ButtonDetails" value="Master/Detail" class="icon-master-detail ew-icon"/><!-- v12 -->
+    <phrase id="ButtonExport" value="Ekspor" class="fa-solid fa-download ew-icon"/><!-- v2023 -->
+    <phrase id="ButtonListOptions" value="Pilihan" class="fa-solid fa-bars ew-icon"/><!-- v2023 -->
+    <phrase id="ButtonListOptionsCard" value="Pilihan" class="fa-solid fa-ellipsis-vertical ew-icon"/><!-- v2023 -->
+    <phrase id="ButtonSearch" value="Cari" class="fa-solid fa-magnifying-glass ew-icon"/><!-- v2023 -->
+    <phrase id="CancelBtn" value="Batal"/><!-- v2017 -->
+    <phrase id="CancelLink" value="Batal" class="fa-solid fa-times ew-icon"/><!-- v2023 -->
+    <phrase id="ChangePassword" value="Ganti Kata Sandi"/><!-- v2020 -->
+    <phrase id="ChangePasswordMessage" value="Ganti Kata Sandi"/><!-- v2019 -->
+    <phrase id="ChangePasswordPage" value="Ganti Kata Sandi"/>
+    <phrase id="ChangePasswordBtn" value="Ganti"/>
+    <phrase id="ChartExportError1" value="Tidak dapat mengambil %t gambar dari %e"/><!-- v2023 -->
+    <phrase id="ChartExportError2" value="Nama berkas hilang"/><!-- v2023 -->
+    <phrase id="ChartExportError3" value="Folder Upload tidak ada"/><!-- v2023 -->
+    <phrase id="ChartExportError4" value="Folder Upload tidak dapat ditulisi"/><!-- v2023 -->
+    <phrase id="ChartOrder" value="Urut berdasarkan"/><!-- v2020 -->
+    <phrase id="ChartOrderXAsc" value="Label Menaik"/><!-- v2020 -->
+    <phrase id="ChartOrderXDesc" value="Label Menurun"/><!-- v2020 -->
+    <phrase id="ChartOrderYAsc" value="Nilai Menaik"/><!-- v2020 -->
+    <phrase id="ChartOrderYDesc" value="Nilai Menurun"/><!-- v2020 -->
+    <phrase id="ChooseFileBtn" value="Pilih..."/><!-- v11 -->
+    <phrase id="ChooseFile" value="Jatuhkan file di sini atau klik unggah"/><!-- v2022 -->
+    <phrase id="ChooseFiles" value="Jatuhkan file di sini atau klik unggah"/><!-- v2022 -->
+    <phrase id="Clear" value="Bersihkan"/><!-- v2022 -->
+    <phrase id="ClickReCaptcha" value="Klik tanda centang reCAPTCHA"/><!-- v12 -->
+    <phrase id="ClickToDrillDown" value="Klik untuk menampilkan ke bawah"/><!-- v2020 -->
+    <phrase id="CloseAccountBtn" value="Hapus data dan tutup akun saya"/><!-- v2019 -->
+    <phrase id="CloseBtn" value="Tutup"/><!-- v2017 -->
+    <phrase id="Columns" value="Kolom" class="fa-solid fa-table-columns ew-icon"/><!-- v2023 -->
+    <phrase id="Confirm" value="Konfirmasi"/>
+    <phrase id="ConfirmBtn" value="Konfirmasi"/><!-- v2017 -->
+    <phrase id="ConfirmCancel" value="Anda ingin membatalkan?"/><!-- v2016 -->
+    <phrase id="ConfirmPassword" value="Konfirmasi Kata Sandi"/><!-- v2021 -->
+    <phrase id="ConflictCancelLink" value="Batal"/>
+    <phrase id="CookieConsentTitle" value="Cookies"/><!-- v2021 -->
+    <phrase id="CookieConsentSummary" value="Gunakan ruang ini untuk merangkum penggunaan kebijakan privasi dan cookie."/><!-- v2021 -->
+    <phrase id="Copy" value="Salin"/>
+    <phrase id="CopyLink" value="Salin" class="fa-regular fa-copy ew-icon"/><!-- v2023 -->
+    <phrase id="CopyToClipboard" value="Salin ke clipboard"/><!-- v2022 -->
+    <phrase id="CopiedToClipboard" value="Telah disalin ke clipboard"/><!-- v2022 -->
+    <phrase id="Count" value="Jumlah"/>
+    <phrase id="CountSelected" value="%s terpilih"/><!-- v12 -->
+    <phrase id="Crop" value="Crop"/><!-- v2023 -->
+    <phrase id="CrosstabSummary" value="Ringkasan"/><!-- v2023 -->
+    <phrase id="CurrentFilters" value="Filter saat ini:"/><!-- v2020 -->
+    <phrase id="CurrentPassword" value="Kata sandi saat ini: "/><!-- v2016 -->
+    <phrase id="CustomActionCompleted" value="'%s' telah selesai"/>
+    <phrase id="CustomActionCancelled" value="'%s' telah dibatalkan"/>
+    <phrase id="CustomActionFailed" value="'%s' gagal"/><!-- v2016 -->
+    <phrase id="CustomActionNotAllowed" value="'%s' tidak diijinkan"/><!-- v2016 -->
+    <phrase id="CustomView" value="TAMPILAN CUSTOM"/>
+    <phrase id="Danger" value="Error"/><!-- v2020 -->
+    <phrase id="Debug" value="Debug"/><!-- v2021 -->
+    <phrase id="Delete" value="Hapus"/>
+    <phrase id="DeleteBtn" value="Hapus"/>
+    <phrase id="DeleteCancelled" value="Penghapusan dibatalkan"/>
+    <phrase id="DeleteConfirm" value="Anda yakin ingin menghapus?"/><!-- v2023 -->
+    <phrase id="DeleteEventConfirm" value="Anda yakin ingin menghapus event ini?"/><!-- v2023 -->
+    <phrase id="DeleteFailed" value="Gagal menghapus data"/><!-- v2023 -->
+    <phrase id="DeleteFilter" value="Hapus filter"/><!-- v2016 -->
+    <phrase id="DeleteFilterConfirm" value="Hapus filter %s?"/><!-- v2016 -->
+    <phrase id="DeleteLink" value="Hapus" class="fa-solid fa-trash ew-icon"/><!-- v2023 -->
+    <phrase id="DeleteSelectedLink" value="Hapus Data Terpilih" class="fa-solid fa-trash ew-icon"/><!-- v2023 -->
+    <phrase id="DeleteRecordsFailed" value="Penghapusan gagal untuk data dengan kunci: %k"/><!-- v2023 -->
+    <phrase id="DeleteSuccess" value="Telah berhasil dihapus"/>
+    <phrase id="DetailLink" value=""/>
+    <phrase id="DetailCount" value="&lt;span class='badge bg-primary ew-detail-count-%c'&gt;%c&lt;/span&gt;"/><!-- v2022 -->
+    <phrase id="Details" value="Detail"/><!-- v2022 -->
+    <phrase id="Disable2FA" value="Nonaktifkan otentikasi dua faktor"/><!-- v2022 -->
+    <phrase id="Disable2FAConfirm" value="Anda yakin ingin menonaktifkan otentikasi dua faktor?"/><!-- v2023 -->
+    <phrase id="DisableNotifications" value="Nonaktifkan notifikasi"/><!-- v2022 -->
+    <phrase id="DisableNotificationsConfirm" value="Anda yakin ingin menonaktifkan notifikasi?"/><!-- v2023 -->
+    <phrase id="DownloadBtn" value="Unduh"/><!-- v2019 -->
+    <phrase id="DrillDownAllRecords" value="Semua data"/><!-- v2020 -->
+    <phrase id="DrillDownFilters" value="Filter drill down:"/><!-- v2020 -->
+    <phrase id="DupIndex" value="Nilai duplikat '%v' untuk indeks yang unik '%f'"/>
+    <phrase id="DupKey" value="Primary key duplikat: '%f'"/>
+    <phrase id="Edit" value="Ubah"/>
+    <phrase id="EditBtn" value="Ubah"/><!-- v2018 -->
+    <phrase id="EditLink" value="Ubah" class="fa-solid fa-pen ew-icon"/><!-- v2023 -->
+    <phrase id="EditSelectedLink" value="Ubah data terpilih" class="icon-grid-edit ew-icon"/><!-- v2023 -->
+    <phrase id="Email" value="Email"/><!-- v2021 -->
+    <phrase id="EmailAddress" value="Alamat Email"/><!-- v2023 -->
+    <phrase id="EmailFormSender" value="Dari"/>
+    <phrase id="EmailFormRecipient" value="Kepada"/>
+    <phrase id="EmailFormCc" value="Cc"/>
+    <phrase id="EmailFormBcc" value="Bcc"/>
+    <phrase id="EmailFormSubject" value="Subyek"/>
+    <phrase id="EmailFormMessage" value="Pesan"/>
+    <phrase id="EmailFormContentType" value="Kirim sebagai"/>
+    <phrase id="EmailFormContentTypeUrl" value="URL"/>
+    <phrase id="EmailFormContentTypeHtml" value="HTML"/>
+    <phrase id="EmptyLabel" value="(Kosong)"/><!-- v2020 -->
+    <phrase id="Enable2FA" value="Aktifkan otentikasi dua faktor"/><!-- v2022 -->
+    <phrase id="EnableNotifications" value="Aktifkan notifikasi"/><!-- v2022 -->
+    <phrase id="EnterFilterName" value="Masukkan nama filter"/><!-- v2016 -->
+    <phrase id="EnterNewPassword" value="Masukkan kata sandi baru"/>
+    <phrase id="EnterOldPassword" value="Masukkan kata sandi lama"/>
+    <phrase id="EnterPassword" value="Masukkan kata sandi"/>
+    <phrase id="EnterRequiredField" value="Masukkan input yang dibutuhkan - %s"/><!-- v2021 -->
+    <phrase id="EnterSearchCriteria" value="Masukkan kriteria pencarian"/>
+    <phrase id="EnterSecurityCodeGoogle" value="Masukkan kode keamanan dari Google Authenticator (atau kode backup)"/><!-- v2023 -->
+    <phrase id="EnterSecurityCodeEmail" value="Masukkan OTP yang telah dikirim ke akun email Anda (atau kode backup)"/><!-- v2023 -->
+    <phrase id="EnterSecurityCodeSms" value="Masukkan OTP yang telah dikirim ke handphone Anda (atau kode backup)"/><!-- v2023 -->
+    <phrase id="EnterSecurityCode" value="Masukkan OTP untuk verifikasi"/><!-- v2023 -->
+    <phrase id="EnterOTPEmailAddress" value="Masukkan akun email Anda untuk menerima OTP"/><!-- v2023 -->
+    <phrase id="EnterOTPMobileNumber" value="Masukkan nomor handphone Anda untuk menerima OTP"/><!-- v2023 -->
+    <phrase id="EnterUserName" value="Masukkan username Anda"/>
+    <phrase id="EnterValidateCode" value="Masukkan kode validasi"/><!-- v11 -->
+    <phrase id="EnterProperSenderEmail" value="Melebihi jumlah maksimum dari jumlah email pengirim atau alamat email tidak benar"/>
+    <phrase id="EnterProperRecipientEmail" value="Melebihi jumlah maksimum dari jumlah email penerima atau alamat email tidak benar"/>
+    <phrase id="EnterProperCcEmail" value="Melebihi jumlah maksimum email tembusan/cc atau alamat email tidak benar"/>
+    <phrase id="EnterProperBccEmail" value="Melebihi jumlah maksimum email tembusan buta/bcc atau alamat email tidak benar"/>
+    <phrase id="EnterSubject" value="Masukkan subyek"/>
+    <phrase id="EnterValue" value="Masukkan nilai"/><!-- v2021 -->
+    <phrase id="EnterValue2" value="Masukkan nilai kedua"/><!-- v2021 -->
+    <phrase id="Error" value="Error"/><!-- v2016 -->
+    <phrase id="ErrorOccurred" value="An error occurred while processing your request."/><!-- v2016 (DN) -->
+    <phrase id="ExactPhrase" value="Frase yang sama persis"/>
+    <phrase id="ExceedMaxRetry" value="Melebihi jumlah maksimum usaha login. Akun terkunci. Cobalah lagi dalam %t menit"/>
+    <phrase id="ExceedMaxEmailExport" value="Melebihi jumlah maksimum dari email ekspor. Cobalah lagi nanti"/>
+    <phrase id="ExportChart" value="Sedang mengekspor grafik: "/><!-- v2020 -->
+    <phrase id="ExportChartData" value="Sedang mengekspor data grafik"/><!-- v2020 -->
+    <phrase id="ExportChartError" value="Gagal mengekspor grafik: "/><!-- v2020 -->
+    <phrase id="ExportClassNotFound" value="Class Export tidak ditemukan"/><!-- v2019 -->
+    <phrase id="Exporting" value="Seadang mengekspor, mohon tunggu..."/><!-- v2018 -->
+    <phrase id="ExportToCsv" value="Ekspor ke CSV" class="icon-csv ew-icon"/><!-- v12 -->
+    <phrase id="ExportToEmail" value="Email" class="fa-regular fa-envelope ew-icon"/><!-- v2023 -->
+    <phrase id="ExportToExcel" value="Ekspor ke Excel" class="icon-excel ew-icon"/><!-- v11 -->
+    <phrase id="ExportToHtml" value="Ekspor ke HTML" class="icon-html ew-icon"/><!-- v11 -->
+    <phrase id="ExportToPdf" value="Ekspor ke PDF" class="icon-pdf ew-icon"/><!-- v11 -->
+    <phrase id="ExportToWord" value="Ekspor ke Word" class="icon-word ew-icon"/><!-- v11 -->
+    <phrase id="ExportToXml" value="Ekspor ke XML" class="icon-xml ew-icon"/><!-- v11 -->
+    <phrase id="FailedToCreate" value="Gagal membuat instance"/><!-- v2022 (DN) -->
+    <phrase id="FailedToExport" value="Gagal mengekspor"/><!-- v2018 -->
+    <phrase id="FailedToSendMail" value="Gagal mengirim email. "/>
+    <phrase id="FieldName" value="Nama Input"/>
+    <phrase id="FieldRequiredIndicator" value="" class="fa-solid fa-asterisk ew-required"/><!-- v2023 -->
+    <phrase id="FileNotFound" value="File tidak ditemukan"/>
+    <phrase id="Filter" value="Filter" class="fa-solid fa-filter"/><!-- v2023 -->
+    <phrase id="FilterAllRecords" value="Semua data"/><!-- v2022 -->
+    <phrase id="FilterCancel" value="Batal"/><!-- v2022 -->
+    <phrase id="FilterName" value="Nama filter"/><!-- v2016 -->
+    <phrase id="FilterNoValue" value="Tidak ada nilai yang dipilih"/><!-- v2022 -->
+    <phrase id="FilterOK" value="OK"/><!-- v2022 -->
+    <phrase id="Filters" value="Filter" class="fa-solid fa-filter ew-icon"/><!-- v2023 -->
+    <phrase id="ResetPasswordResponse" value="Anda akan menerima instruksi pemulihan kata sandi jika alamat email Anda telah terdaftar."/><!-- v2019 -->
+    <phrase id="ResetPassword" value="Pulihkan Kata Sandi"/><!-- v2020 -->
+    <phrase id="GeneratePassword" value="Buat kata sandi acak" class="fa-solid fa-bolt ew-icon"/><!-- v2023 -->
+    <phrase id="GetNewCodes" value="Dapatkan kode baru"/><!-- v2022 -->
+    <phrase id="GoBack" value="Kembali"/>
+    <phrase id="GridAddCancelled" value="Grid tambah dibatalkan"/><!-- v12 -->
+    <phrase id="GridAddLink" value="Grid Tambah" class="icon-grid-add ew-icon"/><!-- v12 -->
+    <phrase id="GridCancelLink" value="Batalkan" class="fa-solid fa-xmark ew-icon"/><!-- v2023 -->
+    <phrase id="GridEditCancelled" value="Grid ubah dibatalkan"/><!-- v12 -->
+    <phrase id="GridEditLink" value="Grid Ubah" class="icon-grid-edit ew-icon"/><!-- v12 -->
+    <phrase id="GridInsertLink" value="Tambah" class="fa-solid fa-check ew-icon"/><!-- v2023 -->
+    <phrase id="GridSaveLink" value="Simpan" class="fa-solid fa-check ew-icon"/><!-- v2023 -->
+    <phrase id="Group" value="Grup"/><!-- v2020 -->
+    <phrase id="GroupsPerPage" value="Grup per halaman"/><!-- v2020 -->
+    <phrase id="Highlight" value="Sorotan"/><!-- v12 -->
+    <phrase id="HighlightBtn" value="Sorotan" class="fa-solid fa-highlighter ew-icon"/><!-- v2023 -->
+    <phrase id="HomePage" value="Beranda" class="fa-solid fa-house ew-icon"/><!-- v2023 -->
+    <phrase id="Import" value="Impor" class="fa-solid fa-upload ew-icon"/><!-- v2023 -->
+    <phrase id="ImportMaxFailuresExceeded" value="Maksimul jumlah kesalahan (%s) telah terlampaui"/><!-- v2023 -->
+    <phrase id="ImportRowError" value="Gagal mengimpor baris #%i: %e"/><!-- v2023 -->
+    <phrase id="ImportInvalidFileExtension" value="Ekstensi file tidak valid '%e'"/><!-- v2023 -->
+    <phrase id="ImportInvalidFieldName" value="Nama field tidak valid: %f"/><!-- v2023 -->
+    <phrase id="ImportInvalidFieldValue" value="Nilai tidak valid untuk field '%f': %v"/><!-- v2023 -->
+    <phrase id="ImportNoHeaderRow" value="Tidak ada baris header untuk mengimpor"/><!-- v2023 -->
+    <phrase id="ImportResult" value="Telah memproses %c dari %t data dari %f (sukses: %s, gagal: %e)"/><!-- v2023 -->
+    <phrase id="ImportSave" value="Data belum disimpan. Jika Anda menerima hasil ini, tekan tombol 'Simpan'."/><!-- v2023 -->
+    <phrase id="ImportServerError" value="Gagal memproses file yang diunggah"/><!-- v2023 -->
+    <phrase id="ImportUploadError" value="Gagal mengunggah %f: %s"/><!-- v2023 -->
+    <phrase id="ImportUploadComplete" value="Upload telah selesai, sedang memproses file..."/><!-- v2023 -->
+    <phrase id="ImportUploadProgress" value="Sedang mengunggah...(p%)"/><!-- v2023 -->
+    <phrase id="IncorrectCreditCard" value="Nomor Kartu Kredit tidak benar"/><!-- v2021 -->
+    <phrase id="IncorrectDate" value="Tanggal tidak benar (%s)"/><!-- v2021 -->
+    <phrase id="IncorrectEmail" value="Email tidak benar"/>
+    <phrase id="IncorrectField" value="Nilai field tidak valid"/>
+    <phrase id="IncorrectFloat" value="Angka desimal tidak valid"/>
+    <phrase id="IncorrectGUID" value="GUID tidak benar"/>
+    <phrase id="IncorrectInteger" value="Nilai harus berupa bilangan bulat"/>
+    <phrase id="IncorrectMin" value="Angka harus lebih besar dari atau sama dengan %s"/><!-- v2023 -->
+    <phrase id="IncorrectMinDate" value="Tanggal/Waktu harus lebih lama atau sama dengan %s"/><!-- v2023 -->
+    <phrase id="IncorrectMax" value="Angka harus lebih kecil dari atau sama dengan %s"/><!-- v2023 -->
+    <phrase id="IncorrectMaxDate" value="Tanggal/Waktu harus lebih awal dari atau sama dengan %s"/><!-- v2023 -->
+    <phrase id="IncorrectPhone" value="Nomor telepon tidak benar"/>
+    <phrase id="IncorrectRange" value="Angka harus di antara %1 dan %2"/>
+    <phrase id="IncorrectRegExp" value="Regex tidak cocok"/>
+    <phrase id="IncorrectSecurityCode" value="Kode keamanan tidak benar"/><!-- v2022 -->
+    <phrase id="IncorrectSSN" value="Nomor keamanan sosial tidak benar"/>
+    <phrase id="IncorrectTime" value="Waktu tidak benar (%s)"/><!-- v2022 -->
+    <phrase id="IncorrectUrl" value="URL tidak benar"/><!-- v2022 -->
+    <phrase id="IncorrectValidationCode" value="Kode validasi tidak benar, cobalah lagi."/><!-- v2021 -->
+    <phrase id="IncorrectZip" value="Kode pos tidak benar"/>
+    <phrase id="Info" value="Informasi"/><!-- v2020 -->
+    <phrase id="InlineAddLink" value="Tambah di baris" class="icon-inline-add ew-icon"/><!-- v12 -->
+    <phrase id="InlineCopyLink" value="Salin di baris" class="icon-inline-copy ew-icon"/><!-- v12 -->
+    <phrase id="InlineEditLink" value="Ubah di baris" class="icon-inline-edit ew-icon"/><!-- v12 -->
+    <phrase id="InsertCancelled" value="Penambahan dibatalkan"/>
+    <phrase id="InsertFailed" value="Penambahan gagal"/>
+    <phrase id="InsertLink" value="Tambah" class="fa-solid fa-check ew-icon"/><!-- v2023 -->
+    <phrase id="InsertSuccess" value="Berhasil ditambahkan"/>
+    <phrase id="InvalidDate" value="Tanggal tidak valid"/><!-- v2021 -->
+    <phrase id="InvalidKeyValue" value="Pasangan kunci dan nilai(key-value) tidak benar"/>
+    <phrase id="InvalidRecord" value="Data tidak valid! Kunci bernilai null"/>
+    <phrase id="InvalidPostRequest" value="Permintaan post tidak valid"/><!-- v12 -->
+    <phrase id="InvalidParameter" value="Parameter tidak valid"/>
+    <phrase id="InvalidPassword" value="Kata sandi tidak valid"/>
+    <phrase id="InvalidPasswordChars" value="Kata Sandi tidak boleh mengandung &amp;, &lt;, &gt;, &quot;, atau &apos;"/><!-- v2021 -->
+    <phrase id="InvalidNewPassword" value="Kata Sandi baru tidak valid"/>
+    <phrase id="InvalidUidPwd" value="Username atau kata sandi tidak valid"/>
+    <phrase id="InvalidUsernameChars" value="Username pengguna harus tidak boleh mengandung &amp;, &lt;, &gt;, &quot;, atau &apos;"/><!-- v2021 -->
+    <phrase id="Language" value="Bahasa"/>
+    <phrase id="LearnMore" value="Pelajari Lagi"/><!-- v2018 -->
+    <phrase id="LightboxTitle" value=" "/><!-- v12 -->
+    <phrase id="LightboxCurrent" value="gambar {current} dari {total}"/><!-- Note: DO NOT translate "{current}" and "{total}" --><!-- v12 -->
+    <phrase id="LightboxPrevious" value="mundur"/><!-- v12 -->
+    <phrase id="LightboxNext" value="maju"/><!-- v12 -->
+    <phrase id="LightboxClose" value="tutup"/><!-- v12 -->
+    <phrase id="LightboxXhrError" value="Konten ini gagal dimuat."/><!-- v12 -->
+    <phrase id="LightboxImgError" value="Gambar ini gagal dimuat."/><!-- v12 -->
+    <phrase id="List" value=""/><!-- v2019 -->
+    <phrase id="ListActionButton" value="Aksi" class="fa-solid fa-ellipsis-vertical"/><!-- v2023 -->
+    <phrase id="Loading" value="Sedang memuat..."/>
+    <phrase id="LocalRedirectOnly" value="Hanya URL lokal yang diperbolehkan."/><!-- (DN) -->
+    <phrase id="Login" value="Login" class="fa-solid fa-arrow-right-to-bracket ew-icon"/><!-- v2023 -->
+    <phrase id="LoginMicrosoft" value="Login dengan Azure" class="fa-brands fa-microsoft"/><!-- v2023 (DN: Use "Microsoft" as key, not "Azure") -->
+    <phrase id="LoginCancelled" value="Login dibatalkan"/>
+    <phrase id="LoginFacebook" value="Login dengan Facebook" class="fa-brands fa-facebook-f"/><!-- v2023 -->
+    <phrase id="LoginSucceeded" value="Login berhasil, sedang memuat..."/><!-- v2023 -->
+    <phrase id="LoginFailed" value="Login dengan %p gagal"/><!-- v2018 -->
+    <phrase id="LoginGoogle" value="Login dengan Google" class="fa-brands fa-google"/><!-- v2023 -->
+    <phrase id="LoginMsg" value="Masuk untuk memulai sesi Anda"/><!-- v2019 -->
+    <phrase id="LoginOptions" value="Pilihan"/><!-- v12 -->
+    <phrase id="LoginOr" value="- ATAU -"/><!-- v2018 -->
+    <phrase id="LoginSaml" value="Login dengan SAML" class="fa-solid fa-user-shield"/><!-- v2023 -->
+    <phrase id="LoginPage" value="Login"/>
+    <phrase id="Login2FAPage" value="Login (Otentikasi dua faktor)"/><!-- v2022 -->
+    <phrase id="Logout" class="fa-solid fa-arrow-right-from-bracket ew-icon" value="Logout"/><!-- v2023 -->
+    <phrase id="LookupTitle" value="Lookup - %s"/><!-- v2022 -->
+    <phrase id="MasterDetailCopyLink" value="Master/Detail Salin" class="icon-md-copy ew-icon"/><!-- v12 -->
+    <phrase id="MasterDetailEditLink" value="Master/Detail Ubah" class="icon-md-edit ew-icon"/><!-- v12 -->
+    <phrase id="MasterDetailListLink" value="Daftar Detail" class="fa-solid fa-table-list ew-icon"/><!-- v2023 -->
+    <phrase id="MasterDetailViewLink" value="Master/Detail Tampilan" class="icon-md-view ew-icon"/><!-- v12 -->
+    <phrase id="MaxFileSize" value="Ukuran maksimum file (%s bytes) telah terlampaui."/>
+    <phrase id="MismatchPassword" value="Kata Sandi tidak cocok"/>
+    <phrase id="MissingLookupTableName" value="Nama tabel lookup tidak ada"/>
+    <phrase id="MissingDisplayFieldName" value="Nama field yang ditampilkan tidak ada"/>
+    <phrase id="MissingDisplayFieldValue" value="Nilai field yang ditampilkan tidak ada"/>
+    <phrase id="MissingPDFObject" value="PDFObject tidak ada"/><!-- v2020 -->
+    <phrase id="MissingUserLevelID" value="ID Level Pengguna tidak ada"/>
+    <phrase id="MissingUserLevelName" value="Nama Level Pengguna tidak ada"/>
+    <phrase id="MobileNumber" value="Nomor telepon seluler"/><!-- v2023 -->
+    <phrase id="MultiColumnCards" value="Tampilan Kartu" class="fa-solid fa-table-cells-large ew-icon"/><!-- v2023 -->
+    <phrase id="MultiColumnTable" value="Tampilan Tabel" class="fa-solid fa-table-list ew-icon"/><!-- v2023 -->
+    <phrase id="MultipleMasterDetails" value="Master/Detail" class="icon-master-detail ew-icon"/><!-- v12 -->
+    <phrase id="NewPassword" value="Kata Sandi Baru"/><!-- v2021 -->
+    <phrase id="Next" value="Maju"/><!-- v2016 -->
+    <phrase id="NoAddRecord" value="Tidak ada data yang ditambahkan"/>
+    <phrase id="NoFieldSelected" value="Tidak ada field terpilih untuk pembaruan"/>
+    <phrase id="NoPermission" value="Anda tidak memiliki ijin untuk mengakses %s."/><!-- v2016 -->
+    <phrase id="NoAddPermission" value="Anda tidak memiliki ijin untuk menambahkan data."/>
+    <phrase id="NoChartData" value="Tidak ada data yang ditampilkan"/><!-- v2020 -->
+    <phrase id="NoDeletePermission" value="Anda tidak memiliki ijin untuk menghapus data."/>
+    <phrase id="NoDistinctColVals" value="Tidak ada nilai kolom untuk SQL: "/><!-- v2020 -->
+    <phrase id="NoEditPermission" value="Anda tidak memiliki ijin untuk mengubah data."/>
+    <phrase id="NoHtmlForm" value="Form HTML tidak ditemukan"/><!-- v2022 -->
+    <phrase id="NoRecord" value="Data tidak ditemukan"/><!-- v2017 -->
+    <phrase id="NoRecordForKey" value="Data tidak ditemukan untuk kunci = "/>
+    <phrase id="NoReportOrCharts" value="Tidak ada laporan atau grafik tersedia untuk halaman ini."/><!-- v2020 -->
+    <phrase id="NoRecordSelected" value="Tidak ada data terpilih"/>
+    <phrase id="NoSubscription" value="Anda tidak memiliki subscription"/><!-- v2022 -->
+    <phrase id="NoSubscriptions" value="Tidak ada subscription ditemukan"/><!-- v2022 -->
+    <phrase id="NoTableGenerated" value="Tidak ada tabel yang dibangkitkan"/>
+    <phrase id="Notice" value="Pemberitahuan"/><!-- v2021 -->
+    <phrase id="Notifications" value="Notifikasi" class="fa-solid fa-bell ew-icon"/><!-- v2023 -->
+    <phrase id="NotificationsDisabled" value="Notifikasi telah dinonaktifkan"/><!-- v2022 -->
+    <phrase id="NotificationsEnabled" value="Notifikasi telah diaktifkan"/><!-- v2022 -->
+    <phrase id="NoUserLevel" value="Tidak ada pengaturan level pengguna."/>
+    <phrase id="NullLabel" value="(Null)"/><!-- v2020 -->
+    <phrase id="Of" value="dari"/><!-- v2017 -->
+    <phrase id="OKBtn" value="OK"/><!-- v2021 -->
+    <phrase id="Old" value="Lama"/>
+    <phrase id="OldPassword" value="Kata Sandi Lama"/><!-- v2021 -->
+    <phrase id="OverwriteBtn" value="Timpa"/><!-- v2017 -->
+    <phrase id="OverwriteLink" value="Timpa"/>
+    <phrase id="Page" value="Halaman"/><!-- v2017 -->
+    <phrase id="PageNotFound" value="Route '%p' tidak ditemukan."/><!-- v2021 -->
+    <phrase id="PagerFirst" value="Awal"/>
+    <phrase id="PagerLast" value="Akhir"/>
+    <phrase id="PagerNext" value="Maju"/>
+    <phrase id="PagerPrevious" value="Mundur"/>
+    <phrase id="Password" value="Kata Sandi"/><!-- v2021 -->
+    <phrase id="PasswordMask" value="********"/><!-- v2016 -->
+    <phrase id="PasswordRequest" value="Permintaan Kata Sandi"/>
+    <phrase id="PasswordChanged" value="Kata Sandi telah diganti"/>
+    <phrase id="PasswordExpired" value="Kata Sandi telah habis berlakunya. Silahkan ganti kata sandi."/>
+    <phrase id="PasswordStrength" value="Kekuatan: %p"/><!-- v2016 -->
+    <phrase id="PasswordTooSimple" value="Kata sandi Anda terlalu sederhana"/><!-- v2016 -->
+    <phrase id="Permission" value="Ijin" class="fa-solid fa-user ew-icon"/><!-- v2023 -->
+    <phrase id="PermissionAdd" value="Tambah/Salin"/><!-- v2020 -->
+    <phrase id="PermissionAdmin" value="Admin"/><!-- v2019 -->
+    <phrase id="PermissionDelete" value="Hapus"/><!-- v2018 -->
+    <phrase id="PermissionEdit" value="Ubah"/><!-- v2018 -->
+    <phrase id="PermissionExport" value="Ekspor"/><!-- v2023 -->
+    <phrase id="PermissionImport" value="Impor"/><!-- v2020 -->
+    <phrase id="PermissionListSearchView" value="Daftar/Cari/Tampilan"/><!-- v2018 -->
+    <phrase id="PermissionList" value="Daftar"/><!-- v2018 -->
+    <phrase id="PermissionLookup" value="Lookup"/><!-- v2020 -->
+    <phrase id="PermissionPush" value="Push"/><!-- v2023 -->
+    <phrase id="PermissionSearch" value="Cari"/><!-- v2018 -->
+    <phrase id="PermissionView" value="Tampilan"/><!-- v2018 -->
+    <phrase id="PersonalDataBtn" value="Data Pribadi"/><!-- v2019 -->
+    <phrase id="PersonalDataContent" value="Akun Anda mengandung data pribadi yang telah Anda berikan kepada kami. Halaman ini mengijinkan Anda untuk menghapus data tersebut."/><!-- v2019 -->
+    <phrase id="PersonalDataDeleteFailure" value="Terjadi kesalahan yang tidak diharapkan saat menghapus pengguna"/><!-- v2018 -->
+    <phrase id="PersonalDataDeleteSuccess" value="Data pribadi telah berhasil dihapus"/><!-- v2018 -->
+    <phrase id="PersonalDataTitle" value="Data Pribadi"/><!-- v2018 -->
+    <phrase id="PersonalDataWarning" value="Dengan menghapus data ini, maka akan menghapus akun Anda selamanya, dan tidak dapat dikembalikan lagi."/><!-- v2019 -->
+    <phrase id="PleaseSelect" value="Silahkan pilih"/><!-- v2016 -->
+    <phrase id="Prev" value="Mundur"/><!-- v2016 -->
+    <phrase id="PrimaryKeyUnspecified" value="Kunci utama belum ditentukan"/>
+    <phrase id="PrinterFriendly" value="Ramah Printer" class="fa-solid fa-print ew-icon"/><!-- v2023 -->
+    <phrase id="PrivacyPolicy" value="Kebijakan Privasi"/><!-- v2019 -->
+    <phrase id="PrivacyPolicyContent" value="Gunakan halaman ini untuk menguraikan kebijakan privasi situs Anda."/><!-- v2019 -->
+    <phrase id="PushNotificationDefaultTitle" value="Notifikasi Baru"/><!-- v2022 -->
+    <phrase id="PushNotificationFormTitle" value="Judul"/><!-- v2022 -->
+    <phrase id="PushNotificationFormBody" value="Bodi"/><!-- v2022 -->
+    <phrase id="PushNotificationFailure" value="Gagal mengirim notifikasi (gagal = %f)"/><!-- v2022 -->
+    <phrase id="PushNotificationSent" value="Notifikasi telah dikirim &lt;br&gt;(sukses = %s, gagal = %f)"/><!-- v2022 -->
+    <phrase id="PushNotificationSuccess" value="Semua notifikasi telah terkirim (sukses = %s)"/><!-- v2022 -->
+    <phrase id="Quarter" value="Quarter %q"/><!-- v2023 (DN) -->
+    <phrase id="QuarterShort" value="Q%q"/><!-- v2023 (DN) -->
+    <phrase id="QueryBuilder" value="Pembuat Kueri" class="fa-solid fa-sliders ew-icon"/><!-- v2023 -->
+    <phrase id="QuickSearchAuto" value="Otomatis"/><!-- v12 -->
+    <phrase id="QuickSearchAutoShort" value=""/><!-- v12 -->
+    <phrase id="QuickSearchAll" value="Semua kata kunci"/><!-- v12 -->
+    <phrase id="QuickSearchAllShort" value="Semua"/><!-- v12 -->
+    <phrase id="QuickSearchAny" value="Kata kunci apapun"/><!-- v12 -->
+    <phrase id="QuickSearchAnyShort" value="Apapun"/><!-- v12 -->
+    <phrase id="QuickSearchExact" value="Persis cocok"/><!-- v12 -->
+    <phrase id="QuickSearchExactShort" value="Cocok"/><!-- v12 -->
+    <phrase id="Recipient" value="Penerima"/><!-- v2021 -->
+    <phrase id="Record" value="Data"/><!-- v2022 -->
+    <phrase id="RecordChangedByOtherUser" value="Data telah diganti oleh pengguna lain. Klik [Muat Ulang] untuk mengambil data yang telah berubah (data Anda di form akan ditimpa) atau klik [Timpa] untuk menimpa data yang telah berubah tadi."/>
+    <phrase id="RecordDeleted" value="data telah dihapus"/>
+    <phrase id="RecordInserted" value="data telah dimasukkan"/>
+    <phrase id="RecordUpdated" value="data telah diubah"/>
+    <phrase id="RecordsPerPage" value="Ukuran halaman"/><!-- v2017 -->
+    <phrase id="Register" value="Pendaftaran"/><!-- v2020 -->
+    <phrase id="RegisterBtn" value="Pendaftaran"/>
+    <phrase id="RegisterSuccess" value="Pendaftaran berhasil"/>
+    <phrase id="RegisterSuccessActivate" value="Pendaftaran berhasil. Sebuah email telah dikirim ke alamat email Anda, silahkan klik tautan di email tersebut untuk mengaktifkan akun Anda."/>
+    <phrase id="RegisterPage" value="Pendaftaran"/>
+    <phrase id="RelatedRecordRequired" value="Anda tidak dapat menambahkan atau mengubah data karena nilai yang terkait tidak ada di tabel master '%t'"/>
+    <phrase id="RelatedRecordExists" value="Anda tidak dapat menghapus data karena data terkait terdapat di table detail '%t'"/>
+    <phrase id="ReloadBtn" value="Muat Ulang"/><!-- v2017 -->
+    <phrase id="ReloadLink" value="Muat Ulang"/>
+    <phrase id="RememberMe" value="Ingat saya"/>
+    <phrase id="Remove" value="Hapus"/>
+    <phrase id="Replace" value="Timpa"/>
+    <phrase id="Report" value="Laporan"/>
+    <phrase id="ResetPwd" value="Reset Kata Sandi"/><!-- v2020 -->
+    <phrase id="ResetPwdTitle" value="Reset Kata Sandi"/><!-- v2023 -->
+    <phrase id="ResendRegisterEmailBtn" value="Kirim ulang email pendaftaran"/><!-- v2016 -->
+    <phrase id="ResendRegisterEmailSuccess" value="Email pendaftaran untuk pengguna '%u' telah dikirim ulang"/><!-- v2016 -->
+    <phrase id="ResendRegisterEmailFailure" value="Gagal mengirim email pendaftaran untuk pengguna '%u'"/><!-- v12 -->
+    <phrase id="Reset" value="Reset"/>
+    <phrase id="ResetAllFilter" value="Reset semua penyaringan" class="icon-reset-search ew-icon"/><!-- v2020 -->
+    <phrase id="ResetConcurrentUserBtn" value="Reset sesi pengguna yang konkuren"/><!-- v2016 -->
+    <phrase id="ResetConcurrentUserSuccess" value="Sesi untuk pengguna '%u' telah direset"/><!-- v2016 -->
+    <phrase id="ResetConcurrentUserFailure" value="Gagal mereset sesi pengguna '%u'"/><!-- v2016 -->
+    <phrase id="ResetLoginRetryBtn" value="Reset jumlah usaha login"/><!-- v2016 -->
+    <phrase id="ResetLoginRetrySuccess" value="Jumlah usaha Login untuk pengguna '%u' telah direset"/><!-- v2016 -->
+    <phrase id="ResetLoginRetryFailure" value="Gagal mereset jumlah usaha login untuk pengguna '%u'"/><!-- v2016 -->
+    <phrase id="ResetSearchBtn" value="Reset" class="icon-reset-search ew-icon"/><!-- v12 -->
+    <phrase id="ResetSearch" value="Reset"/>
+    <phrase id="ResetUserSecretBtn" value="Reset secret pengguna"/><!-- v2022 -->
+    <phrase id="ResetUserSecretSuccess" value="Secret pengguna untuk '%u' telah direset"/><!-- v2022 -->
+    <phrase id="ResetUserSecretFailure" value="Gagal mereset secret pengguna untuk '%u'"/><!-- v2022 -->
+    <phrase id="RptAvg" value="RATA-RATA"/><!-- v2020 -->
+    <phrase id="RptCnt" value="JUMLAH"/><!-- v2020 -->
+    <phrase id="RptDtlRec" value=" detail data"/><!-- v2020 -->
+    <phrase id="RptGrandSummary" value="Jumlah Total"/><!-- v2020 -->
+    <phrase id="RptMax" value="MAKS"/><!-- v2020 -->
+    <phrase id="RptMin" value="MIN"/><!-- v2020 -->
+    <phrase id="RptPageSummary" value="Jumlah Halaman"/><!-- v2020 -->
+    <phrase id="RptSum" value="JUMLAH"/><!-- v2020 -->
+    <phrase id="RptSumHead" value="Jumlah untuk %c: %v"/><!-- v2020 -->
+    <phrase id="SaveBtn" value="Simpan"/><!-- v2018 -->
+    <phrase id="SaveCurrentFilter" value="Simpan filter terakhir"/><!-- v2016 -->
+    <phrase id="Scan2FAQrCode" value="Setelah menginstal Google Authenticator, scan QR Code di atas dan masukkan kode verifikasi"/><!-- v2022 -->
+    <phrase id="Search" value="Cari"/><!-- v2017 -->
+    <phrase id="SearchBtn" value="Cari"/><!-- v2018 -->
+    <phrase id="SearchLink" value="Cari" class="fa-solid fa-magnifying-glass ew-icon"/><!-- v2023 -->
+    <phrase id="SearchPanel" value="Panel Pencarian"/><!-- v12 -->
+    <phrase id="SecurityCode" value="Kode keamanan"/><!-- v2022 -->
+    <phrase id="SecurityCodeVerified" value="Kode keamanan terverifikasi, sedang mengarahkan..."/><!-- v2022 -->
+    <phrase id="SelectAll" value="Pilih semua"/><!-- v2022 -->
+    <phrase id="SelectBtn" value="Pilih"/><!-- v2017 -->
+    <phrase id="SendEmailBtn" value="Kirim"/>
+    <phrase id="SendEmailSuccess" value="Email telah berhasil dikirim"/>
+    <phrase id="Sender" value="Pengirim"/><!-- v2021 -->
+    <phrase id="SendOTP" value="Kirim OTP"/><!-- v2023 -->
+    <phrase id="SendOTPConfirm" value="Anda yakin ingin mengirim OTP?"/><!-- v2023 -->
+    <phrase id="SendOTPSuccess" value="OTP telah berhasil dikirim."/><!-- v2023 -->
+    <phrase id="SendOTPFailed" value="OTP tidak terkirim dengan kesalahan: %e"/><!-- v2023 -->
+    <phrase id="SendOTPSkipped" value="OTP diabaikan untuk akun yang tidak valid '%a' dari pengguna '%u'"/><!-- v2023 -->
+    <phrase id="SendOTPCancelled" value="OTP dibatalkan oleh pengguna"/><!-- v2023 -->
+    <phrase id="SendPushNotification" value="Kirim Notifikasi" class="fa-solid fa-bell ew-icon"/><!-- v2023 -->
+    <phrase id="SendPushNotificationBtn" value="Kirim"/><!-- v2022 -->
+    <phrase id="SendPushNotificationsToAll" value="Tidak pendaftaran yang dipilih. Kirim notifikasi ke semua?"/><!-- v2022 -->
+    <phrase id="SendPwd" value="Kirim"/><!-- v2020 -->
+    <phrase id="SequenceNumber" value="%s."/>
+    <phrase id="ServerCommunicationError" value="Kesalahan terjadi saat menghubungi server."/><!-- v2022 -->
+    <phrase id="ServerError" value="Kesalahan internal terjadi saat memproses permintaan Anda."/><!-- v2021 -->
+    <phrase id="SessionWillExpire" value="Sesi Anda akan habis berlakunya dalam %s detik. Klik OK untuk melanjutkan sesi Anda."/><!-- v2016 -->
+    <phrase id="SessionExpired" value="Sesi Anda telah habis masa lakunya."/><!-- v2016 -->
+    <phrase id="SetPasswordExpiredBtn" value="Habiskan masa laku kata sandi"/><!-- v2016 -->
+    <phrase id="SetPasswordExpiredSuccess" value="Kata sandi pengguna '%u' telah ditentukan sebagai habis masa lakunya"/><!-- v2016 -->
+    <phrase id="SetPasswordExpiredFailure" value="Gagal membuat kata sandi pengguna '%u' sebagai habis masa lakunya"/><!-- v2016 -->
+    <phrase id="ShowAllBtn" value="Tampilkan semua" class="icon-reset-search ew-icon"/><!-- v12 -->
+    <phrase id="ShowAll" value="Tampilkan semua"/><!-- v12 -->
+    <phrase id="Skip" value="Lewati"/><!-- v2023 -->
+    <phrase id="SortUp" value="Menaik" class="fa-solid fa-sort-up"/><!-- v2023 -->
+    <phrase id="SortDown" value="Menurun" class="fa-solid fa-sort-down"/><!-- v2023 -->
+    <phrase id="Subject" value="Subyek"/><!-- v2021 -->
+    <phrase id="Success" value="Sukses"/><!-- v2020 -->
+    <phrase id="Summary" value="Jumlah"/><!-- v2020 -->
+    <phrase id="SummaryColon" value=": "/><!-- v2020 -->
+    <phrase id="Table" value="TABEL"/>
+    <phrase id="Tables" value="Tabel"/><!-- v2022 -->
+    <phrase id="To" value="sampai"/>
+    <phrase id="Top" value="Atas"/><!-- v2020 -->
+    <phrase id="Total" value="Total"/>
+    <phrase id="UnauthorizedUserID" value="Pengguna (%c) belum diotorisasi untuk menyetel ID Pengguna (%u)."/>
+    <phrase id="UnauthorizedParentUserID" value="Pengguna (%c) belum diotorisasi untuk menyetel ID pengguna induk (%p)."/>
+    <phrase id="UnauthorizedMasterUserID" value="Pengguna (%c) belum diotorisasi untuk menambahkan data. Penyaringan Master: %f"/>
+    <phrase id="UnsupportedBrowser" value="Browser tidak didukung oleh halaman ini"/><!-- v2021 -->
+    <phrase id="Update" value="Ubah"/>
+    <phrase id="UpdateBtn" value="Ubah"/><!-- v2017 -->
+    <phrase id="UpdateCancelled" value="Pengubahan dibatalkan"/>
+    <phrase id="UpdateFailed" value="Pengubahan gagal"/>
+    <phrase id="UpdateLink" value="Ubah" class="fa-solid fa-check ew-icon"/><!-- v2023 -->
+    <phrase id="UpdateSelectedLink" value="Ubah Data Terpilih" class="fa-solid fa-pen ew-icon"/><!-- v2023 -->
+    <phrase id="UpdateSomeRecordsFailed" value="Pengubahan gagal untuk data dengan kunci: %k"/><!-- v2022 -->
+    <phrase id="UpdateSuccess" value="Telah berhasil diubah"/>
+    <phrase id="Uploading" value="Sedang mengunggah..."/>
+    <phrase id="UploadStart" value="Mulai"/>
+    <phrase id="UploadCancel" value="Batal"/>
+    <phrase id="UploadDelete" value="Hapus"/>
+    <phrase id="UploadOverwrite" value="Timpa file yang lama?"/>
+    <phrase id="UploadErrorMaxFileSize" value="File terlalu besar"/><!-- v2023 -->
+    <phrase id="UploadErrorMinFileSize" value="File terlalu kecil"/><!-- v2023 -->
+    <phrase id="UploadErrorAcceptFileTypes" value="Tipe file tidak diijinkan"/><!-- v2023 -->
+    <phrase id="UploadErrorMaxNumberOfFiles" value="Jumlah maksimum file telah terlampaui"/><!-- v2023 -->
+    <phrase id="UploadErrorMaxWidth" value="Lebar maksimum gambar telah terlampaui"/><!-- v2023 -->
+    <phrase id="UploadErrorMinWidth" value="Gambar membutukan lebar minimum"/><!-- v2023 -->
+    <phrase id="UploadErrorMaxHeight" value="Gambar melewati tinggi maksimum"/><!-- v2023 -->
+    <phrase id="UploadErrorMinHeight" value="Gambar membutuhkan tinggi minimum"/><!-- v2023 -->
+    <phrase id="UploadErrorMaxFileLength" value="Total panjang nama file melebihi jumlah maksimum karakter"/>
+    <phrase id="UserAdministrator" value="Administrator"/><!-- v12 -->
+    <phrase id="UserAnonymous" value="Anonymous"/><!-- v12 -->
+    <phrase id="UserDefault" value="Default"/><!-- v12 -->
+    <phrase id="UserEmail" value="Email"/>
+    <phrase id="UserExists" value="Pengguna sudah ada"/>
+    <phrase id="UserLevel" value="Level Pengguna: "/>
+    <phrase id="UserLevelAdministratorName" value="Nama level pengguna untuk level pengguna -1 harus 'Administrator'"/>
+    <phrase id="UserLevelAnonymousName" value="Nama level pengguna untuk pengguna level -2 harus 'Anonymous'"/><!-- v2016 -->
+    <phrase id="UserLevelPermission" value="Hak Akses Level Pengguna"/>
+    <phrase id="UserLevelIDInteger" value="ID Level Pengguna harus integer"/>
+    <phrase id="UserLevelDefaultName" value="Nama level pengguna untuk pengguna level 0 harus 'Default'"/>
+    <phrase id="UserLevelIDIncorrect" value="ID Level pengguna yang didefinisikan harus lebih besar dari 0"/>
+    <phrase id="UserLevelNameIncorrect" value="Nama Level Pengguna yang didefinisikan tidak boleh 'Anonymous', 'Administrator' atau 'Default'"/>
+    <phrase id="UserLoggedIn" value="Pengguna '%u' sudah tercatat masuk"/>
+    <phrase id="UserName" value="User Name"/><!-- v2021 -->
+    <phrase id="UserNotFound" value="Pengguna '%u' tidak ditemukan"/><!-- v2018 -->
+    <phrase id="UserProfileCorrupted" value="Profil pengguna korup. Silahkan logout lalu login lagi"/>
+    <phrase id="ValueNotExist" value="Nilai tidak ada"/><!-- v12 -->
+    <phrase id="Verify" value="Verifikasi"/><!-- v2022 -->
+    <phrase id="View" value="Tampilkan"/>
+    <phrase id="ViewImageGallery" value="Klik untuk melihat gambar"/><!-- v2016 -->
+    <phrase id="ViewLink" value="Tampilkan" class="icon-view ew-icon"/><!-- v12 -->
+    <phrase id="ViewPageAddLink" value="Tambah" class="fa-solid fa-plus ew-icon"/><!-- v2023 -->
+    <phrase id="ViewPageCopyLink" value="Salin" class="fa-regular fa-copy ew-icon"/><!-- v2023 -->
+    <phrase id="ViewPageDeleteLink" value="Hapus" class="fa-solid fa-trash ew-icon"/><!-- v2023 -->
+    <phrase id="ViewPageDetailLink" value=""/>
+    <phrase id="ViewPageEditLink" value="Ubah" class="fa-solid fa-pen ew-icon"/><!-- v2023 -->
+    <phrase id="Warning" value="Peringatan"/><!-- v2020 -->
+    <phrase id="Week" value="Minggu"/><!-- v2020 -->
+    <phrase id="WrongFileType" value="Tipe file tidak diijinkan."/>
+    <phrase id="Year" value="Tahun"/><!-- v2020 -->
+    <phrase id="=" value="&amp;nbsp;"/><!-- v12 -->
+    <phrase id="EQUAL" value="="/><!-- v2016 -->
+    <phrase id="IN" value="di dalam"/><!-- v2023 -->
+    <phrase id="NOT IN" value="tidak di dalam"/><!-- v2023 -->
+    <phrase id="&lt;&gt;" value="&amp;lt;&amp;gt;"/>
+    <phrase id="&lt;" value="&amp;lt;"/>
+    <phrase id="&lt;=" value="&amp;lt;="/>
+    <phrase id="&gt;" value="&amp;gt;"/>
+    <phrase id="&gt;=" value="&amp;gt;="/>
+    <phrase id="LIKE" value="mengandung"/>
+    <phrase id="NOT LIKE" value="tidak mengandung"/><!-- v2023 -->
+    <phrase id="STARTS WITH" value="dimulai dengan"/>
+    <phrase id="NOT STARTS WITH" value="tidak dimulai dengan"/><!-- v2023 -->
+    <phrase id="ENDS WITH" value="diakhiri dengan"/>
+    <phrase id="NOT ENDS WITH" value="tidak diakhiri dengan"/><!-- v2023 -->
+    <phrase id="IS EMPTY" value="kosong"/><!-- v2023 -->
+    <phrase id="IS NOT EMPTY" value="tidak kosong"/><!-- v2023 -->
+    <phrase id="IS NULL" value="bernilai null"/>
+    <phrase id="IS NOT NULL" value="tidak bernilai null"/>
+    <phrase id="BETWEEN" value="di antara"/>
+    <phrase id="NOT BETWEEN" value="tidak di antara"/><!-- v2023 -->
+    <phrase id="AND" value="dan"/>
+    <phrase id="OR" value="atau"/>
+<!-- Advanced Filter --><!-- v2020 -->
+    <phrase id="Future" value="Akan Datang"/>
+    <phrase id="Past" value="Telah Lewat"/>
+    <phrase id="Last14Days" value="14 hari terakhir"/>
+    <phrase id="Last30Days" value="30 hari terakhir"/>
+    <phrase id="Last7Days" value="7 hari terakhir"/>
+    <phrase id="Next14Days" value="14 hari ke depan"/>
+    <phrase id="Next30Days" value="30 hari ke depan"/>
+    <phrase id="Next7Days" value="7 hari ke depan"/>
+    <phrase id="Today" value="Hari ini"/>
+    <phrase id="Tomorrow" value="Besok"/>
+    <phrase id="Yesterday" value="Kemarin"/>
+    <phrase id="LastMonth" value="Bulan lalu"/>
+    <phrase id="NextMonth" value="Bulan depan"/>
+    <phrase id="ThisMonth" value="Bulan ini"/>
+    <phrase id="LastTwoWeeks" value="Dua minggu terakhir"/>
+    <phrase id="LastWeek" value="Minggu lalu"/>
+    <phrase id="NextTwoWeeks" value="Dua minggu ke depan"/>
+    <phrase id="NextWeek" value="Minggu depan"/>
+    <phrase id="ThisWeek" value="Minggu ini"/>
+    <phrase id="LastYear" value="Tahun lalu"/>
+    <phrase id="NextYear" value="Tahun depan"/>
+    <phrase id="ThisYear" value="Tahun ini"/>
+<!-- Exceptions --><!-- v2021 -->
+    <phrase id="400" value="Request Buruk"/>
+    <phrase id="400Desc" value="Server tidak dapat atau tidak akan memproses request karena terjadi kesalahan di sisi klien."/>
+    <phrase id="401" value="Tidak diotorisasi"/>
+    <phrase id="401Desc" value="Permintaan membutuhkan otentikasi pengguna yang valid."/>
+    <phrase id="403" value="Dilarang"/>
+    <phrase id="403Desc" value="Anda tidak diijinkan untuk melakukan operasi yang diminta."/>
+    <phrase id="404" value="Tidak Ditemukan"/>
+    <phrase id="404Desc" value="Sumber daya yang diminta tidak dapat ditemukan. Periksa ulang URI dan coba lagi."/>
+    <phrase id="405" value="Metode Tidak Diijinkan"/>
+    <phrase id="405Desc" value="Metode yang diminta tidak didukung untuk sumber daya yang diminta."/>
+    <phrase id="500" value="Kesalahan Internal Server"/>
+    <phrase id="500Desc" value="Kondisi yang tidak diharapkan terjadi untuk mencegah server dari pemenuhan permintaan."/>
+    <phrase id="501" value="Tidak Diimplementasikan"/>
+    <phrase id="501Desc" value="Server tidak mendukung fungsi yang dibutuhkan untuk memenuhi permintaan."/>
+<!-- DO NOT change letter case of the following IDs! -->
+<!-- Datetime Picker --><!-- v2023 -->
+    <datetimepicker>
+        <phrase id="today" value="Ke hari ini"/>,
+        <phrase id="clear" value="Bersihkan pilihan"/>,
+        <phrase id="close" value="Tutup"/>,
+        <phrase id="selectMonth" value="Pilih Bulan"/>,
+        <phrase id="previousMonth" value="Bulan Sebelumnya"/>,
+        <phrase id="nextMonth" value="Bulan Berikutnya"/>,
+        <phrase id="selectYear" value="Pilih Tahun"/>,
+        <phrase id="previousYear" value="Tahun Sebelumnya"/>,
+        <phrase id="nextYear" value="Tahun Berikutnya"/>,
+        <phrase id="selectDecade" value="Pilih per 10 Tahun"/>,
+        <phrase id="previousDecade" value="10 Tahun Sebelumnya"/>,
+        <phrase id="nextDecade" value="10 Tahun Berikutnya"/>,
+        <phrase id="previousCentury" value="Abad Sebelumnya"/>,
+        <phrase id="nextCentury" value="Abad Berikutnya"/>,
+        <phrase id="pickHour" value="Pilih Jam"/>,
+        <phrase id="incrementHour" value="Naikkan Jam"/>,
+        <phrase id="decrementHour" value="Turunkan Jam"/>,
+        <phrase id="pickMinute" value="Pilih Menit"/>,
+        <phrase id="incrementMinute" value="Naikkan Menit"/>,
+        <phrase id="decrementMinute" value="Turunkan Menit"/>,
+        <phrase id="pickSecond" value="Pilih Detik"/>,
+        <phrase id="incrementSecond" value="Naikkan Detik"/>,
+        <phrase id="decrementSecond" value="Turunkan Detik"/>,
+        <phrase id="toggleMeridiem" value="Nyalakan/Matikan Meridiem"/>,
+        <phrase id="selectTime" value="Pilih Waktu"/>,
+        <phrase id="selectDate" value="Pilih Tanggal"/>
+    </datetimepicker>
+<!-- Select2 --><!-- v2022 -->
+    <select2>
+        <phrase id="errorLoading" value="Hasil tidak dapat dimuat."/>
+        <phrase id="inputTooLong" value="Silahkan hapus %s karakter"/>
+        <phrase id="inputTooShort" value="Masukkan %s karakter atau lebih"/>
+        <phrase id="loadingMore" value="Sedang memuat lagi..."/>
+        <phrase id="maximumSelected" value="Anda dapat hanya memilih %s item"/>
+        <phrase id="noResults" value="Hasil tidak ditemukan"/>
+        <phrase id="searching" value="Sedang mencari..."/>
+        <phrase id="removeAllItems" value="Hapus semua item"/>
+        <phrase id="removeItem" value="Hapus item"/>
+        <phrase id="search" value="Cari"/>
+    </select2>
+<!-- jQuery Query Builder --><!-- v2023 -->
+    <querybuilderjs>
+        <phrase id="add_rule" value="Tambah aturan"/>
+        <phrase id="add_group" value="Tambah grup"/>
+        <phrase id="delete_rule" value="Hapus aturan"/>
+        <phrase id="delete_group" value="Hapus grup"/>
+        <phrase id="invert" value="Balikkan"/>
+        <phrase id="NOT" value="TIDAK"/>
+        <conditions>
+            <phrase id="AND" value="DAN"/>
+            <phrase id="OR" value="ATAU"/>
+        </conditions>
+        <operators>
+            <phrase id="equal" value="="/>
+            <phrase id="not_equal" value="&amp;lt;&amp;gt;"/>
+            <phrase id="in" value="di dalam"/>
+            <phrase id="not_in" value="tidak di dalam"/>
+            <phrase id="less" value="&amp;lt;"/>
+            <phrase id="less_or_equal" value="&amp;lt;="/>
+            <phrase id="greater" value="&amp;gt;"/>
+            <phrase id="greater_or_equal" value="&amp;gt;="/>
+            <phrase id="between" value="di antara"/>
+            <phrase id="not_between" value="tidak di antara"/>
+            <phrase id="begins_with" value="dimulai dengan"/>
+            <phrase id="not_begins_with" value="tidak dimulai dengan"/>
+            <phrase id="contains" value="mengandung"/>
+            <phrase id="not_contains" value="tidak mengandung"/>
+            <phrase id="ends_with" value="diakhiri dengan"/>
+            <phrase id="not_ends_with" value="tidak diakhiri dengan"/>
+            <phrase id="is_empty" value="kosong"/>
+            <phrase id="is_not_empty" value="tidak kosong"/>
+            <phrase id="is_null" value="bernilai null"/>
+            <phrase id="is_not_null" value="tidak bernilai null"/>
+        </operators>
+        <errors>
+            <phrase id="no_filter" value="Tidak ada filter terpilih"/>
+            <phrase id="empty_group" value="Grup kosong"/>
+            <phrase id="radio_empty" value="Tidak ada nilai terpilih"/>
+            <phrase id="checkbox_empty" value="Tidak ada nilai terpilih"/>
+            <phrase id="select_empty" value="Tidak ada nilai terpilih"/>
+            <phrase id="string_empty" value="Nilai kosong"/>
+            <phrase id="string_exceed_min_length" value="Harus mengandung sedikitnya {0} karakter"/>
+            <phrase id="string_exceed_max_length" value="Harus tidak mengandung lebih dari {0} karakter"/>
+            <phrase id="string_invalid_format" value="Format tidak valid ({0})"/>
+            <phrase id="number_nan" value="Bukan angka"/>
+            <phrase id="number_not_integer" value="Bukan nilai integer/bilangan bulat"/>
+            <phrase id="number_not_double" value="Bukan nilai desimal"/>
+            <phrase id="number_exceed_min" value="Harus lebih besar dari {0}"/>
+            <phrase id="number_exceed_max" value="Harus lebih kecil dari {0}"/>
+            <phrase id="number_wrong_step" value="Harus kelipatan {0}"/>
+            <phrase id="number_between_invalid" value="Nilai tidak valid, {0} lebih besar dari {1}"/>
+            <phrase id="datetime_empty" value="Nilai kosong"/>
+            <phrase id="datetime_invalid" value="Format tanggal tidak valid ({0})"/>
+            <phrase id="datetime_exceed_min" value="Harus setelah {0}"/>
+            <phrase id="datetime_exceed_max" value="Harus sebelum {0}"/>
+            <phrase id="datetime_between_invalid" value="Nilai tidak valid, {0} lebih besar dari {1}"/>
+            <phrase id="boolean_not_valid" value="Bukan nilai boolean"/>'
+            <phrase id="operator_not_multiple" value="Operator '{1}' tidak dapat menerima nilai banyak"/>
+        </errors>
+    </querybuilderjs>
+<!-- FullCalendar --><!-- v2023 -->
+    <fullcalendar>
+        <week>
+            <phrase id="dow" value="0"/><!-- Integer. Day of the week. Sunday=0, Monday=1, Tuesday=2, etc. -->
+            <phrase id="doy" value="4"/><!-- Integer. Day of year. Number of days need to be within the year to be considered the first week -->
+        </week>
+        <buttonText>
+            <phrase id="prev" value="mundur"/>
+            <phrase id="next" value="maju"/>
+            <phrase id="prevYear" value="tahun lalu"/>
+            <phrase id="nextYear" value="tahun depan"/>
+            <phrase id="year" value="tahun"/>
+            <phrase id="today" value="hari ini"/>
+            <phrase id="month" value="bulan"/>
+            <phrase id="week" value="minggu"/>
+            <phrase id="day" value="hari"/>
+            <phrase id="list" value="daftar"/>
+        </buttonText>
+         <buttonHints>
+            <phrase id="prev" value="Mundur $0"/><!-- Do not translate '$0' -->
+            <phrase id="next" value="Maju $0"/><!-- Do not translate '$0' -->
+        </buttonHints>
+        <phrase id="weekText" value="M"/>
+        <phrase id="weekTextLong" value="Minggu"/>
+        <phrase id="closeHint" value="Tutup"/>
+        <phrase id="timeHint" value="Waktu"/>
+        <phrase id="eventHint" value="Event"/>
+        <phrase id="allDayText" value="sepanjang-hari"/>
+        <phrase id="moreLinkText" value="lagi"/>
+        <phrase id="noEventsText" value="Tidak ada event yang ditampilkan"/>
+        <phrase id="viewHint" value="$0 tampilan"/><!-- Do not translate '$0' -->
+        <phrase id="navLinkHint" value="Lompat ke $0"/><!-- Do not translate '$0' -->
+    </fullcalendar>
+</global>
+</ew-language>

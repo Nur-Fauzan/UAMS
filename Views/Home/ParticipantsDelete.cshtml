@@ -1,0 +1,131 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (participantsDelete.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = participantsDelete.UseLayout ? "_Layout" : "";
+}
+<script>
+var currentTable = @Html.Raw(ConvertToJson(participantsDelete.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Participants: currentTable } });
+var currentPageID = ew.PAGE_ID = "delete";
+var currentForm;
+var fParticipantsdelete;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fParticipantsdelete")
+        .setPageId("delete")
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@participantsDelete.ShowPageHeader()
+@participantsDelete.ShowMessages()
+<form name="fParticipantsdelete" id="fParticipantsdelete" class="ew-form ew-delete-form" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="delete">
+@foreach (string key in participantsDelete.RecordKeys) {
+<input type="hidden" name="key_m[]" value="@key">
+}
+<div class="card ew-card ew-grid @(participantsDelete.TableGridClass)">
+<div class="card-body ew-grid-middle-panel @(participantsDelete.TableContainerClass)" style="@(participantsDelete.TableContainerStyle)">
+<table class="@(participantsDelete.TableClass)">
+    <thead>
+    <tr class="ew-table-header">
+@if (participantsDelete.Id.Visible) { // participantsDelete.Id.Visible (begin)
+        <th class="@Html.Raw(participantsDelete.Id.HeaderCellClass)"><span id="elh_Participants_Id" class="Participants_Id">@Html.Raw(participantsDelete.Id.Caption)</span></th>
+} @* participantsDelete.Id.Visible (end) *@
+@if (participantsDelete.UserId.Visible) { // participantsDelete.UserId.Visible (begin)
+        <th class="@Html.Raw(participantsDelete.UserId.HeaderCellClass)"><span id="elh_Participants_UserId" class="Participants_UserId">@Html.Raw(participantsDelete.UserId.Caption)</span></th>
+} @* participantsDelete.UserId.Visible (end) *@
+@if (participantsDelete.AppointmentId.Visible) { // participantsDelete.AppointmentId.Visible (begin)
+        <th class="@Html.Raw(participantsDelete.AppointmentId.HeaderCellClass)"><span id="elh_Participants_AppointmentId" class="Participants_AppointmentId">@Html.Raw(participantsDelete.AppointmentId.Caption)</span></th>
+} @* participantsDelete.AppointmentId.Visible (end) *@
+@if (participantsDelete.Status.Visible) { // participantsDelete.Status.Visible (begin)
+        <th class="@Html.Raw(participantsDelete.Status.HeaderCellClass)"><span id="elh_Participants_Status" class="Participants_Status">@Html.Raw(participantsDelete.Status.Caption)</span></th>
+} @* participantsDelete.Status.Visible (end) *@
+    </tr>
+    </thead>
+    <tbody>
+@{ participantsDelete.RecordCount = 0; }
+@while (participantsDelete.Recordset != null && await participantsDelete.Recordset.ReadAsync()) { // DN
+    participantsDelete.RecordCount++;
+    participantsDelete.RowCount++;
+
+    // Set row properties
+    participantsDelete.ResetAttributes();
+    participantsDelete.RowType = RowType.View; // View
+
+    // Get the field contents
+    await participantsDelete.LoadRowValues(participantsDelete.Recordset);
+
+    // Render row
+    await participantsDelete.RenderRow();
+    <tr @Html.Raw(participantsDelete.RowAttributes)>
+@if (participantsDelete.Id.Visible) { // participantsDelete.Id.Visible (begin)
+        <td @Html.Raw(participantsDelete.Id.CellAttributes)>
+<span id="">
+<span @Html.Raw(participantsDelete.Id.ViewAttributes)>
+@Html.Raw(participantsDelete.Id.GetViewValue())</span>
+</span></td>
+} @* participantsDelete.Id.Visible (end) *@
+@if (participantsDelete.UserId.Visible) { // participantsDelete.UserId.Visible (begin)
+        <td @Html.Raw(participantsDelete.UserId.CellAttributes)>
+<span id="">
+<span @Html.Raw(participantsDelete.UserId.ViewAttributes)>
+@Html.Raw(participantsDelete.UserId.GetViewValue())</span>
+</span></td>
+} @* participantsDelete.UserId.Visible (end) *@
+@if (participantsDelete.AppointmentId.Visible) { // participantsDelete.AppointmentId.Visible (begin)
+        <td @Html.Raw(participantsDelete.AppointmentId.CellAttributes)>
+<span id="">
+<span @Html.Raw(participantsDelete.AppointmentId.ViewAttributes)>
+@Html.Raw(participantsDelete.AppointmentId.GetViewValue())</span>
+</span></td>
+} @* participantsDelete.AppointmentId.Visible (end) *@
+@if (participantsDelete.Status.Visible) { // participantsDelete.Status.Visible (begin)
+        <td @Html.Raw(participantsDelete.Status.CellAttributes)>
+<span id="">
+<span @Html.Raw(participantsDelete.Status.ViewAttributes)>
+@Html.Raw(participantsDelete.Status.GetViewValue())</span>
+</span></td>
+} @* participantsDelete.Status.Visible (end) *@
+    </tr>
+}
+@{ participantsDelete.CloseRecordset(); }
+</tbody>
+</table>
+</div>
+</div>
+<div class="ew-buttons ew-desktop-buttons">
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit">@Html.Raw(Language.Phrase("DeleteBtn"))</button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="@AppPath(participantsDelete.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+</div>
+</form>
+@participantsDelete.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>

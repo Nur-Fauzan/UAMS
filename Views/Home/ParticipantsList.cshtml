@@ -1,0 +1,271 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (participantsList.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = participantsList.UseLayout ? "_Layout" : "";
+}
+@if (!participantsList.IsExport()) {
+<script>
+var currentTable = @Html.Raw(ConvertToJson(participantsList.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Participants: currentTable } });
+var currentPageID = ew.PAGE_ID = "list";
+var currentForm;
+var @(participantsList.FormName);
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("@(participantsList.FormName)")
+        .setPageId("list")
+        .setSubmitWithFetch(@(participantsList.UseAjaxActions ? "true" : "false"))
+        .setFormKeyCountName("@(participantsList.FormKeyCountName)")
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+}
+@if (!participantsList.IsExport()) {
+<div class="btn-toolbar ew-toolbar">
+@if (participantsList.TotalRecords > 0 && participantsList.ExportOptions.Visible) {
+    participantsList.ExportOptions.Render("body");
+}
+@if (participantsList.ImportOptions.Visible) {
+    participantsList.ImportOptions.Render("body");
+}
+@if (participantsList.SearchOptions.Visible) {
+    participantsList.SearchOptions.Render("body");
+}
+@if (participantsList.FilterOptions.Visible) {
+    participantsList.FilterOptions.Render("body");
+}
+</div>
+}
+@if (!participantsList.IsModal) {
+<form name="fParticipantssrch" id="fParticipantssrch" class="ew-form ew-ext-search-form" action="@AppPath(CurrentPageName())" novalidate autocomplete="off">
+<div id="fParticipantssrch_search_panel" class="mb-2 mb-sm-0 @(participantsList.SearchPanelClass)"><!-- .ew-search-panel -->
+<script>
+var currentTable = @Html.Raw(ConvertToJson(participantsList.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Participants: currentTable } });
+var currentForm;
+var fParticipantssrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery,
+        fields = currentTable.fields;
+
+    // Form object for search
+    let form = new ew.FormBuilder()
+        .setId("fParticipantssrch")
+        .setPageId("list")
+@if (participantsList.UseAjaxActions) {
+        <text>.setSubmitWithFetch(true)</text>
+}
+
+        // Dynamic selection lists
+        .setLists({
+        })
+
+        // Filters
+        .setFilterList(@Html.Raw(participantsList.GetFilterList()))
+        .build();
+    window[form.id] = form;
+    currentSearchForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<input type="hidden" name="cmd" value="search">
+@if (!participantsList.IsExport() && Empty(participantsList.CurrentAction) && participantsList.HasSearchFields()) { @* Show search form (begin) *@
+<div class="ew-extended-search container-fluid ps-2">
+<div class="row mb-0">
+    <div class="col-sm-auto px-0 pe-sm-2">
+        <div class="ew-basic-search input-group">
+            <input type="search" name="@(Config.TableBasicSearch)" id="@(Config.TableBasicSearch)" class="form-control ew-basic-search-keyword" value="@Html.Raw(HtmlEncode(participantsList.BasicSearch.SessionKeyword))" placeholder="@(HtmlEncode(Language.Phrase("Search")))" aria-label="@(HtmlEncode(Language.Phrase("Search")))">
+            <input type="hidden" name="@(Config.TableBasicSearchType)" id="@(Config.TableBasicSearchType)" class="ew-basic-search-type" value="@(HtmlEncode(participantsList.BasicSearch.SessionType))">
+            <button type="button" data-bs-toggle="dropdown" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false">
+                <span id="searchtype">@Html.Raw(participantsList.BasicSearch.TypeNameShort)</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <button type="button" class="dropdown-item@(participantsList.BasicSearch.SessionType == "" ? " active" : "")" form="fParticipantssrch" data-ew-action="search-type">@Html.Raw(Language.Phrase("QuickSearchAuto"))</button>
+                <button type="button" class="dropdown-item@(participantsList.BasicSearch.SessionType == "=" ? " active" : "")" form="fParticipantssrch" data-ew-action="search-type" data-search-type="=">@Html.Raw(Language.Phrase("QuickSearchExact"))</button>
+                <button type="button" class="dropdown-item@(participantsList.BasicSearch.SessionType == "AND" ? " active" : "")" form="fParticipantssrch" data-ew-action="search-type" data-search-type="AND">@Html.Raw(Language.Phrase("QuickSearchAll"))</button>
+                <button type="button" class="dropdown-item@(participantsList.BasicSearch.SessionType == "OR" ? " active" : "")" form="fParticipantssrch" data-ew-action="search-type" data-search-type="OR">@Html.Raw(Language.Phrase("QuickSearchAny"))</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-auto mb-3">
+        <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit">@Html.Raw(Language.Phrase("SearchBtn"))</button>
+    </div>
+</div>
+</div><!-- /.ew-extended-search -->
+} @* Show search form (end) *@
+</div><!-- /.ew-search-panel -->
+</form>
+}
+@participantsList.ShowPageHeader()
+@participantsList.ShowMessages()
+<main class="list @(participantsList.TotalRecords == 0 && !participantsList.IsAdd ? " ew-no-record" : "")">
+<div id="ew-header-options">
+    @participantsList.HeaderOptions.RenderBody()
+</div>
+<div id="ew-list">
+@if (participantsList.TotalRecords > 0 || !Empty(participantsList.CurrentAction)) {
+<div class="card ew-card ew-grid@(participantsList.IsAddOrEdit ? " ew-grid-add-edit" : "") @(participantsList.TableGridClass)">
+<form name="@(participantsList.FormName)" id="@(participantsList.FormName)" class="ew-form ew-list-form" action="@AppPath(participantsList.PageName)" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+@if (participantsList.IsModal) {
+<input type="hidden" name="modal" value="1">
+}
+<div id="gmp_Participants" class="card-body ew-grid-middle-panel @(participantsList.TableContainerClass)" style="@(participantsList.TableContainerStyle)">
+@if (participantsList.TotalRecords > 0 || participantsList.IsGridEdit || participantsList.IsMultiEdit) {
+<table id="tbl_Participantslist" class="@(participantsList.TableClass)"><!-- .ew-table -->
+<thead>
+    <tr class="ew-table-header">
+@{
+    // Header row
+    participantsList.RowType = RowType.Header;
+
+    // Render list options
+    await participantsList.RenderListOptions();
+}
+@* Render list options (header, left) *@
+@participantsList.ListOptions.RenderHeader("left")
+@if (participantsList.Id.Visible) { // participantsList.Id.Visible (begin)
+        <th data-name="Id" class="@(participantsList.Id.HeaderCellClass)"><div id="elh_Participants_Id" class="Participants_Id">@Html.Raw(participantsList.RenderFieldHeader(participantsList.Id))</div></th>
+} @* participantsList.Id.Visible (end) *@
+@if (participantsList.UserId.Visible) { // participantsList.UserId.Visible (begin)
+        <th data-name="UserId" class="@(participantsList.UserId.HeaderCellClass)"><div id="elh_Participants_UserId" class="Participants_UserId">@Html.Raw(participantsList.RenderFieldHeader(participantsList.UserId))</div></th>
+} @* participantsList.UserId.Visible (end) *@
+@if (participantsList.AppointmentId.Visible) { // participantsList.AppointmentId.Visible (begin)
+        <th data-name="AppointmentId" class="@(participantsList.AppointmentId.HeaderCellClass)"><div id="elh_Participants_AppointmentId" class="Participants_AppointmentId">@Html.Raw(participantsList.RenderFieldHeader(participantsList.AppointmentId))</div></th>
+} @* participantsList.AppointmentId.Visible (end) *@
+@if (participantsList.Status.Visible) { // participantsList.Status.Visible (begin)
+        <th data-name="Status" class="@(participantsList.Status.HeaderCellClass)"><div id="elh_Participants_Status" class="Participants_Status">@Html.Raw(participantsList.RenderFieldHeader(participantsList.Status))</div></th>
+} @* participantsList.Status.Visible (end) *@
+@* Render list options (header, right) *@
+@participantsList.ListOptions.RenderHeader("right")
+    </tr>
+</thead>
+<tbody data-page="@(participantsList.PageNumber)">
+@{
+    await participantsList.SetupGrid();
+    bool eof = participantsList.Recordset == null; // DN
+}
+@while (participantsList.RecordCount < participantsList.StopRecord || SameString(participantsList.RowIndex, "$rowindex$")) { // Begin While
+    if (!eof && !SameString(participantsList.RowIndex, "$rowindex$") &&
+        (!participantsList.IsGridAdd || participantsList.CurrentMode == "copy") &&
+        (!((participantsList.IsCopy || participantsList.IsAdd) && participantsList.RowIndex is int rowIndex && rowIndex == 0))) // DN
+        eof = !await participantsList.Recordset.ReadAsync();
+    participantsList.RecordCount++;
+    if (participantsList.RecordCount >= participantsList.StartRecord) {
+        await participantsList.SetupRow();
+    <tr @Html.Raw(participantsList.RowAttributes)>
+    @* Render list options (body, left) *@
+    @participantsList.ListOptions.RenderBody("left", participantsList.RowCount)
+    @if (participantsList.Id.Visible) { // participantsList.Id.Visible (begin)
+        <td data-name="Id" @Html.Raw(participantsList.Id.CellAttributes)>
+<span id="el@(participantsList.RowIndex == "$rowindex$" ? "$rowindex$" : participantsList.RowCount)_Participants_Id" class="el_Participants_Id">
+<span @Html.Raw(participantsList.Id.ViewAttributes)>
+@Html.Raw(participantsList.Id.GetViewValue())</span>
+</span>
+</td>
+    } @* participantsList.Id.Visible (end) *@
+    @if (participantsList.UserId.Visible) { // participantsList.UserId.Visible (begin)
+        <td data-name="UserId" @Html.Raw(participantsList.UserId.CellAttributes)>
+<span id="el@(participantsList.RowIndex == "$rowindex$" ? "$rowindex$" : participantsList.RowCount)_Participants_UserId" class="el_Participants_UserId">
+<span @Html.Raw(participantsList.UserId.ViewAttributes)>
+@Html.Raw(participantsList.UserId.GetViewValue())</span>
+</span>
+</td>
+    } @* participantsList.UserId.Visible (end) *@
+    @if (participantsList.AppointmentId.Visible) { // participantsList.AppointmentId.Visible (begin)
+        <td data-name="AppointmentId" @Html.Raw(participantsList.AppointmentId.CellAttributes)>
+<span id="el@(participantsList.RowIndex == "$rowindex$" ? "$rowindex$" : participantsList.RowCount)_Participants_AppointmentId" class="el_Participants_AppointmentId">
+<span @Html.Raw(participantsList.AppointmentId.ViewAttributes)>
+@Html.Raw(participantsList.AppointmentId.GetViewValue())</span>
+</span>
+</td>
+    } @* participantsList.AppointmentId.Visible (end) *@
+    @if (participantsList.Status.Visible) { // participantsList.Status.Visible (begin)
+        <td data-name="Status" @Html.Raw(participantsList.Status.CellAttributes)>
+<span id="el@(participantsList.RowIndex == "$rowindex$" ? "$rowindex$" : participantsList.RowCount)_Participants_Status" class="el_Participants_Status">
+<span @Html.Raw(participantsList.Status.ViewAttributes)>
+@Html.Raw(participantsList.Status.GetViewValue())</span>
+</span>
+</td>
+    } @* participantsList.Status.Visible (end) *@
+    @* Render list options (body, right) *@
+    @participantsList.ListOptions.RenderBody("right", participantsList.RowCount)
+    </tr>
+    } @* End if *@
+
+    // Reset for template row
+    if (SameString(participantsList.RowIndex, "$rowindex$"))
+        participantsList.RowIndex = 0;
+
+    // Reset inline add/copy row
+    if ((participantsList.IsCopy || participantsList.IsAdd) && participantsList.RowIndex is int rowIndex2 && rowIndex2 == 0)
+        participantsList.RowIndex = 1;
+} @* End While *@
+</tbody>
+</table><!-- /.ew-table -->
+} @* End If TotalRecords > 0 *@
+</div><!-- /.ew-grid-middle-panel -->
+@if (Empty(participantsList.CurrentAction) && !participantsList.UseAjaxActions) {
+<input type="hidden" name="action" id="action" value="">
+}
+</form><!-- /.ew-list-form -->
+@{ participantsList.CloseRecordset(); }
+@if (!participantsList.IsExport()) {
+<div class="card-footer ew-grid-lower-panel">
+@if (!participantsList.IsGridAdd && !(participantsList.IsGridEdit && participantsList.ModalGridEdit) && !participantsList.IsMultiEdit) {
+@Html.Raw(participantsList.Pager.Render())
+}
+<div class="ew-list-other-options">
+@participantsList.OtherOptions.RenderBody("bottom")
+</div>
+</div>
+}
+</div><!-- /.ew-grid -->
+} else { // Show other options
+<div class="ew-list-other-options">
+@participantsList.OtherOptions.ForEach(opt => opt.ButtonClass = "").RenderBody()
+</div>
+}
+</div>
+<div id="ew-footer-options">
+    @participantsList.FooterOptions.RenderBody()
+</div>
+</main>
+@participantsList.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+@if (!participantsList.IsExport()) {
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Participants");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>
+}

@@ -1,0 +1,234 @@
+@{
+    // View
+    View = this;
+
+    // Check action result
+    if (appointmentsAdd.ActionResult is EmptyResult) // Terminate page
+        return;
+
+    // Layout
+    Layout = appointmentsAdd.UseLayout ? "_Layout" : "";
+}
+<script>
+var currentTable = @Html.Raw(ConvertToJson(appointmentsAdd.ToClientVar()));
+ew.deepAssign(ew.vars, { tables: { Appointments: currentTable } });
+var currentPageID = ew.PAGE_ID = "add";
+var currentForm;
+var fAppointmentsadd;
+loadjs.ready(["wrapper", "head"], function () {
+    let $ = jQuery;
+    let fields = currentTable.fields;
+
+    // Form object
+    let form = new ew.FormBuilder()
+        .setId("fAppointmentsadd")
+        .setPageId("add")
+
+        // Add fields
+        .setFields([
+
+            ["_Title", [fields._Title.visible && fields._Title.required ? ew.Validators.required(fields._Title.caption) : null], fields._Title.isInvalid],
+            ["Description", [fields.Description.visible && fields.Description.required ? ew.Validators.required(fields.Description.caption) : null], fields.Description.isInvalid],
+            ["_StartTime", [fields._StartTime.visible && fields._StartTime.required ? ew.Validators.required(fields._StartTime.caption) : null, ew.Validators.datetime(fields._StartTime.clientFormatPattern)], fields._StartTime.isInvalid],
+            ["EndTime", [fields.EndTime.visible && fields.EndTime.required ? ew.Validators.required(fields.EndTime.caption) : null, ew.Validators.datetime(fields.EndTime.clientFormatPattern)], fields.EndTime.isInvalid],
+            ["CreatedBy", [fields.CreatedBy.visible && fields.CreatedBy.required ? ew.Validators.required(fields.CreatedBy.caption) : null, ew.Validators.integer], fields.CreatedBy.isInvalid],
+            ["Timezone", [fields.Timezone.visible && fields.Timezone.required ? ew.Validators.required(fields.Timezone.caption) : null], fields.Timezone.isInvalid]
+        ])
+
+        // Form_CustomValidate
+        .setCustomValidate(
+            function(fobj) { // DO NOT CHANGE THIS LINE!
+                    // Your custom validation code here, return false if invalid.
+                    return true;
+                }
+        )
+
+        // Use JavaScript validation or not
+        .setValidateRequired(ew.CLIENT_VALIDATE)
+
+        // Dynamic selection lists
+        .setLists({
+        })
+        .build();
+    window[form.id] = form;
+    currentForm = form;
+    loadjs.done(form.id);
+});
+</script>
+<script>
+loadjs.ready("head", function() {
+    // Write your client script here, no need to add script tags.
+});
+</script>
+@appointmentsAdd.ShowPageHeader()
+@appointmentsAdd.ShowMessages()
+<form name="fAppointmentsadd" id="fAppointmentsadd" class="@(appointmentsAdd.FormClassName)" action="@AppPath(CurrentPageName())" method="post" novalidate autocomplete="off">
+@if (CurrentPage?.CheckToken ?? false) {
+    <input type="hidden" name="@Config.TokenNameKey" value="@Config.TokenName"><!-- CSRF token name -->
+    @Html.AntiForgeryToken()
+}
+<input type="hidden" name="action" id="action" value="insert">
+<input type="hidden" name="modal" value="@ConvertToInt(appointmentsAdd.IsModal)">
+@if (IsJsonResponse()) {
+<input type="hidden" name="json" value="1">
+}
+<input type="hidden" name="@(appointmentsAdd.OldKeyName)" value="@Html.Raw(appointmentsAdd.OldKey)">
+<div class="ew-add-div"><!-- page* -->
+@if (appointmentsAdd._Title.Visible) { // appointmentsAdd._Title.Visible (begin)
+    <div id="r__Title" @Html.Raw(appointmentsAdd._Title.RowAttributes)>
+        <label id="elh_Appointments__Title" for="x__Title" class="@(appointmentsAdd.LeftColumnClass)">@Html.Raw(appointmentsAdd._Title.Caption)@Html.Raw(appointmentsAdd._Title.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(appointmentsAdd.RightColumnClass)"><div @Html.Raw(appointmentsAdd._Title.CellAttributes)>
+<span id="el_Appointments__Title">
+<input type="@(appointmentsAdd._Title.InputTextType)" name="x__Title" id="x__Title" data-table="Appointments" data-field="x__Title" value="@Html.Raw(appointmentsAdd._Title.EditValue)" size="30" maxlength="200" placeholder="@Html.Raw(HtmlEncode(appointmentsAdd._Title.PlaceHolder))" data-format-pattern="@(appointmentsAdd._Title.FormatPattern)"@Html.Raw(appointmentsAdd._Title.EditAttributes) aria-describedby="x__Title_help">
+@Html.Raw(appointmentsAdd._Title.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(appointmentsAdd._Title.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* appointmentsAdd._Title.Visible (end) *@
+@if (appointmentsAdd.Description.Visible) { // appointmentsAdd.Description.Visible (begin)
+    <div id="r_Description" @Html.Raw(appointmentsAdd.Description.RowAttributes)>
+        <label id="elh_Appointments_Description" for="x_Description" class="@(appointmentsAdd.LeftColumnClass)">@Html.Raw(appointmentsAdd.Description.Caption)@Html.Raw(appointmentsAdd.Description.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(appointmentsAdd.RightColumnClass)"><div @Html.Raw(appointmentsAdd.Description.CellAttributes)>
+<span id="el_Appointments_Description">
+<textarea data-table="Appointments" data-field="x_Description" name="x_Description" id="x_Description" cols="35" rows="4" placeholder="@Html.Raw(HtmlEncode(appointmentsAdd.Description.PlaceHolder))"@Html.Raw(appointmentsAdd.Description.EditAttributes) aria-describedby="x_Description_help">@(appointmentsAdd.Description.EditValue)</textarea>
+@Html.Raw(appointmentsAdd.Description.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(appointmentsAdd.Description.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* appointmentsAdd.Description.Visible (end) *@
+@if (appointmentsAdd._StartTime.Visible) { // appointmentsAdd._StartTime.Visible (begin)
+    <div id="r__StartTime" @Html.Raw(appointmentsAdd._StartTime.RowAttributes)>
+        <label id="elh_Appointments__StartTime" for="x__StartTime" class="@(appointmentsAdd.LeftColumnClass)">@Html.Raw(appointmentsAdd._StartTime.Caption)@Html.Raw(appointmentsAdd._StartTime.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(appointmentsAdd.RightColumnClass)"><div @Html.Raw(appointmentsAdd._StartTime.CellAttributes)>
+<span id="el_Appointments__StartTime">
+<input type="@(appointmentsAdd._StartTime.InputTextType)" name="x__StartTime" id="x__StartTime" data-table="Appointments" data-field="x__StartTime" value="@Html.Raw(appointmentsAdd._StartTime.EditValue)" placeholder="@Html.Raw(HtmlEncode(appointmentsAdd._StartTime.PlaceHolder))" data-format-pattern="@(appointmentsAdd._StartTime.FormatPattern)"@Html.Raw(appointmentsAdd._StartTime.EditAttributes) aria-describedby="x__StartTime_help">
+@Html.Raw(appointmentsAdd._StartTime.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(appointmentsAdd._StartTime.GetErrorMessage())</div>
+@if (!appointmentsAdd._StartTime.ReadOnly && !appointmentsAdd._StartTime.Disabled && !appointmentsAdd._StartTime.EditAttrs.Is("readonly") && !appointmentsAdd._StartTime.EditAttrs.Is("disabled")) {
+<script>
+loadjs.ready(["fAppointmentsadd", "datetimepicker"], function () {
+    let format = "@Html.Raw(DateFormat(0))", // DN
+        options = {
+                localization: {
+                    locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),
+                    hourCycle: format.match(/H/) ? "h24" : "h12",
+                    format,
+                    ...ew.language.phrase("datetimepicker")
+                },
+                display: {
+                    icons: {
+                        previous: ew.IS_RTL ? "fa-solid fa-chevron-right" : "fa-solid fa-chevron-left",
+                        next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
+                    },
+                    components: {
+                        clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
+                        hours: !!format.match(/h/i),
+                        minutes: !!format.match(/m/),
+                        seconds: !!format.match(/s/i)
+                    },
+                theme: ew.getPreferredTheme()
+                }
+            };
+    ew.createDateTimePicker("fAppointmentsadd", "x__StartTime", ew.deepAssign({"useCurrent":false,"display":{"sideBySide":false}}, options));
+});
+</script>
+}
+</span>
+</div></div>
+    </div>
+} @* appointmentsAdd._StartTime.Visible (end) *@
+@if (appointmentsAdd.EndTime.Visible) { // appointmentsAdd.EndTime.Visible (begin)
+    <div id="r_EndTime" @Html.Raw(appointmentsAdd.EndTime.RowAttributes)>
+        <label id="elh_Appointments_EndTime" for="x_EndTime" class="@(appointmentsAdd.LeftColumnClass)">@Html.Raw(appointmentsAdd.EndTime.Caption)@Html.Raw(appointmentsAdd.EndTime.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(appointmentsAdd.RightColumnClass)"><div @Html.Raw(appointmentsAdd.EndTime.CellAttributes)>
+<span id="el_Appointments_EndTime">
+<input type="@(appointmentsAdd.EndTime.InputTextType)" name="x_EndTime" id="x_EndTime" data-table="Appointments" data-field="x_EndTime" value="@Html.Raw(appointmentsAdd.EndTime.EditValue)" placeholder="@Html.Raw(HtmlEncode(appointmentsAdd.EndTime.PlaceHolder))" data-format-pattern="@(appointmentsAdd.EndTime.FormatPattern)"@Html.Raw(appointmentsAdd.EndTime.EditAttributes) aria-describedby="x_EndTime_help">
+@Html.Raw(appointmentsAdd.EndTime.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(appointmentsAdd.EndTime.GetErrorMessage())</div>
+@if (!appointmentsAdd.EndTime.ReadOnly && !appointmentsAdd.EndTime.Disabled && !appointmentsAdd.EndTime.EditAttrs.Is("readonly") && !appointmentsAdd.EndTime.EditAttrs.Is("disabled")) {
+<script>
+loadjs.ready(["fAppointmentsadd", "datetimepicker"], function () {
+    let format = "@Html.Raw(DateFormat(0))", // DN
+        options = {
+                localization: {
+                    locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),
+                    hourCycle: format.match(/H/) ? "h24" : "h12",
+                    format,
+                    ...ew.language.phrase("datetimepicker")
+                },
+                display: {
+                    icons: {
+                        previous: ew.IS_RTL ? "fa-solid fa-chevron-right" : "fa-solid fa-chevron-left",
+                        next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
+                    },
+                    components: {
+                        clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
+                        hours: !!format.match(/h/i),
+                        minutes: !!format.match(/m/),
+                        seconds: !!format.match(/s/i)
+                    },
+                theme: ew.getPreferredTheme()
+                }
+            };
+    ew.createDateTimePicker("fAppointmentsadd", "x_EndTime", ew.deepAssign({"useCurrent":false,"display":{"sideBySide":false}}, options));
+});
+</script>
+}
+</span>
+</div></div>
+    </div>
+} @* appointmentsAdd.EndTime.Visible (end) *@
+@if (appointmentsAdd.CreatedBy.Visible) { // appointmentsAdd.CreatedBy.Visible (begin)
+    <div id="r_CreatedBy" @Html.Raw(appointmentsAdd.CreatedBy.RowAttributes)>
+        <label id="elh_Appointments_CreatedBy" for="x_CreatedBy" class="@(appointmentsAdd.LeftColumnClass)">@Html.Raw(appointmentsAdd.CreatedBy.Caption)@Html.Raw(appointmentsAdd.CreatedBy.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(appointmentsAdd.RightColumnClass)"><div @Html.Raw(appointmentsAdd.CreatedBy.CellAttributes)>
+<span id="el_Appointments_CreatedBy">
+<input type="@(appointmentsAdd.CreatedBy.InputTextType)" name="x_CreatedBy" id="x_CreatedBy" data-table="Appointments" data-field="x_CreatedBy" value="@Html.Raw(appointmentsAdd.CreatedBy.EditValue)" size="30" placeholder="@Html.Raw(HtmlEncode(appointmentsAdd.CreatedBy.PlaceHolder))" data-format-pattern="@(appointmentsAdd.CreatedBy.FormatPattern)"@Html.Raw(appointmentsAdd.CreatedBy.EditAttributes) aria-describedby="x_CreatedBy_help">
+@Html.Raw(appointmentsAdd.CreatedBy.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(appointmentsAdd.CreatedBy.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* appointmentsAdd.CreatedBy.Visible (end) *@
+@if (appointmentsAdd.Timezone.Visible) { // appointmentsAdd.Timezone.Visible (begin)
+    <div id="r_Timezone" @Html.Raw(appointmentsAdd.Timezone.RowAttributes)>
+        <label id="elh_Appointments_Timezone" for="x_Timezone" class="@(appointmentsAdd.LeftColumnClass)">@Html.Raw(appointmentsAdd.Timezone.Caption)@Html.Raw(appointmentsAdd.Timezone.Required ? Language.Phrase("FieldRequiredIndicator") : "")</label>
+        <div class="@(appointmentsAdd.RightColumnClass)"><div @Html.Raw(appointmentsAdd.Timezone.CellAttributes)>
+<span id="el_Appointments_Timezone">
+<input type="@(appointmentsAdd.Timezone.InputTextType)" name="x_Timezone" id="x_Timezone" data-table="Appointments" data-field="x_Timezone" value="@Html.Raw(appointmentsAdd.Timezone.EditValue)" size="30" maxlength="50" placeholder="@Html.Raw(HtmlEncode(appointmentsAdd.Timezone.PlaceHolder))" data-format-pattern="@(appointmentsAdd.Timezone.FormatPattern)"@Html.Raw(appointmentsAdd.Timezone.EditAttributes) aria-describedby="x_Timezone_help">
+@Html.Raw(appointmentsAdd.Timezone.GetCustomMessage)
+<div class="invalid-feedback">@Html.Raw(appointmentsAdd.Timezone.GetErrorMessage())</div>
+</span>
+</div></div>
+    </div>
+} @* appointmentsAdd.Timezone.Visible (end) *@
+</div><!-- /page* -->
+@{ appointmentsAdd.CloseRecordset(); }
+@Html.Raw(appointmentsAdd.IsModal ? "<template class=\"ew-modal-buttons\">" : "<div class=\"row ew-buttons\">")<!-- buttons .row -->
+    <div class="@(appointmentsAdd.OffsetColumnClass)"><!-- buttons offset -->
+    <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fAppointmentsadd">@Html.Raw(Language.Phrase("AddBtn"))</button>
+@if (IsJsonResponse()) {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-bs-dismiss="modal">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+} else {
+    <button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" form="fAppointmentsadd" data-href="@AppPath(appointmentsAdd.ReturnUrl)">@Html.Raw(Language.Phrase("CancelBtn"))</button>
+}
+    </div><!-- /buttons offset -->
+@Html.Raw(appointmentsAdd.IsModal ? "</template>" : "</div>")<!-- /buttons .row -->
+</form>
+@appointmentsAdd.ShowPageFooter()
+@Html.Raw(GetDebugMessage())
+@ElapsedTime()
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("Appointments");
+});
+</script>
+<script>
+loadjs.ready("load", function() {
+    // Write your table-specific startup script here
+    // document.write("page loaded");
+});
+</script>
