@@ -285,7 +285,7 @@ public partial class UAMS_20250216_1835 {
             string url = "";
             var tableList = Config.UserLevelTablePermissions;
             for (var i = 0; i < tableList.Count; i++) {
-                if (tableList[i].TableName == "Users") {
+                if (tableList[i].TableName == "Dashboard") {
                     if (Security.AllowList(tableList[i].ProjectId + tableList[i].TableName)) {
                         url = tableList[i].Url;
                         break;

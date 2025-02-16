@@ -654,21 +654,22 @@ public partial class AppointmentController : ApiController
     }
 
     [HttpGet("dashboard")]
-    public IActionResult GetDashboard()
+    public IActionResult GetDashboard([FromQuery] int userID)
     {
-        int currentUserId = Convert.ToInt32(CurrentUserID());
         var user = QueryBuilder("Users")
-            .Where("Id", currentUserId)
-            .Select("PreferredTimezone")
+            .Join("Timezones", "Users.PreferredTimezoneID", "Timezones.TimezoneID")
+            .Where("Users.Id", userID)
+            .Select("Timezones.TimezoneName", "Timezones.UtcOffset")
             .FirstOrDefault();
         if (user == null)
         {
             return BadRequest("User not found.");
         }
-        string preferredTimezone = user["PreferredTimezone"].ToString();
+        string preferredTimezoneUTC = user.UtcOffset.ToString();
+        string preferredTimezone = user.TimezoneName.ToString();
         var appointments = QueryBuilder("Appointments")
             .Join("Participants", "Appointments.Id", "Participants.AppointmentId")
-            .Where("Participants.UserId", currentUserId)
+            .Where("Participants.UserId", userID)
             .Select("Appointments.Id", "Title", "StartTime", "EndTime")
             .OrderByDesc("StartTime")
             .Limit(1)
@@ -679,12 +680,13 @@ public partial class AppointmentController : ApiController
             try
             {
                 TimeZoneInfo tzInfo = TimeZoneInfo.FindSystemTimeZoneById(preferredTimezone);
-                DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(appointment["StartTime"].ToString()), tzInfo);
-                DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(appointment["EndTime"].ToString()), tzInfo);
+                DateTime startLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(appointment.StartTime.ToString()), tzInfo);
+                DateTime endLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(appointment.EndTime.ToString()), tzInfo);
                 convertedAppointments.Add(new
                 {
-                    Id = appointment["Id"],
-                    Title = appointment["Title"],
+                    Id = appointment.Id,
+                    Title = appointment.Title,
+                    PreferredTimezone = preferredTimezoneUTC,
                     StartTime = startLocal.ToString("yyyy-MM-dd HH:mm:ss"),
                     EndTime = endLocal.ToString("yyyy-MM-dd HH:mm:ss")
                 });

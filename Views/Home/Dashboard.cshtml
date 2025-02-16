@@ -23,62 +23,70 @@
     border-radius: 5px;
 }
 </style>
-<h2>Dashboard</h2>
-
 <div id="dashboardContainer">
     <p>Loading dashboard...</p>
 </div>
 
-@section Scripts {
-    <script>
-        async function loadDashboard() {
-            try {
-                const response = await fetch("/api/dashboard", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": "Bearer " + localStorage.getItem("token"), // If using JWT
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch dashboard data.");
+<script>
+const dashboardContainer = document.getElementById("dashboardContainer");
+if (@Html.Raw(CurrentUserLevel()) != "-1") {
+    async function loadDashboard() {
+        try {
+            const response = await fetch("/api/appointment/dashboard?userID=@Html.Raw(CurrentUserID())", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"), // If using JWT
+                    "Content-Type": "application/json"
                 }
-
-                const data = await response.json();
-                displayAppointments(data);
-            } catch (error) {
-                console.error("Error loading dashboard:", error);
-                document.getElementById("dashboardContainer").innerHTML = "<p>Error loading dashboard.</p>";
-            }
-        }
-
-        function displayAppointments(appointments) {
-            const container = document.getElementById("dashboardContainer");
-            container.innerHTML = ""; // Clear previous content
-
-            if (appointments.length === 0) {
-                container.innerHTML = "<p>No recent appointments.</p>";
-                return;
-            }
-
-            let html = "<ul class='appointment-list'>";
-            appointments.forEach(appt => {
-                html += `
-                    <li>
-                        <strong>${appt.Title}</strong><br>
-                        Start: ${appt.StartTime} <br>
-                        End: ${appt.EndTime}
-                    </li>
-                `;
             });
-            html += "</ul>";
 
-            container.innerHTML = html;
+            if (!response.ok) {
+                throw new Error("Failed to fetch dashboard data.");
+            }
+
+            const data = await response.json();
+            displayAppointments(data);
+        } catch (error) {
+            console.error("Error loading dashboard:", error);
+            document.getElementById("dashboardContainer").innerHTML = "<p>Error loading dashboard.</p>";
         }
+    }
 
-        document.addEventListener("DOMContentLoaded", loadDashboard);
-    </script>
+    function displayAppointments(appointments) {
+        const container = document.getElementById("dashboardContainer");
+        container.innerHTML = ""; // Clear previous content
+
+        if (appointments.length === 0) {
+            container.innerHTML = "<p>No recent appointments.</p>";
+            return;
+        }
+        container.innerHTML += "<h4>Your latest Appointment Schedule</h4>";
+
+        let html = "<ul class='appointment-list'>";
+        appointments.forEach(appt => {
+            html += `
+                <li>
+                    <strong>${appt.Title}</strong><br>
+                    Start: ${appt.StartTime} ${appt.PreferredTimezone} <br>
+                    End: ${appt.EndTime} ${appt.PreferredTimezone}
+                </li>
+            `;
+        });
+        html += "</ul>";
+
+        container.innerHTML = html;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadDashboard);
+} else {
+    dashboardContainer.innerHTML = `
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="window.location.href='/AppointmentForm'" class="btn btn-primary">
+                Create Appointment
+            </button>
+        </div>
+    `;
 }
+</script>
 
 @Html.Raw(GetDebugMessage())
